@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { AgentHeader } from '@/components/agent';
+import { apiUrl } from '@/lib/config';
 
 interface Inquiry {
   id: string;
@@ -56,7 +57,7 @@ export default function AgentInquiriesPage() {
         params.set('status', statusFilter);
       }
 
-      const res = await fetch(`/api/inquiries?${params.toString()}`);
+      const res = await fetch(apiUrl(`/api/inquiries?${params.toString()}`));
       const result = await res.json();
 
       if (!result.success) {
@@ -103,7 +104,7 @@ export default function AgentInquiriesPage() {
   const handleMarkAsClosed = async (id: string) => {
     try {
       setActionLoading(id);
-      const res = await fetch(`/api/inquiries/${id}/status`, {
+      const res = await fetch(apiUrl(`/api/inquiries/${id}/status`), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'CLOSED' }),
@@ -171,7 +172,7 @@ export default function AgentInquiriesPage() {
             onClick={() => setStatusFilter(statusFilter === 'FORWARDED' ? 'ALL' : 'FORWARDED')}
           >
             <p className="text-xl font-bold text-purple-400">{newInquiriesCount}</p>
-            <p className="text-white/50 text-xs">New Inquiries</p>
+            <p className="text-slate-500 text-xs">New Inquiries</p>
           </div>
           <div
             className={`glass-ultra rounded-xl px-6 py-3 cursor-pointer transition-all ${
@@ -182,11 +183,11 @@ export default function AgentInquiriesPage() {
             <p className="text-xl font-bold text-gray-400">
               {inquiries.filter(i => i.status === 'CLOSED').length}
             </p>
-            <p className="text-white/50 text-xs">Closed</p>
+            <p className="text-slate-500 text-xs">Closed</p>
           </div>
           <div className="glass-ultra rounded-xl px-6 py-3">
-            <p className="text-xl font-bold text-white">{pagination.total}</p>
-            <p className="text-white/50 text-xs">Total</p>
+            <p className="text-xl font-bold text-slate-800">{pagination.total}</p>
+            <p className="text-slate-500 text-xs">Total</p>
           </div>
         </div>
 
@@ -195,7 +196,7 @@ export default function AgentInquiriesPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="md:col-span-2">
               <div className="relative">
-                <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-white/40"></i>
+                <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
                 <input
                   type="text"
                   placeholder="Search by name, email, or property..."
@@ -245,12 +246,12 @@ export default function AgentInquiriesPage() {
             {filteredInquiries.map((inquiry) => (
               <div
                 key={inquiry.id}
-                className="glass-ultra rounded-2xl p-6 hover:bg-white/[0.04] transition-all"
+                className="glass-ultra rounded-2xl p-6 hover:bg-slate-100 transition-all"
               >
                 <div className="flex flex-col lg:flex-row lg:items-start gap-6">
                   {/* Property Info */}
                   <div className="flex items-center space-x-4 lg:w-64 flex-shrink-0">
-                    <div className="relative w-20 h-16 rounded-xl overflow-hidden bg-white/5">
+                    <div className="relative w-20 h-16 rounded-xl overflow-hidden bg-slate-100">
                       {inquiry.listing.mainImage ? (
                         <Image
                           src={inquiry.listing.mainImage}
@@ -259,13 +260,13 @@ export default function AgentInquiriesPage() {
                           className="object-cover"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-white/20">
+                        <div className="w-full h-full flex items-center justify-center text-slate-300">
                           <i className="fas fa-image"></i>
                         </div>
                       )}
                     </div>
                     <div className="min-w-0">
-                      <h4 className="text-white font-medium text-sm truncate">{inquiry.listing.title}</h4>
+                      <h4 className="text-slate-800 font-medium text-sm truncate">{inquiry.listing.title}</h4>
                       <p className="text-accent-purple text-sm font-semibold">{formatPrice(inquiry.listing.price)}</p>
                     </div>
                   </div>
@@ -288,31 +289,31 @@ export default function AgentInquiriesPage() {
                           </div>
                         )}
                         <div>
-                          <h4 className="text-white font-medium">{inquiry.name}</h4>
-                          <p className="text-white/40 text-sm">{inquiry.email}</p>
+                          <h4 className="text-slate-800 font-medium">{inquiry.name}</h4>
+                          <p className="text-slate-400 text-sm">{inquiry.email}</p>
                         </div>
                       </div>
                       <div className="flex items-center space-x-3">
-                        <span className="text-white/30 text-xs hidden sm:block">{formatDate(inquiry.createdAt)}</span>
+                        <span className="text-slate-400 text-xs hidden sm:block">{formatDate(inquiry.createdAt)}</span>
                         <span className={`px-3 py-1 rounded-lg text-xs font-medium ${statusColors[inquiry.status] || ''}`}>
                           {inquiry.status}
                         </span>
                       </div>
                     </div>
 
-                    <div className="bg-white/[0.02] rounded-xl p-4 mb-4">
-                      <p className="text-white/70 text-sm">{inquiry.message}</p>
+                    <div className="bg-slate-100 rounded-xl p-4 mb-4">
+                      <p className="text-slate-600 text-sm">{inquiry.message}</p>
                     </div>
 
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-4 text-white/40 text-sm">
+                      <div className="flex items-center space-x-4 text-slate-400 text-sm">
                         {inquiry.phone && (
-                          <a href={`tel:${inquiry.phone}`} className="hover:text-white transition-colors">
+                          <a href={`tel:${inquiry.phone}`} className="hover:text-slate-800 transition-colors">
                             <i className="fas fa-phone mr-1"></i>
                             {inquiry.phone}
                           </a>
                         )}
-                        <a href={`mailto:${inquiry.email}`} className="hover:text-white transition-colors">
+                        <a href={`mailto:${inquiry.email}`} className="hover:text-slate-800 transition-colors">
                           <i className="fas fa-envelope mr-1"></i>
                           Email
                         </a>
@@ -321,7 +322,7 @@ export default function AgentInquiriesPage() {
                       <div className="flex items-center space-x-2">
                         <button
                           onClick={() => setSelectedInquiry(inquiry)}
-                          className="px-4 py-2 rounded-lg bg-white/5 text-white/70 hover:bg-white/10 hover:text-white transition-all text-sm"
+                          className="px-4 py-2 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-white transition-all text-sm"
                         >
                           <i className="fas fa-expand mr-1"></i> View Full
                         </button>
@@ -348,16 +349,16 @@ export default function AgentInquiriesPage() {
           </div>
         ) : (
           <div className="glass-ultra rounded-2xl p-12 text-center">
-            <i className="fas fa-envelope text-5xl text-white/20 mb-4"></i>
-            <h3 className="text-white font-semibold text-lg mb-2">No inquiries yet</h3>
-            <p className="text-white/50 mb-6">
+            <i className="fas fa-envelope text-5xl text-slate-300 mb-4"></i>
+            <h3 className="text-slate-800 font-semibold text-lg mb-2">No inquiries yet</h3>
+            <p className="text-slate-500 mb-6">
               {statusFilter !== 'ALL'
                 ? `No ${statusFilter.toLowerCase()} inquiries found.`
                 : 'When customers inquire about your listings, they will appear here.'}
             </p>
             <Link
               href="/agent/listings"
-              className="inline-block px-6 py-3 bg-white/5 rounded-xl text-white/70 hover:bg-white/10 transition-colors"
+              className="inline-block px-6 py-3 bg-slate-100 rounded-xl text-slate-600 hover:bg-slate-200 transition-colors"
             >
               View Your Listings
             </Link>
@@ -367,7 +368,7 @@ export default function AgentInquiriesPage() {
         {/* Pagination */}
         {pagination.totalPages > 1 && (
           <div className="flex items-center justify-between mt-6 glass-ultra rounded-xl px-6 py-4">
-            <p className="text-white/50 text-sm">
+            <p className="text-slate-500 text-sm">
               Showing {(pagination.page - 1) * pagination.limit + 1} to{' '}
               {Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total}
             </p>
@@ -375,17 +376,17 @@ export default function AgentInquiriesPage() {
               <button
                 onClick={() => setPagination(prev => ({ ...prev, page: prev.page - 1 }))}
                 disabled={pagination.page === 1}
-                className="px-3 py-1 rounded-lg bg-white/5 text-white/60 hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-3 py-1 rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Previous
               </button>
-              <span className="text-white/60 text-sm">
+              <span className="text-slate-500 text-sm">
                 Page {pagination.page} of {pagination.totalPages}
               </span>
               <button
                 onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}
                 disabled={pagination.page >= pagination.totalPages}
-                className="px-3 py-1 rounded-lg bg-white/5 text-white/60 hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-3 py-1 rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Next
               </button>
@@ -404,16 +405,16 @@ export default function AgentInquiriesPage() {
           <div className="relative glass-ultra rounded-2xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <button
               onClick={() => setSelectedInquiry(null)}
-              className="absolute top-4 right-4 w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition-all"
+              className="absolute top-4 right-4 w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 hover:text-slate-800 hover:bg-slate-200 transition-all"
             >
               <i className="fas fa-times"></i>
             </button>
 
-            <h3 className="text-xl font-semibold text-white mb-6">Inquiry Details</h3>
+            <h3 className="text-xl font-semibold text-slate-800 mb-6">Inquiry Details</h3>
 
             {/* Property */}
-            <div className="flex items-center space-x-4 mb-6 p-4 bg-white/[0.02] rounded-xl">
-              <div className="relative w-24 h-20 rounded-xl overflow-hidden bg-white/5">
+            <div className="flex items-center space-x-4 mb-6 p-4 bg-slate-100 rounded-xl">
+              <div className="relative w-24 h-20 rounded-xl overflow-hidden bg-slate-100">
                 {selectedInquiry.listing.mainImage ? (
                   <Image
                     src={selectedInquiry.listing.mainImage}
@@ -422,18 +423,18 @@ export default function AgentInquiriesPage() {
                     className="object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-white/20">
+                  <div className="w-full h-full flex items-center justify-center text-slate-300">
                     <i className="fas fa-image"></i>
                   </div>
                 )}
               </div>
               <div>
-                <h4 className="text-white font-medium">{selectedInquiry.listing.title}</h4>
+                <h4 className="text-slate-800 font-medium">{selectedInquiry.listing.title}</h4>
                 <p className="text-accent-purple font-semibold">{formatPrice(selectedInquiry.listing.price)}</p>
                 <Link
-                  href={`/listings/${selectedInquiry.listing.id}`}
+                  href={`/properties/sale/${selectedInquiry.listing.id}`}
                   target="_blank"
-                  className="text-white/40 text-sm hover:text-white transition-colors"
+                  className="text-slate-400 text-sm hover:text-slate-800 transition-colors"
                 >
                   View Listing <i className="fas fa-external-link-alt ml-1"></i>
                 </Link>
@@ -442,40 +443,40 @@ export default function AgentInquiriesPage() {
 
             {/* Customer Info */}
             <div className="mb-6">
-              <h4 className="text-white/50 text-sm font-medium mb-3">Customer Information</h4>
+              <h4 className="text-slate-500 text-sm font-medium mb-3">Customer Information</h4>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-white/40 text-xs mb-1">Name</p>
-                  <p className="text-white">{selectedInquiry.name}</p>
+                  <p className="text-slate-400 text-xs mb-1">Name</p>
+                  <p className="text-slate-800">{selectedInquiry.name}</p>
                 </div>
                 <div>
-                  <p className="text-white/40 text-xs mb-1">Email</p>
+                  <p className="text-slate-400 text-xs mb-1">Email</p>
                   <a href={`mailto:${selectedInquiry.email}`} className="text-accent-blue hover:underline">
                     {selectedInquiry.email}
                   </a>
                 </div>
                 <div>
-                  <p className="text-white/40 text-xs mb-1">Phone</p>
+                  <p className="text-slate-400 text-xs mb-1">Phone</p>
                   {selectedInquiry.phone ? (
                     <a href={`tel:${selectedInquiry.phone}`} className="text-accent-blue hover:underline">
                       {selectedInquiry.phone}
                     </a>
                   ) : (
-                    <p className="text-white/50">Not provided</p>
+                    <p className="text-slate-500">Not provided</p>
                   )}
                 </div>
                 <div>
-                  <p className="text-white/40 text-xs mb-1">Date</p>
-                  <p className="text-white">{formatDate(selectedInquiry.createdAt)}</p>
+                  <p className="text-slate-400 text-xs mb-1">Date</p>
+                  <p className="text-slate-800">{formatDate(selectedInquiry.createdAt)}</p>
                 </div>
               </div>
             </div>
 
             {/* Message */}
             <div className="mb-6">
-              <h4 className="text-white/50 text-sm font-medium mb-3">Message</h4>
-              <div className="bg-white/[0.02] rounded-xl p-4">
-                <p className="text-white/80 whitespace-pre-wrap">{selectedInquiry.message}</p>
+              <h4 className="text-slate-500 text-sm font-medium mb-3">Message</h4>
+              <div className="bg-slate-100 rounded-xl p-4">
+                <p className="text-slate-700 whitespace-pre-wrap">{selectedInquiry.message}</p>
               </div>
             </div>
 

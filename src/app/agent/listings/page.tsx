@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { AgentHeader } from '@/components/agent';
+import { apiUrl } from '@/lib/config';
 
 interface Listing {
   id: string;
@@ -64,7 +65,7 @@ export default function AgentListingsPage() {
         params.set('status', statusFilter);
       }
 
-      const res = await fetch(`/api/listings/my?${params.toString()}`);
+      const res = await fetch(apiUrl(`/api/listings/my?${params.toString()}`));
       const result = await res.json();
 
       if (!result.success) {
@@ -313,7 +314,7 @@ export default function AgentListingsPage() {
 
                   <div className="flex space-x-2">
                     <Link
-                      href={`/listings/${listing.id}`}
+                      href={`/properties/sale/${listing.id}`}
                       target="_blank"
                       className="flex-1 py-2 rounded-lg bg-slate-100 text-slate-700 text-center text-sm hover:bg-slate-200 transition-colors"
                     >

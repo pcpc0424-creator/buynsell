@@ -105,6 +105,71 @@ Server auto-switches to 3001. Access via `http://localhost:3001`
 - [x] Map integration with Leaflet
 - [x] Responsive design
 
+## Production Deployment (basePath: /buynsell)
+
+### Server Configuration
+- **URL**: `http://115.68.223.124/buynsell/`
+- **Port**: 3008 (PM2 managed)
+- **Process**: `pm2 start npm --name "buynsell" -- start -- -p 3008`
+
+### basePath Configuration
+The app is deployed with basePath `/buynsell`. Important files:
+
+1. **next.config.mjs**
+```javascript
+const nextConfig = {
+  basePath: '/buynsell',
+  assetPrefix: '/buynsell',
+  // ...
+};
+```
+
+2. **.env**
+```
+NEXTAUTH_URL="http://115.68.223.124/buynsell"
+NEXT_PUBLIC_BASE_PATH="/buynsell"
+```
+
+3. **src/lib/config.ts** - API URL helper
+```typescript
+export const config = {
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
+};
+
+export function apiUrl(path: string): string {
+  return `${config.basePath}${path}`;
+}
+```
+
+4. **src/components/providers/SessionProvider.tsx**
+```typescript
+<NextAuthSessionProvider basePath="/buynsell/api/auth">
+```
+
+### basePath Usage Rules
+- **API calls**: Use `apiUrl('/api/...')` from `@/lib/config`
+- **Static images**: Use `${config.basePath}/images/...`
+- **NextAuth**: basePath is set in SessionProvider
+
+### Nginx Configuration
+```nginx
+location /buynsell {
+    proxy_pass http://localhost:3008;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+    proxy_set_header Host $host;
+    proxy_cache_bypass $http_upgrade;
+}
+```
+
+### PM2 Commands
+```bash
+pm2 restart buynsell    # Restart after build
+pm2 logs buynsell       # View logs
+pm2 save                # Save process list
+```
+
 ## Network Access
-- Local: `http://localhost:3001`
-- Network: `http://10.1.1.155:3001`
+- **Production**: `http://115.68.223.124/buynsell/`
+- **Local**: `http://localhost:3008/buynsell/`

@@ -3,6 +3,7 @@
 import { memo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { config } from '@/lib/config';
 
 interface Agent {
   id: string;
@@ -61,17 +62,17 @@ function PropertyList({ properties, loading, total = 0, onSortChange, sort = 'ne
     return (
       <div>
         <div className="flex items-center justify-between mb-6">
-          <div className="h-6 w-40 bg-white/10 rounded animate-pulse"></div>
-          <div className="h-10 w-40 bg-white/10 rounded animate-pulse"></div>
+          <div className="h-6 w-40 bg-slate-200 rounded animate-pulse"></div>
+          <div className="h-10 w-40 bg-slate-200 rounded animate-pulse"></div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="glass-ultra rounded-3xl overflow-hidden">
-              <div className="h-[240px] bg-white/10 animate-pulse"></div>
+              <div className="h-[240px] bg-slate-200 animate-pulse"></div>
               <div className="p-5 space-y-3">
-                <div className="h-6 w-3/4 bg-white/10 rounded animate-pulse"></div>
-                <div className="h-4 w-1/2 bg-white/10 rounded animate-pulse"></div>
-                <div className="h-8 w-1/3 bg-white/10 rounded animate-pulse"></div>
+                <div className="h-6 w-3/4 bg-slate-200 rounded animate-pulse"></div>
+                <div className="h-4 w-1/2 bg-slate-200 rounded animate-pulse"></div>
+                <div className="h-8 w-1/3 bg-slate-200 rounded animate-pulse"></div>
               </div>
             </div>
           ))}
@@ -83,9 +84,9 @@ function PropertyList({ properties, loading, total = 0, onSortChange, sort = 'ne
   if (properties.length === 0) {
     return (
       <div className="glass-ultra rounded-3xl p-12 text-center">
-        <i className="fas fa-home text-5xl text-white/20 mb-4"></i>
-        <h3 className="text-xl font-semibold text-white mb-2">No properties found</h3>
-        <p className="text-white/50">Try adjusting your filters or search criteria</p>
+        <i className="fas fa-home text-5xl text-slate-300 mb-4"></i>
+        <h3 className="text-xl font-semibold text-slate-800 mb-2">No properties found</h3>
+        <p className="text-slate-500">Try adjusting your filters or search criteria</p>
       </div>
     );
   }
@@ -94,9 +95,9 @@ function PropertyList({ properties, loading, total = 0, onSortChange, sort = 'ne
     <div>
       {/* Results Header */}
       <div className="flex items-center justify-between mb-6">
-        <p className="text-white/60">
-          Showing <span className="text-white font-semibold">{properties.length}</span> of{' '}
-          <span className="text-white font-semibold">{total}</span> properties
+        <p className="text-slate-500">
+          Showing <span className="text-slate-800 font-semibold">{properties.length}</span> of{' '}
+          <span className="text-slate-800 font-semibold">{total}</span> properties
         </p>
         <select
           value={sort}
@@ -143,7 +144,7 @@ function PropertyList({ properties, loading, total = 0, onSortChange, sort = 'ne
 
                 {/* Favorite Button */}
                 <button
-                  className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center text-white/70 hover:text-accent-pink hover:bg-black/50 transition-all"
+                  className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center text-white hover:text-accent-pink hover:bg-black/50 transition-all"
                   onClick={(e) => {
                     e.preventDefault();
                     // TODO: Add to favorites
@@ -155,9 +156,9 @@ function PropertyList({ properties, loading, total = 0, onSortChange, sort = 'ne
                 {/* Agent Badge */}
                 {property.agent && (
                   <div className="absolute bottom-4 left-4 flex items-center space-x-2">
-                    <div className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-white/50">
+                    <div className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-slate-2000">
                       <Image
-                        src={property.agent.image || '/images/default-avatar.png'}
+                        src={property.agent.image || `${config.basePath}/images/default-avatar.svg`}
                         alt={property.agent.name || 'Agent'}
                         fill
                         className="object-cover"
@@ -174,16 +175,16 @@ function PropertyList({ properties, loading, total = 0, onSortChange, sort = 'ne
               </div>
 
               <div className="p-5">
-                <h3 className="text-lg font-semibold text-white mb-2 line-clamp-1 group-hover:text-accent-blue transition-colors">
+                <h3 className="text-lg font-semibold text-slate-800 mb-2 line-clamp-1 group-hover:text-accent-blue transition-colors">
                   {property.title}
                 </h3>
-                <p className="text-white/50 text-sm mb-3 flex items-center">
+                <p className="text-slate-500 text-sm mb-3 flex items-center">
                   <i className="fas fa-map-marker-alt mr-2 text-accent-blue"></i>
                   {property.city}
                 </p>
 
                 {/* Property Stats */}
-                <div className="flex items-center space-x-4 text-white/60 text-sm mb-4">
+                <div className="flex items-center space-x-4 text-slate-500 text-sm mb-4">
                   {property.bedrooms !== null && property.bedrooms > 0 && (
                     <span className="flex items-center">
                       <i className="fas fa-bed mr-1"></i>
@@ -208,7 +209,7 @@ function PropertyList({ properties, loading, total = 0, onSortChange, sort = 'ne
                   <span className="text-xl font-bold gradient-text">
                     {formatPrice(property.price, property.transactionType)}
                   </span>
-                  <span className="text-white/40 text-xs uppercase">
+                  <span className="text-slate-400 text-xs uppercase">
                     {property.propertyType.replace('_', ' ')}
                   </span>
                 </div>

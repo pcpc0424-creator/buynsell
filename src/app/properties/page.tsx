@@ -1,19 +1,20 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { Header, Footer, Services } from '@/components/layout';
 import { PropertyCategories } from '@/components/property';
 import PropertyList from '@/components/property/PropertyList';
 import PropertyFilters, { FilterState } from '@/components/property/PropertyFilters';
+import { apiUrl } from '@/lib/config';
 
 // Dynamic import for PropertyMap to avoid SSR issues with Leaflet
 const PropertyMap = dynamic(() => import('@/components/map/PropertyMap'), {
   ssr: false,
   loading: () => (
     <div className="h-full w-full glass-ultra rounded-2xl animate-pulse flex items-center justify-center">
-      <span className="text-white/50">Loading map...</span>
+      <span className="text-slate-500">Loading map...</span>
     </div>
   ),
 });
@@ -29,7 +30,7 @@ const defaultFilters: FilterState = {
   bedrooms: '',
 };
 
-export default function PropertiesPage() {
+function PropertiesPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -68,7 +69,7 @@ export default function PropertiesPage() {
       if (filters.maxPrice) params.set('maxPrice', filters.maxPrice);
       if (filters.bedrooms) params.set('bedrooms', filters.bedrooms);
 
-      const res = await fetch(`/api/listings?${params.toString()}`);
+      const res = await fetch(apiUrl(`/api/listings?${params.toString()}`));
       const data = await res.json();
 
       if (data.success) {
@@ -143,7 +144,7 @@ export default function PropertiesPage() {
         <button
           onClick={() => setPage((p) => Math.max(1, p - 1))}
           disabled={page === 1}
-          className="px-4 py-2 rounded-lg glass-ultra text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/10 transition-all"
+          className="px-4 py-2 rounded-lg glass-ultra text-slate-800 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-200 transition-all"
         >
           <i className="fas fa-chevron-left"></i>
         </button>
@@ -166,7 +167,7 @@ export default function PropertiesPage() {
               className={`px-4 py-2 rounded-lg transition-all ${
                 page === pageNum
                   ? 'btn-premium text-white'
-                  : 'glass-ultra text-white hover:bg-white/10'
+                  : 'glass-ultra text-slate-800 hover:bg-slate-200'
               }`}
             >
               {pageNum}
@@ -177,7 +178,7 @@ export default function PropertiesPage() {
         <button
           onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
           disabled={page === totalPages}
-          className="px-4 py-2 rounded-lg glass-ultra text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/10 transition-all"
+          className="px-4 py-2 rounded-lg glass-ultra text-slate-800 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-200 transition-all"
         >
           <i className="fas fa-chevron-right"></i>
         </button>
@@ -194,10 +195,10 @@ export default function PropertiesPage() {
         <div className={`mx-auto px-6 lg:px-8 ${viewMode === 'split' ? 'max-w-[1600px]' : 'max-w-7xl'}`}>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
             <div>
-              <h1 className="text-3xl lg:text-4xl font-display font-bold text-white mb-2">
+              <h1 className="text-3xl lg:text-4xl font-display font-bold text-slate-800 mb-2">
                 Browse <span className="gradient-text">Properties</span>
               </h1>
-              <p className="text-white/50">Find your perfect property from our listings</p>
+              <p className="text-slate-500">Find your perfect property from our listings</p>
             </div>
 
             {/* View Mode Toggle */}
@@ -207,7 +208,7 @@ export default function PropertiesPage() {
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                   viewMode === 'list'
                     ? 'bg-accent-blue text-white'
-                    : 'text-white/60 hover:text-white'
+                    : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
                 <i className="fas fa-list mr-2"></i>List
@@ -217,7 +218,7 @@ export default function PropertiesPage() {
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                   viewMode === 'map'
                     ? 'bg-accent-blue text-white'
-                    : 'text-white/60 hover:text-white'
+                    : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
                 <i className="fas fa-map mr-2"></i>Map
@@ -227,7 +228,7 @@ export default function PropertiesPage() {
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all hidden lg:block ${
                   viewMode === 'split'
                     ? 'bg-accent-blue text-white'
-                    : 'text-white/60 hover:text-white'
+                    : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
                 <i className="fas fa-columns mr-2"></i>Split
@@ -277,9 +278,9 @@ export default function PropertiesPage() {
               <div className="lg:col-span-3">
                 <div className="glass-ultra rounded-2xl p-4 mb-4">
                   <div className="flex items-center justify-between">
-                    <p className="text-white/60">
-                      Showing <span className="text-white font-semibold">{properties.length}</span> of{' '}
-                      <span className="text-white font-semibold">{total}</span> properties on map
+                    <p className="text-slate-500">
+                      Showing <span className="text-slate-800 font-semibold">{properties.length}</span> of{' '}
+                      <span className="text-slate-800 font-semibold">{total}</span> properties on map
                     </p>
                   </div>
                 </div>
@@ -319,8 +320,8 @@ export default function PropertiesPage() {
                 <div className="sticky top-24">
                   <div className="glass-ultra rounded-2xl p-4 mb-4">
                     <div className="flex items-center justify-between">
-                      <p className="text-white/60 text-sm">
-                        <span className="text-white font-semibold">{total}</span> properties
+                      <p className="text-slate-500 text-sm">
+                        <span className="text-slate-800 font-semibold">{total}</span> properties
                       </p>
                       <select
                         value={sort}
@@ -340,16 +341,16 @@ export default function PropertiesPage() {
                       <div className="space-y-4">
                         {[1, 2, 3].map((i) => (
                           <div key={i} className="glass-ultra rounded-2xl p-4 animate-pulse">
-                            <div className="h-32 bg-white/10 rounded-xl mb-3"></div>
-                            <div className="h-4 bg-white/10 rounded w-3/4 mb-2"></div>
-                            <div className="h-4 bg-white/10 rounded w-1/2"></div>
+                            <div className="h-32 bg-slate-200 rounded-xl mb-3"></div>
+                            <div className="h-4 bg-slate-200 rounded w-3/4 mb-2"></div>
+                            <div className="h-4 bg-slate-200 rounded w-1/2"></div>
                           </div>
                         ))}
                       </div>
                     ) : properties.length === 0 ? (
                       <div className="glass-ultra rounded-2xl p-8 text-center">
-                        <i className="fas fa-home text-4xl text-white/20 mb-4"></i>
-                        <p className="text-white/50">No properties found</p>
+                        <i className="fas fa-home text-4xl text-slate-300 mb-4"></i>
+                        <p className="text-slate-500">No properties found</p>
                       </div>
                     ) : (
                       <div className="space-y-4">
@@ -382,14 +383,14 @@ export default function PropertiesPage() {
                                 </span>
                               </div>
                               <div className="flex-1 p-3">
-                                <h3 className="text-white font-semibold text-sm line-clamp-1 mb-1">
+                                <h3 className="text-slate-800 font-semibold text-sm line-clamp-1 mb-1">
                                   {property.title}
                                 </h3>
-                                <p className="text-white/50 text-xs mb-2">
+                                <p className="text-slate-500 text-xs mb-2">
                                   <i className="fas fa-map-marker-alt mr-1"></i>
                                   {property.city}
                                 </p>
-                                <div className="flex items-center gap-3 text-white/40 text-xs mb-2">
+                                <div className="flex items-center gap-3 text-slate-400 text-xs mb-2">
                                   {property.bedrooms > 0 && (
                                     <span><i className="fas fa-bed mr-1"></i>{property.bedrooms}</span>
                                   )}
@@ -478,5 +479,17 @@ export default function PropertiesPage() {
         }
       `}</style>
     </>
+  );
+}
+
+export default function PropertiesPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent-blue"></div>
+      </div>
+    }>
+      <PropertiesPageContent />
+    </Suspense>
   );
 }

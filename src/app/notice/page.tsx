@@ -60,7 +60,7 @@ export default function NoticePage() {
             <h1 className="text-3xl lg:text-4xl font-display font-bold text-white mb-4">
               <span className="gradient-text">Notice</span> Board
             </h1>
-            <p className="text-white/50">Stay updated with the latest announcements and updates</p>
+            <p className="text-slate-500">Stay updated with the latest announcements and updates</p>
           </div>
 
           {/* Notices List */}
@@ -68,10 +68,10 @@ export default function NoticePage() {
             {notices.map((notice) => (
               <article key={notice.id} className="glass-ultra rounded-2xl p-6 hover:bg-white/[0.04] transition-all">
                 <div className="flex items-start justify-between mb-4">
-                  <span className={`px-3 py-1 rounded-full text-white text-xs font-semibold ${categoryColors[notice.category] || 'bg-white/20'}`}>
+                  <span className={`px-3 py-1 rounded-full text-white text-xs font-semibold ${categoryColors[notice.category] || 'bg-slate-200'}`}>
                     {notice.category}
                   </span>
-                  <time className="text-white/40 text-sm">
+                  <time className="text-slate-400 text-sm">
                     {new Date(notice.date).toLocaleDateString('en-PH', {
                       year: 'numeric',
                       month: 'long',
@@ -80,7 +80,7 @@ export default function NoticePage() {
                   </time>
                 </div>
                 <h2 className="text-xl font-semibold text-white mb-3">{notice.title}</h2>
-                <p className="text-white/60 text-sm leading-relaxed">{notice.content}</p>
+                <p className="text-slate-500 text-sm leading-relaxed">{notice.content}</p>
                 <Link
                   href={`/notice/${notice.id}`}
                   className="inline-flex items-center text-accent-blue text-sm mt-4 hover:text-accent-purple transition-colors"
@@ -94,12 +94,12 @@ export default function NoticePage() {
 
           {/* Pagination */}
           <div className="flex items-center justify-center gap-2 mt-12">
-            <button className="w-10 h-10 rounded-xl glass-ultra flex items-center justify-center text-white/50 hover:text-white transition-all">
+            <button className="w-10 h-10 rounded-xl glass-ultra flex items-center justify-center text-slate-500 hover:text-white transition-all">
               <i className="fas fa-chevron-left"></i>
             </button>
             <button className="w-10 h-10 rounded-xl btn-premium text-white font-semibold">1</button>
-            <button className="w-10 h-10 rounded-xl glass-ultra text-white/60 hover:text-white transition-all">2</button>
-            <button className="w-10 h-10 rounded-xl glass-ultra flex items-center justify-center text-white/50 hover:text-white transition-all">
+            <button className="w-10 h-10 rounded-xl glass-ultra text-slate-500 hover:text-white transition-all">2</button>
+            <button className="w-10 h-10 rounded-xl glass-ultra flex items-center justify-center text-slate-500 hover:text-white transition-all">
               <i className="fas fa-chevron-right"></i>
             </button>
           </div>

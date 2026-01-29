@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { AdminHeader } from '@/components/admin';
+import { apiUrl } from '@/lib/config';
 
 interface RecentListing {
   id: string;
@@ -79,18 +80,19 @@ const statusColors: Record<string, string> = {
   CLOSED: 'bg-gray-500/20 text-gray-400',
 };
 
-function formatCurrency(value: number): string {
-  if (value >= 1000000) {
-    return `₱${(value / 1000000).toFixed(1)}M`;
+function formatCurrency(value: number | undefined | null): string {
+  const num = value ?? 0;
+  if (num >= 1000000) {
+    return `₱${(num / 1000000).toFixed(1)}M`;
   }
-  if (value >= 1000) {
-    return `₱${(value / 1000).toFixed(0)}K`;
+  if (num >= 1000) {
+    return `₱${(num / 1000).toFixed(0)}K`;
   }
-  return `₱${value.toLocaleString()}`;
+  return `₱${num.toLocaleString()}`;
 }
 
-function formatPrice(value: number): string {
-  return `₱${value.toLocaleString()}`;
+function formatPrice(value: number | undefined | null): string {
+  return `₱${(value ?? 0).toLocaleString()}`;
 }
 
 export default function AdminDashboard() {
@@ -105,7 +107,7 @@ export default function AdminDashboard() {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      const res = await fetch('/api/admin/dashboard');
+      const res = await fetch(apiUrl('/api/admin/dashboard'));
       const result = await res.json();
 
       if (!result.success) {
@@ -124,33 +126,33 @@ export default function AdminDashboard() {
   const stats = data ? [
     {
       label: 'Total Users',
-      value: data.users.total.toLocaleString(),
-      change: `+${data.users.newThisMonth} this month`,
-      changeType: data.users.newThisMonth > 0 ? 'positive' : 'neutral',
+      value: (data.users?.total ?? 0).toLocaleString(),
+      change: `+${data.users?.newThisMonth ?? 0} this month`,
+      changeType: (data.users?.newThisMonth ?? 0) > 0 ? 'positive' : 'neutral',
       icon: 'fa-users',
       color: 'blue',
     },
     {
       label: 'Active Listings',
-      value: (data.listings.byStatus['APPROVED'] || 0).toLocaleString(),
-      change: `+${data.listings.newThisMonth} this month`,
-      changeType: data.listings.newThisMonth > 0 ? 'positive' : 'neutral',
+      value: (data.listings?.byStatus?.['APPROVED'] ?? 0).toLocaleString(),
+      change: `+${data.listings?.newThisMonth ?? 0} this month`,
+      changeType: (data.listings?.newThisMonth ?? 0) > 0 ? 'positive' : 'neutral',
       icon: 'fa-building',
       color: 'purple',
     },
     {
       label: 'Pending Approval',
-      value: data.listings.pendingApproval.toString(),
-      change: `+${data.listings.newToday} today`,
+      value: (data.listings?.pendingApproval ?? 0).toString(),
+      change: `+${data.listings?.newToday ?? 0} today`,
       changeType: 'neutral',
       icon: 'fa-clock',
       color: 'pink',
     },
     {
       label: 'Total Revenue',
-      value: formatCurrency(data.revenue.total),
-      change: `+${formatCurrency(data.revenue.thisMonth)} this month`,
-      changeType: data.revenue.thisMonth > 0 ? 'positive' : 'neutral',
+      value: formatCurrency(data.revenue?.total ?? 0),
+      change: `+${formatCurrency(data.revenue?.thisMonth ?? 0)} this month`,
+      changeType: (data.revenue?.thisMonth ?? 0) > 0 ? 'positive' : 'neutral',
       icon: 'fa-peso-sign',
       color: 'cyan',
     },
@@ -208,7 +210,7 @@ export default function AdminDashboard() {
           {stats.map((stat) => (
             <div
               key={stat.label}
-              className="glass-ultra rounded-2xl p-6 hover:bg-white/[0.04] transition-all"
+              className="glass-ultra rounded-2xl p-6 hover:bg-slate-200 transition-all"
             >
               <div className="flex items-start justify-between mb-4">
                 <div
@@ -222,14 +224,14 @@ export default function AdminDashboard() {
                       ? 'text-green-400'
                       : stat.changeType === 'negative'
                       ? 'text-red-400'
-                      : 'text-white/50'
+                      : 'text-slate-500'
                   }`}
                 >
                   {stat.change}
                 </span>
               </div>
-              <h3 className="text-3xl font-bold text-white mb-1">{stat.value}</h3>
-              <p className="text-white/50 text-sm">{stat.label}</p>
+              <h3 className="text-3xl font-bold text-slate-800 mb-1">{stat.value}</h3>
+              <p className="text-slate-500 text-sm">{stat.label}</p>
             </div>
           ))}
         </div>
@@ -238,7 +240,7 @@ export default function AdminDashboard() {
           {/* Recent Listings */}
           <div className="glass-ultra rounded-2xl p-6">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-semibold text-white">Pending Listings</h2>
+              <h2 className="text-lg font-semibold text-slate-800">Pending Listings</h2>
               <Link
                 href="/admin/listings?status=PENDING"
                 className="text-accent-blue hover:text-accent-purple transition-colors text-sm"
@@ -251,14 +253,14 @@ export default function AdminDashboard() {
                 data.recent.listings.map((listing) => (
                   <div
                     key={listing.id}
-                    className="flex items-center justify-between p-4 rounded-xl bg-white/[0.02] hover:bg-white/[0.04] transition-all"
+                    className="flex items-center justify-between p-4 rounded-xl bg-slate-100 hover:bg-slate-200 transition-all"
                   >
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-white font-medium truncate">{listing.title}</h4>
-                      <p className="text-white/40 text-sm">by {listing.agent?.name || 'Unknown'}</p>
+                      <h4 className="text-slate-800 font-medium truncate">{listing.title}</h4>
+                      <p className="text-slate-400 text-sm">by {listing.agent?.name || 'Unknown'}</p>
                     </div>
                     <div className="flex items-center space-x-4 ml-4">
-                      <span className="text-white/60 text-sm hidden sm:block">
+                      <span className="text-slate-500 text-sm hidden sm:block">
                         {formatPrice(listing.price)}
                       </span>
                       <span className={`px-2.5 py-1 rounded-lg text-xs font-medium ${statusColors[listing.status]}`}>
@@ -268,7 +270,7 @@ export default function AdminDashboard() {
                   </div>
                 ))
               ) : (
-                <p className="text-white/40 text-center py-4">No pending listings</p>
+                <p className="text-slate-400 text-center py-4">No pending listings</p>
               )}
             </div>
           </div>
@@ -276,7 +278,7 @@ export default function AdminDashboard() {
           {/* Recent Inquiries */}
           <div className="glass-ultra rounded-2xl p-6">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-semibold text-white">Pending Inquiries</h2>
+              <h2 className="text-lg font-semibold text-slate-800">Pending Inquiries</h2>
               <Link
                 href="/admin/inquiries?status=PENDING"
                 className="text-accent-blue hover:text-accent-purple transition-colors text-sm"
@@ -289,14 +291,14 @@ export default function AdminDashboard() {
                 data.recent.inquiries.map((inquiry) => (
                   <div
                     key={inquiry.id}
-                    className="flex items-center justify-between p-4 rounded-xl bg-white/[0.02] hover:bg-white/[0.04] transition-all"
+                    className="flex items-center justify-between p-4 rounded-xl bg-slate-100 hover:bg-slate-200 transition-all"
                   >
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-white font-medium">{inquiry.user?.name || inquiry.name}</h4>
-                      <p className="text-white/40 text-sm truncate">Re: {inquiry.listing?.title}</p>
+                      <h4 className="text-slate-800 font-medium">{inquiry.user?.name || inquiry.name}</h4>
+                      <p className="text-slate-400 text-sm truncate">Re: {inquiry.listing?.title}</p>
                     </div>
                     <div className="flex items-center space-x-4 ml-4">
-                      <span className="text-white/40 text-xs hidden sm:block">
+                      <span className="text-slate-400 text-xs hidden sm:block">
                         {new Date(inquiry.createdAt).toLocaleDateString()}
                       </span>
                       <span className={`px-2.5 py-1 rounded-lg text-xs font-medium ${statusColors[inquiry.status]}`}>
@@ -306,7 +308,7 @@ export default function AdminDashboard() {
                   </div>
                 ))
               ) : (
-                <p className="text-white/40 text-center py-4">No pending inquiries</p>
+                <p className="text-slate-400 text-center py-4">No pending inquiries</p>
               )}
             </div>
           </div>
@@ -314,16 +316,16 @@ export default function AdminDashboard() {
 
         {/* Quick Actions */}
         <div className="mt-8">
-          <h2 className="text-lg font-semibold text-white mb-4">Quick Actions</h2>
+          <h2 className="text-lg font-semibold text-slate-800 mb-4">Quick Actions</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <Link
               href="/admin/listings?status=PENDING"
-              className="glass-ultra rounded-xl p-4 text-center hover:bg-white/[0.04] transition-all group"
+              className="glass-ultra rounded-xl p-4 text-center hover:bg-slate-200 transition-all group"
             >
               <div className="w-12 h-12 rounded-xl bg-yellow-500/10 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
                 <i className="fas fa-check-circle text-yellow-400 text-xl"></i>
               </div>
-              <span className="text-white font-medium text-sm">Review Listings</span>
+              <span className="text-slate-800 font-medium text-sm">Review Listings</span>
               {data && data.listings.pendingApproval > 0 && (
                 <span className="block text-yellow-400 text-xs mt-1">
                   {data.listings.pendingApproval} pending
@@ -332,12 +334,12 @@ export default function AdminDashboard() {
             </Link>
             <Link
               href="/admin/inquiries?status=PENDING"
-              className="glass-ultra rounded-xl p-4 text-center hover:bg-white/[0.04] transition-all group"
+              className="glass-ultra rounded-xl p-4 text-center hover:bg-slate-200 transition-all group"
             >
               <div className="w-12 h-12 rounded-xl bg-accent-blue/10 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
                 <i className="fas fa-envelope-open text-accent-blue text-xl"></i>
               </div>
-              <span className="text-white font-medium text-sm">Handle Inquiries</span>
+              <span className="text-slate-800 font-medium text-sm">Handle Inquiries</span>
               {data && data.inquiries.pendingReview > 0 && (
                 <span className="block text-accent-blue text-xs mt-1">
                   {data.inquiries.pendingReview} pending
@@ -346,12 +348,12 @@ export default function AdminDashboard() {
             </Link>
             <Link
               href="/admin/users"
-              className="glass-ultra rounded-xl p-4 text-center hover:bg-white/[0.04] transition-all group"
+              className="glass-ultra rounded-xl p-4 text-center hover:bg-slate-200 transition-all group"
             >
               <div className="w-12 h-12 rounded-xl bg-accent-purple/10 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
                 <i className="fas fa-user-plus text-accent-purple text-xl"></i>
               </div>
-              <span className="text-white font-medium text-sm">Manage Users</span>
+              <span className="text-slate-800 font-medium text-sm">Manage Users</span>
               {data && data.users.newToday > 0 && (
                 <span className="block text-accent-purple text-xs mt-1">
                   {data.users.newToday} new today
@@ -360,12 +362,12 @@ export default function AdminDashboard() {
             </Link>
             <Link
               href="/admin/settings"
-              className="glass-ultra rounded-xl p-4 text-center hover:bg-white/[0.04] transition-all group"
+              className="glass-ultra rounded-xl p-4 text-center hover:bg-slate-200 transition-all group"
             >
               <div className="w-12 h-12 rounded-xl bg-accent-cyan/10 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
                 <i className="fas fa-cog text-accent-cyan text-xl"></i>
               </div>
-              <span className="text-white font-medium text-sm">Settings</span>
+              <span className="text-slate-800 font-medium text-sm">Settings</span>
             </Link>
           </div>
         </div>
@@ -375,7 +377,7 @@ export default function AdminDashboard() {
           <div className="mt-8">
             <div className="glass-ultra rounded-2xl p-6">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-semibold text-white">Recent Registrations</h2>
+                <h2 className="text-lg font-semibold text-slate-800">Recent Registrations</h2>
                 <Link
                   href="/admin/users"
                   className="text-accent-blue hover:text-accent-purple transition-colors text-sm"
@@ -386,7 +388,7 @@ export default function AdminDashboard() {
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="text-left text-white/40 text-sm border-b border-white/5">
+                    <tr className="text-left text-slate-400 text-sm border-b border-slate-200">
                       <th className="pb-3 font-medium">User</th>
                       <th className="pb-3 font-medium">Role</th>
                       <th className="pb-3 font-medium">Tier</th>
@@ -395,11 +397,11 @@ export default function AdminDashboard() {
                   </thead>
                   <tbody className="divide-y divide-white/5">
                     {data.recent.users.map((user) => (
-                      <tr key={user.id} className="text-white/80">
+                      <tr key={user.id} className="text-slate-700">
                         <td className="py-3">
                           <div>
                             <p className="font-medium text-white">{user.name || 'N/A'}</p>
-                            <p className="text-sm text-white/40">{user.email}</p>
+                            <p className="text-sm text-slate-400">{user.email}</p>
                           </div>
                         </td>
                         <td className="py-3">
@@ -421,7 +423,7 @@ export default function AdminDashboard() {
                             {user.tier}
                           </span>
                         </td>
-                        <td className="py-3 text-white/40 text-sm">
+                        <td className="py-3 text-slate-400 text-sm">
                           {new Date(user.createdAt).toLocaleDateString()}
                         </td>
                       </tr>

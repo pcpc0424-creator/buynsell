@@ -58,14 +58,14 @@ export default function SellPage() {
             <h1 className="text-3xl lg:text-4xl font-display font-bold text-white mb-4">
               <span className="gradient-text">Sell</span> Your Property
             </h1>
-            <p className="text-white/50">List your property and reach thousands of potential buyers</p>
+            <p className="text-slate-500">List your property and reach thousands of potential buyers</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* Property Type Selection */}
             <div className="glass-ultra rounded-2xl p-6">
               <h2 className="text-xl font-semibold text-white mb-2">Property Type</h2>
-              <p className="text-white/50 text-sm mb-6">Select the type of property you want to sell</p>
+              <p className="text-slate-500 text-sm mb-6">Select the type of property you want to sell</p>
 
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
                 {propertyTypes.map((type) => (
@@ -75,9 +75,9 @@ export default function SellPage() {
                     className={`property-type-card ${selectedType === type.value ? 'selected' : ''}`}
                   >
                     <div className="type-icon">
-                      <i className={`fas ${type.icon} text-xl ${selectedType === type.value ? 'text-white' : 'text-white/50'}`}></i>
+                      <i className={`fas ${type.icon} text-xl ${selectedType === type.value ? 'text-white' : 'text-slate-500'}`}></i>
                     </div>
-                    <h4 className={`text-sm font-medium ${selectedType === type.value ? 'text-white' : 'text-white/70'}`}>
+                    <h4 className={`text-sm font-medium ${selectedType === type.value ? 'text-white' : 'text-slate-600'}`}>
                       {type.label}
                     </h4>
                   </div>
@@ -88,11 +88,11 @@ export default function SellPage() {
             {/* Basic Information */}
             <div className="glass-ultra rounded-2xl p-6">
               <h2 className="text-xl font-semibold text-white mb-2">Basic Information</h2>
-              <p className="text-white/50 text-sm mb-6">Provide the essential details about your property</p>
+              <p className="text-slate-500 text-sm mb-6">Provide the essential details about your property</p>
 
               <div className="space-y-5">
                 <div>
-                  <label className="block text-white/70 text-sm font-medium mb-2">Property Title</label>
+                  <label className="block text-slate-600 text-sm font-medium mb-2">Property Title</label>
                   <input
                     type="text"
                     name="title"
@@ -106,9 +106,9 @@ export default function SellPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-white/70 text-sm font-medium mb-2">Price (PHP)</label>
+                    <label className="block text-slate-600 text-sm font-medium mb-2">Price (PHP)</label>
                     <div className="relative">
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">₱</span>
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">₱</span>
                       <input
                         type="text"
                         name="price"
@@ -121,7 +121,7 @@ export default function SellPage() {
                     </div>
                   </div>
                   <div>
-                    <label className="block text-white/70 text-sm font-medium mb-2">Listing Type</label>
+                    <label className="block text-slate-600 text-sm font-medium mb-2">Listing Type</label>
                     <select
                       name="transactionType"
                       value={formData.transactionType}
@@ -138,7 +138,7 @@ export default function SellPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                   <div>
-                    <label className="block text-white/70 text-sm font-medium mb-2">Bedrooms</label>
+                    <label className="block text-slate-600 text-sm font-medium mb-2">Bedrooms</label>
                     <select
                       name="bedrooms"
                       value={formData.bedrooms}
@@ -152,7 +152,7 @@ export default function SellPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-white/70 text-sm font-medium mb-2">Bathrooms</label>
+                    <label className="block text-slate-600 text-sm font-medium mb-2">Bathrooms</label>
                     <select
                       name="bathrooms"
                       value={formData.bathrooms}
@@ -166,7 +166,7 @@ export default function SellPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-white/70 text-sm font-medium mb-2">Floor Area (sqm)</label>
+                    <label className="block text-slate-600 text-sm font-medium mb-2">Floor Area (sqm)</label>
                     <input
                       type="number"
                       name="area"
@@ -179,7 +179,7 @@ export default function SellPage() {
                 </div>
 
                 <div>
-                  <label className="block text-white/70 text-sm font-medium mb-2">Description</label>
+                  <label className="block text-slate-600 text-sm font-medium mb-2">Description</label>
                   <textarea
                     name="description"
                     value={formData.description}
@@ -194,13 +194,13 @@ export default function SellPage() {
             {/* Location */}
             <div className="glass-ultra rounded-2xl p-6">
               <h2 className="text-xl font-semibold text-white mb-2">Location</h2>
-              <p className="text-white/50 text-sm mb-6">Where is your property located?</p>
+              <p className="text-slate-500 text-sm mb-6">Where is your property located?</p>
 
               <div className="space-y-5">
                 <div>
-                  <label className="block text-white/70 text-sm font-medium mb-2">Full Address</label>
+                  <label className="block text-slate-600 text-sm font-medium mb-2">Full Address</label>
                   <div className="relative">
-                    <i className="fas fa-map-marker-alt absolute left-4 top-1/2 -translate-y-1/2 text-white/40"></i>
+                    <i className="fas fa-map-marker-alt absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
                     <input
                       type="text"
                       name="address"
@@ -215,7 +215,7 @@ export default function SellPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-white/70 text-sm font-medium mb-2">City</label>
+                    <label className="block text-slate-600 text-sm font-medium mb-2">City</label>
                     <select
                       name="city"
                       value={formData.city}
@@ -233,7 +233,7 @@ export default function SellPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-white/70 text-sm font-medium mb-2">Barangay</label>
+                    <label className="block text-slate-600 text-sm font-medium mb-2">Barangay</label>
                     <input
                       type="text"
                       name="barangay"
@@ -250,15 +250,15 @@ export default function SellPage() {
             {/* Photo Upload */}
             <div className="glass-ultra rounded-2xl p-6">
               <h2 className="text-xl font-semibold text-white mb-2">Property Photos</h2>
-              <p className="text-white/50 text-sm mb-6">Upload high-quality photos (max 10 photos)</p>
+              <p className="text-slate-500 text-sm mb-6">Upload high-quality photos (max 10 photos)</p>
 
               <div className="upload-zone">
                 <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-accent-blue/20 to-accent-purple/20 flex items-center justify-center mx-auto mb-4">
                   <i className="fas fa-cloud-upload-alt text-2xl text-accent-blue"></i>
                 </div>
                 <h4 className="text-white font-medium mb-2">Drag & drop photos here</h4>
-                <p className="text-white/40 text-sm mb-2">or click to browse</p>
-                <p className="text-white/30 text-xs">JPG, PNG, WEBP (Max 5MB each)</p>
+                <p className="text-slate-400 text-sm mb-2">or click to browse</p>
+                <p className="text-slate-400 text-xs">JPG, PNG, WEBP (Max 5MB each)</p>
                 <input type="file" className="hidden" id="fileInput" multiple accept="image/*" />
               </div>
             </div>
@@ -266,12 +266,12 @@ export default function SellPage() {
             {/* Contact Information */}
             <div className="glass-ultra rounded-2xl p-6">
               <h2 className="text-xl font-semibold text-white mb-2">Contact Information</h2>
-              <p className="text-white/50 text-sm mb-6">How can buyers reach you?</p>
+              <p className="text-slate-500 text-sm mb-6">How can buyers reach you?</p>
 
               <div className="space-y-5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-white/70 text-sm font-medium mb-2">Full Name</label>
+                    <label className="block text-slate-600 text-sm font-medium mb-2">Full Name</label>
                     <input
                       type="text"
                       name="fullName"
@@ -283,7 +283,7 @@ export default function SellPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-white/70 text-sm font-medium mb-2">Email Address</label>
+                    <label className="block text-slate-600 text-sm font-medium mb-2">Email Address</label>
                     <input
                       type="email"
                       name="email"
@@ -298,7 +298,7 @@ export default function SellPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-white/70 text-sm font-medium mb-2">Phone Number</label>
+                    <label className="block text-slate-600 text-sm font-medium mb-2">Phone Number</label>
                     <input
                       type="tel"
                       name="phone"
@@ -310,7 +310,7 @@ export default function SellPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-white/70 text-sm font-medium mb-2">Preferred Contact</label>
+                    <label className="block text-slate-600 text-sm font-medium mb-2">Preferred Contact</label>
                     <select
                       name="preferredContact"
                       value={formData.preferredContact}
@@ -330,7 +330,7 @@ export default function SellPage() {
 
             {/* Submit */}
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-              <p className="text-white/40 text-sm">
+              <p className="text-slate-400 text-sm">
                 By submitting, you agree to our{' '}
                 <a href="/terms" className="text-accent-blue hover:underline">Terms of Service</a>
               </p>

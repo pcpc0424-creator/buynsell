@@ -31,7 +31,7 @@ const services = [
 
 export default function Services() {
   return (
-    <section className="py-16 border-t border-white/5">
+    <section className="py-16 border-t border-slate-200">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {services.map((service) => (
@@ -44,8 +44,8 @@ export default function Services() {
               >
                 <i className={`fas ${service.icon} text-2xl ${service.iconColor}`}></i>
               </div>
-              <h3 className="text-white font-semibold mb-3">{service.title}</h3>
-              <p className="text-white/40 text-sm">{service.description}</p>
+              <h3 className="text-slate-800 font-semibold mb-3">{service.title}</h3>
+              <p className="text-slate-400 text-sm">{service.description}</p>
             </div>
           ))}
         </div>

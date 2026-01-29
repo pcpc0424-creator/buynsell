@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { AdminHeader } from '@/components/admin';
+import { apiUrl, config } from '@/lib/config';
 
 interface Listing {
   id: string;
@@ -61,7 +62,7 @@ export default function FeaturedListingsPage() {
         params.set('isActive', statusFilter === 'active' ? 'true' : 'false');
       }
 
-      const res = await fetch(`/api/admin/featured-listings?${params.toString()}`);
+      const res = await fetch(apiUrl(`/api/admin/featured-listings?${params.toString()}`));
       const data = await res.json();
 
       if (!data.success) {
@@ -78,7 +79,7 @@ export default function FeaturedListingsPage() {
 
   const fetchAvailableListings = useCallback(async () => {
     try {
-      const res = await fetch('/api/listings?status=APPROVED&limit=100');
+      const res = await fetch(apiUrl('/api/listings?status=APPROVED&limit=100'));
       const data = await res.json();
 
       if (data.success) {
@@ -107,7 +108,7 @@ export default function FeaturedListingsPage() {
       setSaving(true);
       setError(null);
 
-      const res = await fetch('/api/admin/featured-listings', {
+      const res = await fetch(apiUrl('/api/admin/featured-listings'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ listingId }),
@@ -134,7 +135,7 @@ export default function FeaturedListingsPage() {
     if (!confirm(`Remove "${item.listing.title}" from featured listings?`)) return;
 
     try {
-      const res = await fetch(`/api/admin/featured-listings/${item.id}`, {
+      const res = await fetch(apiUrl(`/api/admin/featured-listings/${item.id}`), {
         method: 'DELETE',
       });
 
@@ -154,7 +155,7 @@ export default function FeaturedListingsPage() {
 
   const handleToggleActive = async (item: FeaturedListing) => {
     try {
-      const res = await fetch(`/api/admin/featured-listings/${item.id}`, {
+      const res = await fetch(apiUrl(`/api/admin/featured-listings/${item.id}`), {
         method: 'PATCH',
       });
 
@@ -203,7 +204,7 @@ export default function FeaturedListingsPage() {
         payload.endDate = null;
       }
 
-      const res = await fetch(`/api/admin/featured-listings/${editingItem.id}`, {
+      const res = await fetch(apiUrl(`/api/admin/featured-listings/${editingItem.id}`), {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -249,7 +250,7 @@ export default function FeaturedListingsPage() {
         position: idx,
       }));
 
-      const res = await fetch('/api/admin/featured-listings', {
+      const res = await fetch(apiUrl('/api/admin/featured-listings'), {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ order }),
@@ -313,7 +314,7 @@ export default function FeaturedListingsPage() {
             <div className="flex items-center text-red-400">
               <i className="fas fa-exclamation-circle mr-3"></i>
               <span>{error}</span>
-              <button onClick={() => setError(null)} className="ml-auto text-white/50 hover:text-white">
+              <button onClick={() => setError(null)} className="ml-auto text-slate-500 hover:text-slate-800">
                 <i className="fas fa-times"></i>
               </button>
             </div>
@@ -334,8 +335,8 @@ export default function FeaturedListingsPage() {
           <div className="glass-ultra rounded-2xl p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-white/50 text-sm">Total Featured</p>
-                <p className="text-3xl font-bold text-white mt-1">{featured.length}</p>
+                <p className="text-slate-500 text-sm">Total Featured</p>
+                <p className="text-3xl font-bold text-slate-800 mt-1">{featured.length}</p>
               </div>
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-400 to-amber-500 flex items-center justify-center">
                 <i className="fas fa-star text-white text-xl"></i>
@@ -346,7 +347,7 @@ export default function FeaturedListingsPage() {
           <div className="glass-ultra rounded-2xl p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-white/50 text-sm">Active</p>
+                <p className="text-slate-500 text-sm">Active</p>
                 <p className="text-3xl font-bold text-green-400 mt-1">{activeCount}</p>
               </div>
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center">
@@ -358,7 +359,7 @@ export default function FeaturedListingsPage() {
           <div className="glass-ultra rounded-2xl p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-white/50 text-sm">Inactive</p>
+                <p className="text-slate-500 text-sm">Inactive</p>
                 <p className="text-3xl font-bold text-yellow-400 mt-1">{inactiveCount}</p>
               </div>
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center">
@@ -376,7 +377,7 @@ export default function FeaturedListingsPage() {
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                 statusFilter === 'all'
                   ? 'bg-accent-blue text-white'
-                  : 'bg-white/10 text-white/70 hover:bg-white/20'
+                  : 'bg-slate-200 text-slate-600 hover:bg-slate-200'
               }`}
             >
               All ({featured.length})
@@ -386,7 +387,7 @@ export default function FeaturedListingsPage() {
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                 statusFilter === 'active'
                   ? 'bg-green-500 text-white'
-                  : 'bg-white/10 text-white/70 hover:bg-white/20'
+                  : 'bg-slate-200 text-slate-600 hover:bg-slate-200'
               }`}
             >
               <i className="fas fa-check mr-2"></i>Active
@@ -396,7 +397,7 @@ export default function FeaturedListingsPage() {
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                 statusFilter === 'inactive'
                   ? 'bg-yellow-500 text-white'
-                  : 'bg-white/10 text-white/70 hover:bg-white/20'
+                  : 'bg-slate-200 text-slate-600 hover:bg-slate-200'
               }`}
             >
               <i className="fas fa-pause mr-2"></i>Inactive
@@ -414,8 +415,8 @@ export default function FeaturedListingsPage() {
         {/* Featured List */}
         {featured.length === 0 ? (
           <div className="glass-ultra rounded-2xl p-12 text-center">
-            <i className="fas fa-star text-4xl text-white/30 mb-4"></i>
-            <p className="text-white/50">No featured listings</p>
+            <i className="fas fa-star text-4xl text-slate-400 mb-4"></i>
+            <p className="text-slate-500">No featured listings</p>
             <button
               onClick={() => setShowAddModal(true)}
               className="mt-4 px-6 py-2 bg-accent-blue hover:bg-accent-blue/80 rounded-lg text-white font-medium transition-all"
@@ -434,7 +435,7 @@ export default function FeaturedListingsPage() {
               >
                 <div className="flex flex-col md:flex-row">
                   {/* Position & Reorder */}
-                  <div className="flex md:flex-col items-center justify-center p-4 bg-white/5 border-b md:border-b-0 md:border-r border-white/10">
+                  <div className="flex md:flex-col items-center justify-center p-4 bg-slate-100 border-b md:border-b-0 md:border-r border-slate-200">
                     <span className="text-2xl font-bold text-accent-blue mr-4 md:mr-0 md:mb-2">
                       #{index + 1}
                     </span>
@@ -442,14 +443,14 @@ export default function FeaturedListingsPage() {
                       <button
                         onClick={() => handleMoveUp(index)}
                         disabled={index === 0}
-                        className="w-8 h-8 rounded-lg bg-white/10 text-white/50 hover:bg-white/20 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                        className="w-8 h-8 rounded-lg bg-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
                       >
                         <i className="fas fa-chevron-up"></i>
                       </button>
                       <button
                         onClick={() => handleMoveDown(index)}
                         disabled={index === featured.length - 1}
-                        className="w-8 h-8 rounded-lg bg-white/10 text-white/50 hover:bg-white/20 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                        className="w-8 h-8 rounded-lg bg-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
                       >
                         <i className="fas fa-chevron-down"></i>
                       </button>
@@ -457,7 +458,7 @@ export default function FeaturedListingsPage() {
                   </div>
 
                   {/* Image */}
-                  <div className="relative w-full md:w-48 h-40 md:h-auto flex-shrink-0 bg-white/5">
+                  <div className="relative w-full md:w-48 h-40 md:h-auto flex-shrink-0 bg-slate-100">
                     <Image
                       src={item.listing.mainImage || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400'}
                       alt={item.listing.title}
@@ -482,7 +483,7 @@ export default function FeaturedListingsPage() {
                         <h3 className="text-lg font-semibold text-white mb-1">
                           {item.listing.title}
                         </h3>
-                        <p className="text-white/50 text-sm mb-2">
+                        <p className="text-slate-500 text-sm mb-2">
                           <i className="fas fa-map-marker-alt mr-1"></i>
                           {item.listing.city}
                         </p>
@@ -494,7 +495,7 @@ export default function FeaturedListingsPage() {
                           }`}>
                             {item.listing.transactionType === 'SALE' ? 'For Sale' : 'For Rent'}
                           </span>
-                          <span className="text-white/50">
+                          <span className="text-slate-500">
                             {item.listing.propertyType.replace('_', ' ')}
                           </span>
                           <span className="text-accent-blue font-semibold">
@@ -503,10 +504,10 @@ export default function FeaturedListingsPage() {
                         </div>
 
                         {/* Agent */}
-                        <div className="flex items-center mt-3 text-sm text-white/50">
+                        <div className="flex items-center mt-3 text-sm text-slate-500">
                           <div className="relative w-6 h-6 rounded-full overflow-hidden mr-2">
                             <Image
-                              src={item.listing.agent.image || '/images/default-avatar.png'}
+                              src={item.listing.agent.image || `${config.basePath}/images/default-avatar.svg`}
                               alt={item.listing.agent.name || 'Agent'}
                               fill
                               className="object-cover"
@@ -517,7 +518,7 @@ export default function FeaturedListingsPage() {
                       </div>
 
                       {/* Date Info */}
-                      <div className="text-sm text-white/40">
+                      <div className="text-sm text-slate-400">
                         <p>
                           <i className="fas fa-calendar-plus mr-1"></i>
                           Start: {new Date(item.startDate).toLocaleDateString()}
@@ -533,7 +534,7 @@ export default function FeaturedListingsPage() {
                   </div>
 
                   {/* Actions */}
-                  <div className="flex md:flex-col items-center justify-center gap-2 p-4 border-t md:border-t-0 md:border-l border-white/10">
+                  <div className="flex md:flex-col items-center justify-center gap-2 p-4 border-t md:border-t-0 md:border-l border-slate-200">
                     <button
                       onClick={() => handleToggleActive(item)}
                       className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
@@ -547,7 +548,7 @@ export default function FeaturedListingsPage() {
                     </button>
                     <button
                       onClick={() => handleEdit(item)}
-                      className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-white text-sm transition-all"
+                      className="px-4 py-2 bg-slate-200 hover:bg-slate-200 rounded-lg text-white text-sm transition-all"
                     >
                       <i className="fas fa-edit mr-1"></i>Edit
                     </button>
@@ -568,12 +569,12 @@ export default function FeaturedListingsPage() {
         {showAddModal && (
           <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
             <div className="glass-ultra rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
-              <div className="p-6 border-b border-white/10">
+              <div className="p-6 border-b border-slate-200">
                 <div className="flex items-center justify-between">
                   <h3 className="text-xl font-semibold text-white">Add Featured Listing</h3>
                   <button
                     onClick={() => setShowAddModal(false)}
-                    className="text-white/50 hover:text-white"
+                    className="text-slate-500 hover:text-slate-800"
                   >
                     <i className="fas fa-times text-xl"></i>
                   </button>
@@ -589,7 +590,7 @@ export default function FeaturedListingsPage() {
                       placeholder="Search listings..."
                       className="form-input pl-10"
                     />
-                    <i className="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-white/30"></i>
+                    <i className="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
                   </div>
                 </div>
               </div>
@@ -597,15 +598,15 @@ export default function FeaturedListingsPage() {
               <div className="p-6 overflow-y-auto max-h-[60vh]">
                 {filteredAvailable.length === 0 ? (
                   <div className="text-center py-8">
-                    <i className="fas fa-home text-4xl text-white/30 mb-4"></i>
-                    <p className="text-white/50">No available listings to feature</p>
+                    <i className="fas fa-home text-4xl text-slate-400 mb-4"></i>
+                    <p className="text-slate-500">No available listings to feature</p>
                   </div>
                 ) : (
                   <div className="space-y-3">
                     {filteredAvailable.map((listing) => (
                       <div
                         key={listing.id}
-                        className="flex items-center p-3 bg-white/5 hover:bg-white/10 rounded-xl transition-all cursor-pointer"
+                        className="flex items-center p-3 bg-slate-100 hover:bg-slate-200 rounded-xl transition-all cursor-pointer"
                         onClick={() => handleAddToFeatured(listing.id)}
                       >
                         <div className="relative w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
@@ -618,7 +619,7 @@ export default function FeaturedListingsPage() {
                         </div>
                         <div className="ml-4 flex-1 min-w-0">
                           <h4 className="text-white font-medium truncate">{listing.title}</h4>
-                          <p className="text-white/50 text-sm truncate">{listing.city}</p>
+                          <p className="text-slate-500 text-sm truncate">{listing.city}</p>
                           <p className="text-accent-blue text-sm font-medium">
                             {formatPrice(listing.price)}
                           </p>
@@ -648,7 +649,7 @@ export default function FeaturedListingsPage() {
         {showEditModal && editingItem && (
           <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
             <div className="glass-ultra rounded-2xl w-full max-w-md">
-              <div className="p-6 border-b border-white/10">
+              <div className="p-6 border-b border-slate-200">
                 <div className="flex items-center justify-between">
                   <h3 className="text-xl font-semibold text-white">Edit Featured Listing</h3>
                   <button
@@ -656,7 +657,7 @@ export default function FeaturedListingsPage() {
                       setShowEditModal(false);
                       setEditingItem(null);
                     }}
-                    className="text-white/50 hover:text-white"
+                    className="text-slate-500 hover:text-slate-800"
                   >
                     <i className="fas fa-times text-xl"></i>
                   </button>
@@ -665,7 +666,7 @@ export default function FeaturedListingsPage() {
 
               <form onSubmit={handleEditSubmit} className="p-6 space-y-4">
                 {/* Listing Info */}
-                <div className="flex items-center p-3 bg-white/5 rounded-xl">
+                <div className="flex items-center p-3 bg-slate-100 rounded-xl">
                   <div className="relative w-12 h-12 rounded-lg overflow-hidden flex-shrink-0">
                     <Image
                       src={editingItem.listing.mainImage || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=200'}
@@ -676,13 +677,13 @@ export default function FeaturedListingsPage() {
                   </div>
                   <div className="ml-3 flex-1 min-w-0">
                     <h4 className="text-white font-medium truncate">{editingItem.listing.title}</h4>
-                    <p className="text-white/50 text-sm">{editingItem.listing.city}</p>
+                    <p className="text-slate-500 text-sm">{editingItem.listing.city}</p>
                   </div>
                 </div>
 
                 {/* Position */}
                 <div>
-                  <label className="block text-white/70 text-sm font-medium mb-2">Position</label>
+                  <label className="block text-slate-600 text-sm font-medium mb-2">Position</label>
                   <input
                     type="number"
                     min="0"
@@ -690,13 +691,13 @@ export default function FeaturedListingsPage() {
                     onChange={(e) => setEditForm({ ...editForm, position: parseInt(e.target.value) || 0 })}
                     className="form-input"
                   />
-                  <p className="text-white/40 text-xs mt-1">Lower numbers appear first</p>
+                  <p className="text-slate-400 text-xs mt-1">Lower numbers appear first</p>
                 </div>
 
                 {/* Date Range */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-white/70 text-sm font-medium mb-2">Start Date</label>
+                    <label className="block text-slate-600 text-sm font-medium mb-2">Start Date</label>
                     <input
                       type="date"
                       value={editForm.startDate}
@@ -705,7 +706,7 @@ export default function FeaturedListingsPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-white/70 text-sm font-medium mb-2">End Date</label>
+                    <label className="block text-slate-600 text-sm font-medium mb-2">End Date</label>
                     <input
                       type="date"
                       value={editForm.endDate}
@@ -721,9 +722,9 @@ export default function FeaturedListingsPage() {
                     type="checkbox"
                     checked={editForm.isActive}
                     onChange={(e) => setEditForm({ ...editForm, isActive: e.target.checked })}
-                    className="w-5 h-5 rounded border-white/20 bg-white/5 text-accent-blue focus:ring-accent-blue"
+                    className="w-5 h-5 rounded border-slate-300 bg-slate-100 text-accent-blue focus:ring-accent-blue"
                   />
-                  <span className="text-white/70">Active (visible on homepage)</span>
+                  <span className="text-slate-600">Active (visible on homepage)</span>
                 </label>
 
                 {/* Actions */}
@@ -749,7 +750,7 @@ export default function FeaturedListingsPage() {
                       setShowEditModal(false);
                       setEditingItem(null);
                     }}
-                    className="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl text-white font-semibold transition-all"
+                    className="px-6 py-3 bg-slate-200 hover:bg-slate-200 rounded-xl text-white font-semibold transition-all"
                   >
                     Cancel
                   </button>

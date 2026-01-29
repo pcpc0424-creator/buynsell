@@ -56,18 +56,12 @@ function PropertyFilters({ filters, onFilterChange, onReset }: PropertyFiltersPr
     onFilterChange({ ...filters, minPrice: min, maxPrice: max });
   };
 
-  const getCurrentPriceRange = () => {
-    return priceRanges.find(
-      (r) => r.min === filters.minPrice && r.max === filters.maxPrice
-    ) || priceRanges[0];
-  };
-
   const hasActiveFilters = Object.values(filters).some((v) => v !== '');
 
   return (
     <div className="glass-ultra rounded-2xl p-6 sticky top-24">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-white">Filters</h3>
+        <h3 className="text-lg font-semibold text-slate-800">Filters</h3>
         {hasActiveFilters && (
           <button
             onClick={onReset}
@@ -81,7 +75,7 @@ function PropertyFilters({ filters, onFilterChange, onReset }: PropertyFiltersPr
       <div className="space-y-5">
         {/* Transaction Type */}
         <div>
-          <label className="block text-white/70 text-sm font-medium mb-2">
+          <label className="block text-slate-600 text-sm font-medium mb-2">
             Transaction Type
           </label>
           <div className="flex gap-2">
@@ -90,7 +84,7 @@ function PropertyFilters({ filters, onFilterChange, onReset }: PropertyFiltersPr
               className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all ${
                 filters.transactionType === ''
                   ? 'btn-premium text-white'
-                  : 'glass-ultra text-white/60 hover:text-white'
+                  : 'glass-ultra text-slate-500 hover:text-slate-800'
               }`}
             >
               All
@@ -100,7 +94,7 @@ function PropertyFilters({ filters, onFilterChange, onReset }: PropertyFiltersPr
               className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all ${
                 filters.transactionType === 'SALE'
                   ? 'btn-premium text-white'
-                  : 'glass-ultra text-white/60 hover:text-white'
+                  : 'glass-ultra text-slate-500 hover:text-slate-800'
               }`}
             >
               Sale
@@ -110,7 +104,7 @@ function PropertyFilters({ filters, onFilterChange, onReset }: PropertyFiltersPr
               className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all ${
                 filters.transactionType === 'RENT'
                   ? 'btn-premium text-white'
-                  : 'glass-ultra text-white/60 hover:text-white'
+                  : 'glass-ultra text-slate-500 hover:text-slate-800'
               }`}
             >
               Rent
@@ -120,7 +114,7 @@ function PropertyFilters({ filters, onFilterChange, onReset }: PropertyFiltersPr
 
         {/* Property Type */}
         <div>
-          <label className="block text-white/70 text-sm font-medium mb-2">
+          <label className="block text-slate-600 text-sm font-medium mb-2">
             Property Type
           </label>
           <select
@@ -139,7 +133,7 @@ function PropertyFilters({ filters, onFilterChange, onReset }: PropertyFiltersPr
 
         {/* City */}
         <div>
-          <label className="block text-white/70 text-sm font-medium mb-2">
+          <label className="block text-slate-600 text-sm font-medium mb-2">
             Location
           </label>
           <select
@@ -158,7 +152,7 @@ function PropertyFilters({ filters, onFilterChange, onReset }: PropertyFiltersPr
 
         {/* Price Range */}
         <div>
-          <label className="block text-white/70 text-sm font-medium mb-2">
+          <label className="block text-slate-600 text-sm font-medium mb-2">
             Price Range
           </label>
           <select
@@ -201,7 +195,7 @@ function PropertyFilters({ filters, onFilterChange, onReset }: PropertyFiltersPr
 
         {/* Bedrooms */}
         <div>
-          <label className="block text-white/70 text-sm font-medium mb-2">
+          <label className="block text-slate-600 text-sm font-medium mb-2">
             Bedrooms
           </label>
           <div className="flex gap-2">
@@ -212,7 +206,7 @@ function PropertyFilters({ filters, onFilterChange, onReset }: PropertyFiltersPr
                 className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all ${
                   filters.bedrooms === num
                     ? 'btn-premium text-white'
-                    : 'glass-ultra text-white/60 hover:text-white'
+                    : 'glass-ultra text-slate-500 hover:text-slate-800'
                 }`}
               >
                 {num === '' ? 'Any' : num === '4' ? '4+' : num}

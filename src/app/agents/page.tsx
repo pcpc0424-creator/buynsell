@@ -92,10 +92,10 @@ export default function AgentsPage() {
       <section className="py-12">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h1 className="text-3xl lg:text-4xl font-display font-bold text-white mb-4">
+            <h1 className="text-3xl lg:text-4xl font-display font-bold text-slate-800 mb-4">
               Our <span className="gradient-text">Agents</span>
             </h1>
-            <p className="text-white/50">Professional real estate agents ready to help you</p>
+            <p className="text-slate-500">Professional real estate agents ready to help you</p>
           </div>
 
           {/* Agents Grid */}
@@ -112,11 +112,11 @@ export default function AgentsPage() {
                     loading="lazy"
                     className="object-cover transition-all duration-500 group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-dark-950 via-transparent to-transparent"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
 
                   {/* Badge */}
                   <div className="absolute top-4 right-4">
-                    <span className="px-3 py-1 rounded-full glass-ultra text-white text-xs font-semibold">
+                    <span className="px-3 py-1 rounded-full bg-white/90 text-slate-800 text-xs font-semibold">
                       Top Rated
                     </span>
                   </div>
@@ -124,7 +124,7 @@ export default function AgentsPage() {
                   {/* Name Overlay */}
                   <div className="absolute bottom-4 left-4 right-4">
                     <h3 className="text-xl font-bold text-white">{agent.name}</h3>
-                    <p className="text-white/60 text-sm">{agent.role}</p>
+                    <p className="text-slate-500 text-sm">{agent.role}</p>
                   </div>
                 </div>
 
@@ -136,16 +136,16 @@ export default function AgentsPage() {
                         <i
                           key={i}
                           className={`fas fa-star text-sm ${
-                            i < Math.floor(agent.rating) ? 'text-yellow-400' : 'text-white/20'
+                            i < Math.floor(agent.rating) ? 'text-yellow-400' : 'text-slate-300'
                           }`}
                         ></i>
                       ))}
-                      <span className="text-white font-semibold ml-2">{agent.rating}</span>
+                      <span className="text-slate-800 font-semibold ml-2">{agent.rating}</span>
                     </div>
-                    <span className="text-white/30 text-sm">{agent.reviews} reviews</span>
+                    <span className="text-slate-400 text-sm">{agent.reviews} reviews</span>
                   </div>
 
-                  <div className="flex items-center justify-between text-sm text-white/50 mb-4">
+                  <div className="flex items-center justify-between text-sm text-slate-500 mb-4">
                     <span><i className="fas fa-building mr-1.5"></i>{agent.listings} Listings</span>
                     <span><i className="fas fa-briefcase mr-1.5"></i>{agent.experience} Years</span>
                   </div>
@@ -154,7 +154,7 @@ export default function AgentsPage() {
                     {agent.specialization.map((spec) => (
                       <span
                         key={spec}
-                        className="px-2 py-1 rounded-lg bg-white/5 text-white/60 text-xs"
+                        className="px-2 py-1 rounded-lg bg-slate-100 text-slate-500 text-xs"
                       >
                         {spec}
                       </span>
@@ -164,7 +164,7 @@ export default function AgentsPage() {
                   <div className="flex space-x-3">
                     <Link
                       href={`/agents/${agent.id}`}
-                      className="flex-1 py-3 rounded-xl glass-ultra text-white text-sm font-medium text-center hover:bg-white/10 transition-all"
+                      className="flex-1 py-3 rounded-xl bg-slate-100 text-slate-700 text-sm font-medium text-center hover:bg-slate-200 transition-all"
                     >
                       <i className="fas fa-user mr-2"></i>Profile
                     </Link>

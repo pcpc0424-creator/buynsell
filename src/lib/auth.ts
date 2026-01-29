@@ -5,6 +5,8 @@ import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import bcrypt from 'bcryptjs';
 import { prisma } from './prisma';
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -56,6 +58,16 @@ export const authOptions: NextAuthOptions = {
     strategy: 'jwt',
   },
   callbacks: {
+    async redirect({ url, baseUrl }) {
+      // Handle signOut redirect - ensure it uses basePath
+      if (url.startsWith('/')) {
+        return `${baseUrl}${url}`;
+      }
+      if (url.startsWith(baseUrl)) {
+        return url;
+      }
+      return baseUrl;
+    },
     async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id;
@@ -81,9 +93,10 @@ export const authOptions: NextAuthOptions = {
     },
   },
   pages: {
-    signIn: '/login',
-    newUser: '/register',
-    error: '/login',
+    signIn: `${basePath}/login`,
+    newUser: `${basePath}/register`,
+    error: `${basePath}/login`,
+    signOut: `${basePath}/`,
   },
   debug: process.env.NODE_ENV === 'development',
 };

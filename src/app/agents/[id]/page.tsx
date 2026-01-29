@@ -114,7 +114,7 @@ export default function AgentDetailPage({ params }: { params: { id: string } }) 
       <section className="py-8">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           {/* Breadcrumb */}
-          <nav className="flex items-center space-x-2 text-sm text-white/50 mb-6">
+          <nav className="flex items-center space-x-2 text-sm text-slate-500 mb-6">
             <Link href="/" className="hover:text-white transition-colors">
               Home
             </Link>
@@ -148,7 +148,7 @@ export default function AgentDetailPage({ params }: { params: { id: string } }) 
                   </div>
 
                   <h1 className="text-2xl font-display font-bold text-white mb-1">{agent.name}</h1>
-                  <p className="text-white/50 mb-4">{agent.role}</p>
+                  <p className="text-slate-500 mb-4">{agent.role}</p>
 
                   {/* Rating */}
                   <div className="flex items-center justify-center space-x-1 mb-6">
@@ -156,27 +156,27 @@ export default function AgentDetailPage({ params }: { params: { id: string } }) 
                       <i
                         key={i}
                         className={`fas fa-star text-sm ${
-                          i < Math.floor(agent.rating) ? 'text-yellow-400' : 'text-white/20'
+                          i < Math.floor(agent.rating) ? 'text-yellow-400' : 'text-slate-300'
                         }`}
                       ></i>
                     ))}
                     <span className="text-white font-semibold ml-2">{agent.rating}</span>
-                    <span className="text-white/40">({agent.reviews} reviews)</span>
+                    <span className="text-slate-400">({agent.reviews} reviews)</span>
                   </div>
 
                   {/* Stats */}
                   <div className="grid grid-cols-3 gap-4 mb-6">
                     <div className="text-center">
                       <p className="text-2xl font-bold gradient-text">{agent.listings}</p>
-                      <p className="text-white/40 text-xs">Listings</p>
+                      <p className="text-slate-400 text-xs">Listings</p>
                     </div>
                     <div className="text-center">
                       <p className="text-2xl font-bold gradient-text">{agent.soldProperties}</p>
-                      <p className="text-white/40 text-xs">Sold</p>
+                      <p className="text-slate-400 text-xs">Sold</p>
                     </div>
                     <div className="text-center">
                       <p className="text-2xl font-bold gradient-text">{agent.experience}</p>
-                      <p className="text-white/40 text-xs">Years Exp.</p>
+                      <p className="text-slate-400 text-xs">Years Exp.</p>
                     </div>
                   </div>
 
@@ -185,7 +185,7 @@ export default function AgentDetailPage({ params }: { params: { id: string } }) 
                     <button className="w-full py-3 rounded-xl btn-premium text-white font-semibold">
                       <i className="fas fa-envelope mr-2"></i>Send Message
                     </button>
-                    <button className="w-full py-3 rounded-xl glass-ultra text-white font-medium hover:bg-white/10 transition-all">
+                    <button className="w-full py-3 rounded-xl glass-ultra text-white font-medium hover:bg-slate-200 transition-all">
                       <i className="fas fa-phone mr-2"></i>Request Call
                     </button>
                   </div>
@@ -198,7 +198,7 @@ export default function AgentDetailPage({ params }: { params: { id: string } }) 
               {/* About */}
               <div className="glass-ultra rounded-3xl p-6">
                 <h2 className="text-xl font-semibold text-white mb-4">About {agent.name.split(' ')[0]}</h2>
-                <p className="text-white/60 leading-relaxed whitespace-pre-line">{agent.bio}</p>
+                <p className="text-slate-500 leading-relaxed whitespace-pre-line">{agent.bio}</p>
               </div>
 
               {/* Details */}
@@ -263,7 +263,7 @@ export default function AgentDetailPage({ params }: { params: { id: string } }) 
                     {agent.achievements.map((achievement) => (
                       <div key={achievement} className="flex items-center space-x-2">
                         <i className="fas fa-check text-accent-cyan text-xs"></i>
-                        <span className="text-white/70 text-sm">{achievement}</span>
+                        <span className="text-slate-600 text-sm">{achievement}</span>
                       </div>
                     ))}
                   </div>
@@ -311,7 +311,7 @@ export default function AgentDetailPage({ params }: { params: { id: string } }) 
                       </div>
                       <div className="p-3">
                         <h4 className="text-white font-medium text-sm truncate">{listing.title}</h4>
-                        <p className="text-white/40 text-xs mb-2">{listing.address}</p>
+                        <p className="text-slate-400 text-xs mb-2">{listing.address}</p>
                         <p className="text-accent-blue font-semibold text-sm">{listing.price}</p>
                       </div>
                     </Link>

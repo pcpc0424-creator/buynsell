@@ -5,12 +5,13 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { AgentHeader } from '@/components/agent';
+import { apiUrl } from '@/lib/config';
 
 const LocationPicker = dynamic(() => import('@/components/map/LocationPicker'), {
   ssr: false,
   loading: () => (
-    <div className="h-[300px] bg-white/5 rounded-xl animate-pulse flex items-center justify-center">
-      <span className="text-white/50">Loading map...</span>
+    <div className="h-[300px] bg-slate-100 rounded-xl animate-pulse flex items-center justify-center">
+      <span className="text-slate-500">Loading map...</span>
     </div>
   ),
 });
@@ -127,7 +128,7 @@ export default function NewListingPage() {
         const formDataUpload = new FormData();
         formDataUpload.append('file', file);
 
-        const res = await fetch('/api/upload', {
+        const res = await fetch(apiUrl('/api/upload'), {
           method: 'POST',
           body: formDataUpload,
         });
@@ -208,7 +209,7 @@ export default function NewListingPage() {
         images: images.map((img, idx) => ({ url: img.url, order: idx })),
       };
 
-      const res = await fetch('/api/listings', {
+      const res = await fetch(apiUrl('/api/listings'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -239,7 +240,7 @@ export default function NewListingPage() {
     setFormData((prev) => ({ ...prev, price: formatted }));
   };
 
-  const totalSteps = 4;
+  const _totalSteps = 4;
 
   return (
     <>
@@ -258,7 +259,7 @@ export default function NewListingPage() {
                   className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all ${
                     step >= s
                       ? 'bg-gradient-to-r from-accent-purple to-accent-blue text-white'
-                      : 'bg-white/10 text-white/40'
+                      : 'bg-slate-200 text-slate-400'
                   }`}
                 >
                   {step > s ? <i className="fas fa-check"></i> : s}
@@ -266,7 +267,7 @@ export default function NewListingPage() {
                 {s < 4 && (
                   <div
                     className={`w-full h-1 mx-2 rounded ${
-                      step > s ? 'bg-accent-purple' : 'bg-white/10'
+                      step > s ? 'bg-accent-purple' : 'bg-slate-200'
                     }`}
                     style={{ width: '80px' }}
                   />
@@ -275,10 +276,10 @@ export default function NewListingPage() {
             ))}
           </div>
           <div className="flex justify-between mt-3 text-sm">
-            <span className={step >= 1 ? 'text-white' : 'text-white/40'}>Basic Info</span>
-            <span className={step >= 2 ? 'text-white' : 'text-white/40'}>Details</span>
-            <span className={step >= 3 ? 'text-white' : 'text-white/40'}>Location</span>
-            <span className={step >= 4 ? 'text-white' : 'text-white/40'}>Photos</span>
+            <span className={step >= 1 ? 'text-white' : 'text-slate-400'}>Basic Info</span>
+            <span className={step >= 2 ? 'text-white' : 'text-slate-400'}>Details</span>
+            <span className={step >= 3 ? 'text-white' : 'text-slate-400'}>Location</span>
+            <span className={step >= 4 ? 'text-white' : 'text-slate-400'}>Photos</span>
           </div>
         </div>
 
@@ -302,7 +303,7 @@ export default function NewListingPage() {
 
               {/* Property Type */}
               <div>
-                <label className="block text-white/70 text-sm font-medium mb-3">Property Type *</label>
+                <label className="block text-slate-600 text-sm font-medium mb-3">Property Type *</label>
                 <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
                   {propertyTypes.map((type) => (
                     <button
@@ -312,7 +313,7 @@ export default function NewListingPage() {
                       className={`p-4 rounded-xl text-center transition-all ${
                         formData.propertyType === type.value
                           ? 'bg-gradient-to-r from-accent-purple to-accent-blue text-white'
-                          : 'bg-white/5 text-white/60 hover:bg-white/10'
+                          : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
                       }`}
                     >
                       <i className={`fas ${type.icon} text-xl mb-2 block`}></i>
@@ -324,7 +325,7 @@ export default function NewListingPage() {
 
               {/* Transaction Type */}
               <div>
-                <label className="block text-white/70 text-sm font-medium mb-3">Transaction Type *</label>
+                <label className="block text-slate-600 text-sm font-medium mb-3">Transaction Type *</label>
                 <div className="flex gap-4">
                   {['SALE', 'RENT'].map((type) => (
                     <button
@@ -334,7 +335,7 @@ export default function NewListingPage() {
                       className={`flex-1 py-3 rounded-xl font-medium transition-all ${
                         formData.transactionType === type
                           ? 'bg-gradient-to-r from-accent-purple to-accent-blue text-white'
-                          : 'bg-white/5 text-white/60 hover:bg-white/10'
+                          : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
                       }`}
                     >
                       <i className={`fas ${type === 'SALE' ? 'fa-tag' : 'fa-key'} mr-2`}></i>
@@ -346,7 +347,7 @@ export default function NewListingPage() {
 
               {/* Title */}
               <div>
-                <label className="block text-white/70 text-sm font-medium mb-2">Property Title *</label>
+                <label className="block text-slate-600 text-sm font-medium mb-2">Property Title *</label>
                 <input
                   type="text"
                   name="title"
@@ -360,11 +361,11 @@ export default function NewListingPage() {
 
               {/* Price */}
               <div>
-                <label className="block text-white/70 text-sm font-medium mb-2">
+                <label className="block text-slate-600 text-sm font-medium mb-2">
                   Price (PHP) * {formData.transactionType === 'RENT' && '/ month'}
                 </label>
                 <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">₱</span>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">₱</span>
                   <input
                     type="text"
                     name="price"
@@ -379,7 +380,7 @@ export default function NewListingPage() {
 
               {/* Property Status */}
               <div>
-                <label className="block text-white/70 text-sm font-medium mb-2">Property Status</label>
+                <label className="block text-slate-600 text-sm font-medium mb-2">Property Status</label>
                 <select
                   name="propertyStatus"
                   value={formData.propertyStatus}
@@ -396,7 +397,7 @@ export default function NewListingPage() {
 
               {/* Description */}
               <div>
-                <label className="block text-white/70 text-sm font-medium mb-2">Description</label>
+                <label className="block text-slate-600 text-sm font-medium mb-2">Description</label>
                 <textarea
                   name="description"
                   value={formData.description}
@@ -425,7 +426,7 @@ export default function NewListingPage() {
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div>
-                  <label className="block text-white/70 text-sm font-medium mb-2">Bedrooms</label>
+                  <label className="block text-slate-600 text-sm font-medium mb-2">Bedrooms</label>
                   <select
                     name="bedrooms"
                     value={formData.bedrooms}
@@ -439,7 +440,7 @@ export default function NewListingPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-white/70 text-sm font-medium mb-2">Bathrooms</label>
+                  <label className="block text-slate-600 text-sm font-medium mb-2">Bathrooms</label>
                   <select
                     name="bathrooms"
                     value={formData.bathrooms}
@@ -453,7 +454,7 @@ export default function NewListingPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-white/70 text-sm font-medium mb-2">Parking</label>
+                  <label className="block text-slate-600 text-sm font-medium mb-2">Parking</label>
                   <select
                     name="parking"
                     value={formData.parking}
@@ -467,7 +468,7 @@ export default function NewListingPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-white/70 text-sm font-medium mb-2">Floor Area (sqm)</label>
+                  <label className="block text-slate-600 text-sm font-medium mb-2">Floor Area (sqm)</label>
                   <input
                     type="number"
                     name="area"
@@ -482,7 +483,7 @@ export default function NewListingPage() {
               {(formData.propertyType === 'CONDO' || formData.propertyType === 'COMMERCIAL') && (
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-white/70 text-sm font-medium mb-2">Floor Number</label>
+                    <label className="block text-slate-600 text-sm font-medium mb-2">Floor Number</label>
                     <input
                       type="number"
                       name="floorNumber"
@@ -493,7 +494,7 @@ export default function NewListingPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-white/70 text-sm font-medium mb-2">Total Floors</label>
+                    <label className="block text-slate-600 text-sm font-medium mb-2">Total Floors</label>
                     <input
                       type="number"
                       name="totalFloors"
@@ -510,7 +511,7 @@ export default function NewListingPage() {
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="px-8 py-3 rounded-xl bg-white/10 text-white font-semibold hover:bg-white/20 transition-all"
+                  className="px-8 py-3 rounded-xl bg-slate-200 text-white font-semibold hover:bg-slate-200 transition-all"
                 >
                   <i className="fas fa-arrow-left mr-2"></i> Back
                 </button>
@@ -532,7 +533,7 @@ export default function NewListingPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-white/70 text-sm font-medium mb-2">City *</label>
+                  <label className="block text-slate-600 text-sm font-medium mb-2">City *</label>
                   <select
                     name="city"
                     value={formData.city}
@@ -547,7 +548,7 @@ export default function NewListingPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-white/70 text-sm font-medium mb-2">Barangay</label>
+                  <label className="block text-slate-600 text-sm font-medium mb-2">Barangay</label>
                   <input
                     type="text"
                     name="barangay"
@@ -560,7 +561,7 @@ export default function NewListingPage() {
               </div>
 
               <div>
-                <label className="block text-white/70 text-sm font-medium mb-2">Full Address *</label>
+                <label className="block text-slate-600 text-sm font-medium mb-2">Full Address *</label>
                 <input
                   type="text"
                   name="address"
@@ -573,7 +574,7 @@ export default function NewListingPage() {
               </div>
 
               <div>
-                <label className="block text-white/70 text-sm font-medium mb-2">
+                <label className="block text-slate-600 text-sm font-medium mb-2">
                   Pin Location on Map
                   {formData.latitude && formData.longitude && (
                     <span className="text-green-400 ml-2">
@@ -593,7 +594,7 @@ export default function NewListingPage() {
                 <button
                   type="button"
                   onClick={() => setStep(2)}
-                  className="px-8 py-3 rounded-xl bg-white/10 text-white font-semibold hover:bg-white/20 transition-all"
+                  className="px-8 py-3 rounded-xl bg-slate-200 text-white font-semibold hover:bg-slate-200 transition-all"
                 >
                   <i className="fas fa-arrow-left mr-2"></i> Back
                 </button>
@@ -614,7 +615,7 @@ export default function NewListingPage() {
               <h2 className="text-xl font-semibold text-white mb-4">Property Photos</h2>
 
               <div
-                className="border-2 border-dashed border-white/20 rounded-2xl p-8 text-center cursor-pointer hover:border-accent-purple/50 transition-all"
+                className="border-2 border-dashed border-slate-300 rounded-2xl p-8 text-center cursor-pointer hover:border-accent-purple/50 transition-all"
                 onClick={() => fileInputRef.current?.click()}
               >
                 <input
@@ -629,9 +630,9 @@ export default function NewListingPage() {
                   <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent-purple mx-auto"></div>
                 ) : (
                   <>
-                    <i className="fas fa-cloud-upload-alt text-4xl text-white/30 mb-4"></i>
+                    <i className="fas fa-cloud-upload-alt text-4xl text-slate-400 mb-4"></i>
                     <p className="text-white font-medium mb-2">Click to upload photos</p>
-                    <p className="text-white/40 text-sm">JPG, PNG, WEBP (Max 5MB each, up to 10 photos)</p>
+                    <p className="text-slate-400 text-sm">JPG, PNG, WEBP (Max 5MB each, up to 10 photos)</p>
                   </>
                 )}
               </div>
@@ -639,7 +640,7 @@ export default function NewListingPage() {
               {/* Main Image */}
               {mainImage && (
                 <div>
-                  <label className="block text-white/70 text-sm font-medium mb-2">
+                  <label className="block text-slate-600 text-sm font-medium mb-2">
                     Main Image (shown in listings)
                   </label>
                   <div className="relative w-full h-64 rounded-xl overflow-hidden">
@@ -666,7 +667,7 @@ export default function NewListingPage() {
               {/* Additional Images */}
               {images.length > 0 && (
                 <div>
-                  <label className="block text-white/70 text-sm font-medium mb-2">
+                  <label className="block text-slate-600 text-sm font-medium mb-2">
                     Additional Images ({images.length})
                   </label>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -702,7 +703,7 @@ export default function NewListingPage() {
                 <button
                   type="button"
                   onClick={() => setStep(3)}
-                  className="px-8 py-3 rounded-xl bg-white/10 text-white font-semibold hover:bg-white/20 transition-all"
+                  className="px-8 py-3 rounded-xl bg-slate-200 text-white font-semibold hover:bg-slate-200 transition-all"
                 >
                   <i className="fas fa-arrow-left mr-2"></i> Back
                 </button>
@@ -734,7 +735,7 @@ export default function NewListingPage() {
             </div>
             <div>
               <h3 className="text-white font-semibold mb-2">Submission Guidelines</h3>
-              <ul className="text-white/50 text-sm space-y-1">
+              <ul className="text-slate-500 text-sm space-y-1">
                 <li><i className="fas fa-check text-green-400 mr-2"></i>Your listing will be reviewed by our team before going live</li>
                 <li><i className="fas fa-check text-green-400 mr-2"></i>Review usually takes 1-2 business days</li>
                 <li><i className="fas fa-check text-green-400 mr-2"></i>You will be notified once approved or if changes are needed</li>

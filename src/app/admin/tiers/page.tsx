@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { AdminHeader } from '@/components/admin';
+import { apiUrl } from '@/lib/config';
 
 interface TierPolicy {
   id: string;
@@ -41,7 +42,7 @@ export default function TierPoliciesPage() {
     try {
       setLoading(true);
       setError(null);
-      const res = await fetch('/api/admin/tier-policies');
+      const res = await fetch(apiUrl('/api/admin/tier-policies'));
       const data = await res.json();
 
       if (!data.success) {
@@ -77,7 +78,7 @@ export default function TierPoliciesPage() {
       setSaving(true);
       setError(null);
 
-      const res = await fetch('/api/admin/tier-policies', {
+      const res = await fetch(apiUrl('/api/admin/tier-policies'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -147,7 +148,7 @@ export default function TierPoliciesPage() {
             <div className="flex items-center text-red-400">
               <i className="fas fa-exclamation-circle mr-3"></i>
               <span>{error}</span>
-              <button onClick={() => setError(null)} className="ml-auto text-white/50 hover:text-white">
+              <button onClick={() => setError(null)} className="ml-auto text-slate-500 hover:text-slate-800">
                 <i className="fas fa-times"></i>
               </button>
             </div>
@@ -178,18 +179,18 @@ export default function TierPoliciesPage() {
                 <div className={`bg-gradient-to-r ${config.color} p-6`}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
-                      <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
+                      <div className="w-12 h-12 rounded-xl bg-slate-200 flex items-center justify-center">
                         <i className={`fas ${config.icon} text-white text-xl`}></i>
                       </div>
                       <div>
                         <h3 className="text-white font-bold text-lg">{config.label}</h3>
-                        <p className="text-white/70 text-sm">{policy.userCount || 0} users</p>
+                        <p className="text-slate-600 text-sm">{policy.userCount || 0} users</p>
                       </div>
                     </div>
                     {!isEditing && (
                       <button
                         onClick={() => handleEdit(policy)}
-                        className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-white text-sm font-medium transition-all"
+                        className="px-4 py-2 bg-slate-200 hover:bg-white/30 rounded-lg text-white text-sm font-medium transition-all"
                       >
                         <i className="fas fa-edit mr-2"></i>Edit
                       </button>
@@ -203,9 +204,9 @@ export default function TierPoliciesPage() {
                     <div className="space-y-4">
                       {/* Daily View Limit */}
                       <div>
-                        <label className="block text-white/70 text-sm font-medium mb-2">
+                        <label className="block text-slate-600 text-sm font-medium mb-2">
                           Daily View Limit
-                          <span className="text-white/40 ml-2">(-1 = unlimited)</span>
+                          <span className="text-slate-400 ml-2">(-1 = unlimited)</span>
                         </label>
                         <input
                           type="number"
@@ -218,9 +219,9 @@ export default function TierPoliciesPage() {
 
                       {/* Monthly View Limit */}
                       <div>
-                        <label className="block text-white/70 text-sm font-medium mb-2">
+                        <label className="block text-slate-600 text-sm font-medium mb-2">
                           Monthly View Limit
-                          <span className="text-white/40 ml-2">(-1 = unlimited)</span>
+                          <span className="text-slate-400 ml-2">(-1 = unlimited)</span>
                         </label>
                         <input
                           type="number"
@@ -233,7 +234,7 @@ export default function TierPoliciesPage() {
 
                       {/* Listing Limit */}
                       <div>
-                        <label className="block text-white/70 text-sm font-medium mb-2">
+                        <label className="block text-slate-600 text-sm font-medium mb-2">
                           Listing Limit (Agents)
                         </label>
                         <input
@@ -247,9 +248,9 @@ export default function TierPoliciesPage() {
 
                       {/* Max Viewable Price */}
                       <div>
-                        <label className="block text-white/70 text-sm font-medium mb-2">
+                        <label className="block text-slate-600 text-sm font-medium mb-2">
                           Max Viewable Price (PHP)
-                          <span className="text-white/40 ml-2">(empty = no limit)</span>
+                          <span className="text-slate-400 ml-2">(empty = no limit)</span>
                         </label>
                         <input
                           type="number"
@@ -263,7 +264,7 @@ export default function TierPoliciesPage() {
 
                       {/* Subscription Price */}
                       <div>
-                        <label className="block text-white/70 text-sm font-medium mb-2">
+                        <label className="block text-slate-600 text-sm font-medium mb-2">
                           Monthly Subscription Price (USD)
                         </label>
                         <input
@@ -280,7 +281,7 @@ export default function TierPoliciesPage() {
                       {/* Points Per View */}
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-white/70 text-sm font-medium mb-2">
+                          <label className="block text-slate-600 text-sm font-medium mb-2">
                             Points Per View
                           </label>
                           <input
@@ -292,7 +293,7 @@ export default function TierPoliciesPage() {
                           />
                         </div>
                         <div>
-                          <label className="block text-white/70 text-sm font-medium mb-2">
+                          <label className="block text-slate-600 text-sm font-medium mb-2">
                             Points Per Listing
                           </label>
                           <input
@@ -307,7 +308,7 @@ export default function TierPoliciesPage() {
 
                       {/* Description */}
                       <div>
-                        <label className="block text-white/70 text-sm font-medium mb-2">
+                        <label className="block text-slate-600 text-sm font-medium mb-2">
                           Description
                         </label>
                         <textarea
@@ -337,7 +338,7 @@ export default function TierPoliciesPage() {
                         </button>
                         <button
                           onClick={handleCancel}
-                          className="px-6 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-white font-medium transition-all"
+                          className="px-6 py-2 bg-slate-200 hover:bg-slate-200 rounded-lg text-white font-medium transition-all"
                         >
                           Cancel
                         </button>
@@ -347,25 +348,25 @@ export default function TierPoliciesPage() {
                     <div className="space-y-4">
                       {/* View Limits */}
                       <div className="grid grid-cols-2 gap-4">
-                        <div className="bg-white/5 rounded-xl p-4">
-                          <p className="text-white/50 text-xs uppercase tracking-wider mb-1">Daily Views</p>
-                          <p className="text-white font-semibold text-lg">{formatLimit(policy.dailyViewLimit)}</p>
+                        <div className="bg-slate-100 rounded-xl p-4">
+                          <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Daily Views</p>
+                          <p className="text-slate-800 font-semibold text-lg">{formatLimit(policy.dailyViewLimit)}</p>
                         </div>
-                        <div className="bg-white/5 rounded-xl p-4">
-                          <p className="text-white/50 text-xs uppercase tracking-wider mb-1">Monthly Views</p>
-                          <p className="text-white font-semibold text-lg">{formatLimit(policy.monthlyViewLimit)}</p>
+                        <div className="bg-slate-100 rounded-xl p-4">
+                          <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Monthly Views</p>
+                          <p className="text-slate-800 font-semibold text-lg">{formatLimit(policy.monthlyViewLimit)}</p>
                         </div>
                       </div>
 
                       {/* Other Limits */}
                       <div className="grid grid-cols-2 gap-4">
-                        <div className="bg-white/5 rounded-xl p-4">
-                          <p className="text-white/50 text-xs uppercase tracking-wider mb-1">Listing Limit</p>
-                          <p className="text-white font-semibold text-lg">{formatLimit(policy.listingLimit)}</p>
+                        <div className="bg-slate-100 rounded-xl p-4">
+                          <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Listing Limit</p>
+                          <p className="text-slate-800 font-semibold text-lg">{formatLimit(policy.listingLimit)}</p>
                         </div>
-                        <div className="bg-white/5 rounded-xl p-4">
-                          <p className="text-white/50 text-xs uppercase tracking-wider mb-1">Max Price</p>
-                          <p className="text-white font-semibold text-lg">
+                        <div className="bg-slate-100 rounded-xl p-4">
+                          <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Max Price</p>
+                          <p className="text-slate-800 font-semibold text-lg">
                             {policy.maxViewablePrice ? `₱${policy.maxViewablePrice.toLocaleString()}` : 'No limit'}
                           </p>
                         </div>
@@ -373,21 +374,21 @@ export default function TierPoliciesPage() {
 
                       {/* Pricing */}
                       <div className="grid grid-cols-2 gap-4">
-                        <div className="bg-white/5 rounded-xl p-4">
-                          <p className="text-white/50 text-xs uppercase tracking-wider mb-1">Subscription</p>
-                          <p className="text-white font-semibold text-lg">{formatPrice(policy.monthlySubscriptionPrice)}/mo</p>
+                        <div className="bg-slate-100 rounded-xl p-4">
+                          <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Subscription</p>
+                          <p className="text-slate-800 font-semibold text-lg">{formatPrice(policy.monthlySubscriptionPrice)}/mo</p>
                         </div>
-                        <div className="bg-white/5 rounded-xl p-4">
-                          <p className="text-white/50 text-xs uppercase tracking-wider mb-1">Points/View</p>
-                          <p className="text-white font-semibold text-lg">{policy.pointsPerView} pts</p>
+                        <div className="bg-slate-100 rounded-xl p-4">
+                          <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Points/View</p>
+                          <p className="text-slate-800 font-semibold text-lg">{policy.pointsPerView} pts</p>
                         </div>
                       </div>
 
                       {/* Description */}
                       {policy.description && (
-                        <div className="bg-white/5 rounded-xl p-4">
-                          <p className="text-white/50 text-xs uppercase tracking-wider mb-1">Description</p>
-                          <p className="text-white/70 text-sm">{policy.description}</p>
+                        <div className="bg-slate-100 rounded-xl p-4">
+                          <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Description</p>
+                          <p className="text-slate-600 text-sm">{policy.description}</p>
                         </div>
                       )}
                     </div>
@@ -400,34 +401,34 @@ export default function TierPoliciesPage() {
 
         {/* Help Section */}
         <div className="mt-8 glass-ultra rounded-2xl p-6">
-          <h3 className="text-white font-semibold mb-4">
+          <h3 className="text-slate-800 font-semibold mb-4">
             <i className="fas fa-info-circle text-accent-blue mr-2"></i>
             Policy Guide
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
-            <div className="bg-white/5 rounded-xl p-4">
-              <p className="text-white font-medium mb-1">View Limits</p>
-              <p className="text-white/50">Number of property details a user can view. Set -1 for unlimited.</p>
+            <div className="bg-slate-100 rounded-xl p-4">
+              <p className="text-slate-800 font-medium mb-1">View Limits</p>
+              <p className="text-slate-500">Number of property details a user can view. Set -1 for unlimited.</p>
             </div>
-            <div className="bg-white/5 rounded-xl p-4">
-              <p className="text-white font-medium mb-1">Listing Limit</p>
-              <p className="text-white/50">Maximum properties an agent can list. Only applies to AGENT role.</p>
+            <div className="bg-slate-100 rounded-xl p-4">
+              <p className="text-slate-800 font-medium mb-1">Listing Limit</p>
+              <p className="text-slate-500">Maximum properties an agent can list. Only applies to AGENT role.</p>
             </div>
-            <div className="bg-white/5 rounded-xl p-4">
-              <p className="text-white font-medium mb-1">Max Viewable Price</p>
-              <p className="text-white/50">Users can only see properties up to this price. Leave empty for no limit.</p>
+            <div className="bg-slate-100 rounded-xl p-4">
+              <p className="text-slate-800 font-medium mb-1">Max Viewable Price</p>
+              <p className="text-slate-500">Users can only see properties up to this price. Leave empty for no limit.</p>
             </div>
-            <div className="bg-white/5 rounded-xl p-4">
-              <p className="text-white font-medium mb-1">Subscription Price</p>
-              <p className="text-white/50">Monthly fee to upgrade to this tier (in USD).</p>
+            <div className="bg-slate-100 rounded-xl p-4">
+              <p className="text-slate-800 font-medium mb-1">Subscription Price</p>
+              <p className="text-slate-500">Monthly fee to upgrade to this tier (in USD).</p>
             </div>
-            <div className="bg-white/5 rounded-xl p-4">
-              <p className="text-white font-medium mb-1">Points Per View</p>
-              <p className="text-white/50">Points deducted when viewing property details.</p>
+            <div className="bg-slate-100 rounded-xl p-4">
+              <p className="text-slate-800 font-medium mb-1">Points Per View</p>
+              <p className="text-slate-500">Points deducted when viewing property details.</p>
             </div>
-            <div className="bg-white/5 rounded-xl p-4">
-              <p className="text-white font-medium mb-1">Points Per Listing</p>
-              <p className="text-white/50">Points required for agents to list a property.</p>
+            <div className="bg-slate-100 rounded-xl p-4">
+              <p className="text-slate-800 font-medium mb-1">Points Per Listing</p>
+              <p className="text-slate-500">Points required for agents to list a property.</p>
             </div>
           </div>
         </div>

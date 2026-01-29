@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { AdminHeader } from '@/components/admin';
+import { apiUrl } from '@/lib/config';
 
 interface User {
   id: string;
@@ -79,7 +80,7 @@ export default function UsersPage() {
         params.set('search', searchTerm);
       }
 
-      const res = await fetch(`/api/admin/users?${params.toString()}`);
+      const res = await fetch(apiUrl(`/api/admin/users?${params.toString()}`));
       const result = await res.json();
 
       if (!result.success) {
@@ -126,7 +127,7 @@ export default function UsersPage() {
   const handleToggleStatus = async (userId: string, currentStatus: boolean) => {
     try {
       setActionLoading(userId);
-      const res = await fetch(`/api/admin/users/${userId}`, {
+      const res = await fetch(apiUrl(`/api/admin/users/${userId}`), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ isActive: !currentStatus }),
@@ -163,7 +164,7 @@ export default function UsersPage() {
 
     try {
       setActionLoading(selectedUser.id);
-      const res = await fetch(`/api/admin/users/${selectedUser.id}`, {
+      const res = await fetch(apiUrl(`/api/admin/users/${selectedUser.id}`), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -225,7 +226,7 @@ export default function UsersPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="md:col-span-2">
               <div className="relative">
-                <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-white/40"></i>
+                <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
                 <input
                   type="text"
                   placeholder="Search users by name or email..."
@@ -277,19 +278,19 @@ export default function UsersPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <div className="glass-ultra rounded-xl p-4 text-center">
             <p className="text-2xl font-bold text-white">{stats.total}</p>
-            <p className="text-white/50 text-sm">Total Users</p>
+            <p className="text-slate-500 text-sm">Total Users</p>
           </div>
           <div className="glass-ultra rounded-xl p-4 text-center">
             <p className="text-2xl font-bold text-accent-purple">{stats.agents}</p>
-            <p className="text-white/50 text-sm">Agents</p>
+            <p className="text-slate-500 text-sm">Agents</p>
           </div>
           <div className="glass-ultra rounded-xl p-4 text-center">
             <p className="text-2xl font-bold text-green-400">{stats.active}</p>
-            <p className="text-white/50 text-sm">Active</p>
+            <p className="text-slate-500 text-sm">Active</p>
           </div>
           <div className="glass-ultra rounded-xl p-4 text-center">
             <p className="text-2xl font-bold text-yellow-400">{stats.premiumGold}</p>
-            <p className="text-white/50 text-sm">Premium/Gold</p>
+            <p className="text-slate-500 text-sm">Premium/Gold</p>
           </div>
         </div>
 
@@ -313,22 +314,22 @@ export default function UsersPage() {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-white/10">
-                  <th className="text-left text-white/50 text-sm font-medium px-6 py-4">User</th>
-                  <th className="text-left text-white/50 text-sm font-medium px-6 py-4">Contact</th>
-                  <th className="text-left text-white/50 text-sm font-medium px-6 py-4">Role</th>
-                  <th className="text-left text-white/50 text-sm font-medium px-6 py-4">Tier</th>
-                  <th className="text-left text-white/50 text-sm font-medium px-6 py-4">Points</th>
-                  <th className="text-left text-white/50 text-sm font-medium px-6 py-4">Status</th>
-                  <th className="text-left text-white/50 text-sm font-medium px-6 py-4">Joined</th>
-                  <th className="text-right text-white/50 text-sm font-medium px-6 py-4">Actions</th>
+                <tr className="border-b border-slate-200">
+                  <th className="text-left text-slate-500 text-sm font-medium px-6 py-4">User</th>
+                  <th className="text-left text-slate-500 text-sm font-medium px-6 py-4">Contact</th>
+                  <th className="text-left text-slate-500 text-sm font-medium px-6 py-4">Role</th>
+                  <th className="text-left text-slate-500 text-sm font-medium px-6 py-4">Tier</th>
+                  <th className="text-left text-slate-500 text-sm font-medium px-6 py-4">Points</th>
+                  <th className="text-left text-slate-500 text-sm font-medium px-6 py-4">Status</th>
+                  <th className="text-left text-slate-500 text-sm font-medium px-6 py-4">Joined</th>
+                  <th className="text-right text-slate-500 text-sm font-medium px-6 py-4">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {users.map((user) => (
                   <tr
                     key={user.id}
-                    className="border-b border-white/5 hover:bg-white/[0.02] transition-colors"
+                    className="border-b border-slate-200 hover:bg-white/[0.02] transition-colors"
                   >
                     <td className="px-6 py-4">
                       <div className="flex items-center space-x-3">
@@ -350,7 +351,7 @@ export default function UsersPage() {
                     </td>
                     <td className="px-6 py-4">
                       <p className="text-white text-sm">{user.email}</p>
-                      <p className="text-white/40 text-xs">{user.phone || 'No phone'}</p>
+                      <p className="text-slate-400 text-xs">{user.phone || 'No phone'}</p>
                     </td>
                     <td className="px-6 py-4">
                       <span className={`px-3 py-1 rounded-lg text-xs font-medium ${roleColors[user.role] || ''}`}>
@@ -363,7 +364,7 @@ export default function UsersPage() {
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="text-white">{user.loyaltyPoints.toLocaleString()}</span>
+                      <span className="text-white">{(user.loyaltyPoints ?? 0).toLocaleString()}</span>
                     </td>
                     <td className="px-6 py-4">
                       <span
@@ -375,13 +376,13 @@ export default function UsersPage() {
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="text-white/50 text-sm">{formatDate(user.createdAt)}</span>
+                      <span className="text-slate-500 text-sm">{formatDate(user.createdAt)}</span>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-end space-x-2">
                         <button
                           onClick={() => handleEditUser(user)}
-                          className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-white/50 hover:bg-white/10 hover:text-white transition-all"
+                          className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200 hover:text-white transition-all"
                           title="Edit User"
                         >
                           <i className="fas fa-edit text-sm"></i>
@@ -412,15 +413,15 @@ export default function UsersPage() {
 
           {users.length === 0 && !loading && (
             <div className="text-center py-12">
-              <i className="fas fa-users text-4xl text-white/20 mb-4"></i>
-              <p className="text-white/50">No users found</p>
+              <i className="fas fa-users text-4xl text-slate-300 mb-4"></i>
+              <p className="text-slate-500">No users found</p>
             </div>
           )}
 
           {/* Pagination */}
           {pagination.totalPages > 1 && (
-            <div className="flex items-center justify-between px-6 py-4 border-t border-white/5">
-              <p className="text-white/50 text-sm">
+            <div className="flex items-center justify-between px-6 py-4 border-t border-slate-200">
+              <p className="text-slate-500 text-sm">
                 Showing {(pagination.page - 1) * pagination.limit + 1} to{' '}
                 {Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total}
               </p>
@@ -428,17 +429,17 @@ export default function UsersPage() {
                 <button
                   onClick={() => setPagination(prev => ({ ...prev, page: prev.page - 1 }))}
                   disabled={pagination.page === 1}
-                  className="px-3 py-1 rounded-lg bg-white/5 text-white/60 hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-3 py-1 rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Previous
                 </button>
-                <span className="text-white/60 text-sm">
+                <span className="text-slate-500 text-sm">
                   Page {pagination.page} of {pagination.totalPages}
                 </span>
                 <button
                   onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}
                   disabled={pagination.page >= pagination.totalPages}
-                  className="px-3 py-1 rounded-lg bg-white/5 text-white/60 hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-3 py-1 rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Next
                 </button>
@@ -474,13 +475,13 @@ export default function UsersPage() {
               )}
               <div>
                 <p className="text-white font-medium">{selectedUser.name || 'N/A'}</p>
-                <p className="text-white/50 text-sm">{selectedUser.email}</p>
+                <p className="text-slate-500 text-sm">{selectedUser.email}</p>
               </div>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-white/70 text-sm font-medium mb-2">Role</label>
+                <label className="block text-slate-600 text-sm font-medium mb-2">Role</label>
                 <select
                   value={editForm.role}
                   onChange={(e) => setEditForm(prev => ({ ...prev, role: e.target.value }))}
@@ -493,7 +494,7 @@ export default function UsersPage() {
               </div>
 
               <div>
-                <label className="block text-white/70 text-sm font-medium mb-2">Tier</label>
+                <label className="block text-slate-600 text-sm font-medium mb-2">Tier</label>
                 <select
                   value={editForm.tier}
                   onChange={(e) => setEditForm(prev => ({ ...prev, tier: e.target.value }))}
@@ -507,7 +508,7 @@ export default function UsersPage() {
               </div>
 
               <div>
-                <label className="block text-white/70 text-sm font-medium mb-2">Loyalty Points</label>
+                <label className="block text-slate-600 text-sm font-medium mb-2">Loyalty Points</label>
                 <input
                   type="number"
                   value={editForm.loyaltyPoints}
@@ -521,7 +522,7 @@ export default function UsersPage() {
             <div className="flex space-x-3 mt-6">
               <button
                 onClick={() => setSelectedUser(null)}
-                className="flex-1 py-3 rounded-xl glass-ultra text-white font-medium hover:bg-white/10 transition-all"
+                className="flex-1 py-3 rounded-xl glass-ultra text-white font-medium hover:bg-slate-200 transition-all"
               >
                 Cancel
               </button>

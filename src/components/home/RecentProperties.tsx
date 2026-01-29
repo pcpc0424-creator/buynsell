@@ -112,11 +112,11 @@ export default function RecentProperties() {
                     {properties[0].price}
                   </div>
                   <h3 className="text-2xl font-bold text-white mb-2">{properties[0].title}</h3>
-                  <p className="text-white/70 flex items-center mb-4">
+                  <p className="text-slate-300 flex items-center mb-4">
                     <i className="fas fa-map-marker-alt mr-2 text-accent-blue"></i>
                     {properties[0].address}
                   </p>
-                  <div className="flex items-center space-x-6 text-white/80">
+                  <div className="flex items-center space-x-6 text-slate-300">
                     <span className="flex items-center">
                       <i className="fas fa-bed mr-2"></i>{properties[0].bedrooms} Beds
                     </span>
@@ -165,7 +165,7 @@ export default function RecentProperties() {
                       {property.price}
                     </div>
                     <h3 className="text-lg font-semibold text-white mb-1">{property.title}</h3>
-                    <p className="text-white/70 text-sm flex items-center">
+                    <p className="text-slate-300 text-sm flex items-center">
                       <i className="fas fa-map-marker-alt mr-2 text-accent-blue"></i>
                       {property.address}
                     </p>

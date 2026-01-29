@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { AdminHeader } from '@/components/admin';
+import { apiUrl } from '@/lib/config';
 
 interface GeneralSettings {
   siteName: string;
@@ -73,8 +74,8 @@ export default function SettingsPage() {
 
       // Fetch general settings and inquiry settings in parallel
       const [generalRes, inquiryRes] = await Promise.all([
-        fetch('/api/admin/settings'),
-        fetch('/api/inquiries/settings'),
+        fetch(apiUrl('/api/admin/settings')),
+        fetch(apiUrl('/api/inquiries/settings')),
       ]);
 
       const [generalData, inquiryData] = await Promise.all([
@@ -120,7 +121,7 @@ export default function SettingsPage() {
       setError(null);
       setSuccess(null);
 
-      const res = await fetch('/api/admin/settings', {
+      const res = await fetch(apiUrl('/api/admin/settings'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(generalSettings),
@@ -147,7 +148,7 @@ export default function SettingsPage() {
       setError(null);
       setSuccess(null);
 
-      const res = await fetch('/api/inquiries/settings', {
+      const res = await fetch(apiUrl('/api/inquiries/settings'), {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(inquirySettings),
@@ -212,7 +213,7 @@ export default function SettingsPage() {
               <span>{error}</span>
               <button
                 onClick={() => setError(null)}
-                className="ml-auto text-white/50 hover:text-white"
+                className="ml-auto text-slate-500 hover:text-white"
               >
                 <i className="fas fa-times"></i>
               </button>
@@ -227,7 +228,7 @@ export default function SettingsPage() {
               <span>{success}</span>
               <button
                 onClick={() => setSuccess(null)}
-                className="ml-auto text-white/50 hover:text-white"
+                className="ml-auto text-slate-500 hover:text-white"
               >
                 <i className="fas fa-times"></i>
               </button>
@@ -247,7 +248,7 @@ export default function SettingsPage() {
                     className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all ${
                       activeTab === tab.id
                         ? 'bg-accent-blue/10 text-accent-blue'
-                        : 'text-white/60 hover:bg-white/5 hover:text-white'
+                        : 'text-slate-500 hover:bg-slate-100 hover:text-white'
                     }`}
                   >
                     <i className={`fas ${tab.icon} w-5`}></i>
@@ -267,7 +268,7 @@ export default function SettingsPage() {
                   <h3 className="text-lg font-semibold text-white mb-4">General Settings</h3>
 
                   <div>
-                    <label className="block text-white/70 text-sm font-medium mb-2">Site Name</label>
+                    <label className="block text-slate-600 text-sm font-medium mb-2">Site Name</label>
                     <input
                       type="text"
                       value={generalSettings.siteName}
@@ -277,7 +278,7 @@ export default function SettingsPage() {
                   </div>
 
                   <div>
-                    <label className="block text-white/70 text-sm font-medium mb-2">Site Description</label>
+                    <label className="block text-slate-600 text-sm font-medium mb-2">Site Description</label>
                     <textarea
                       value={generalSettings.siteDescription}
                       onChange={(e) => setGeneralSettings({ ...generalSettings, siteDescription: e.target.value })}
@@ -288,7 +289,7 @@ export default function SettingsPage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-white/70 text-sm font-medium mb-2">Contact Email</label>
+                      <label className="block text-slate-600 text-sm font-medium mb-2">Contact Email</label>
                       <input
                         type="email"
                         value={generalSettings.contactEmail}
@@ -297,7 +298,7 @@ export default function SettingsPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-white/70 text-sm font-medium mb-2">Contact Phone</label>
+                      <label className="block text-slate-600 text-sm font-medium mb-2">Contact Phone</label>
                       <input
                         type="tel"
                         value={generalSettings.contactPhone}
@@ -315,7 +316,7 @@ export default function SettingsPage() {
                   <h3 className="text-lg font-semibold text-white mb-4">Inquiry Settings</h3>
 
                   <div>
-                    <label className="block text-white/70 text-sm font-medium mb-2">Inquiry Mode</label>
+                    <label className="block text-slate-600 text-sm font-medium mb-2">Inquiry Mode</label>
                     <select
                       value={inquirySettings.mode}
                       onChange={(e) => setInquirySettings({ ...inquirySettings, mode: e.target.value })}
@@ -324,7 +325,7 @@ export default function SettingsPage() {
                       <option value="MODE_A">Mode A - Admin Only (All inquiries go to admin)</option>
                       <option value="MODE_B">Mode B - Admin Confirms then Forwards to Agent</option>
                     </select>
-                    <p className="text-white/40 text-xs mt-2">
+                    <p className="text-slate-400 text-xs mt-2">
                       Mode A: All inquiries are handled by admin only. Agent phone numbers are never exposed.
                       <br />
                       Mode B: Admin reviews and confirms before forwarding to the respective agent.
@@ -332,7 +333,7 @@ export default function SettingsPage() {
                   </div>
 
                   <div>
-                    <label className="block text-white/70 text-sm font-medium mb-2">
+                    <label className="block text-slate-600 text-sm font-medium mb-2">
                       Auto-Forward Delay (hours)
                     </label>
                     <input
@@ -342,7 +343,7 @@ export default function SettingsPage() {
                       className="form-input"
                       min={0}
                     />
-                    <p className="text-white/40 text-xs mt-2">
+                    <p className="text-slate-400 text-xs mt-2">
                       Set to 0 to disable auto-forwarding. Only applies to Mode B.
                     </p>
                   </div>
@@ -353,9 +354,9 @@ export default function SettingsPage() {
                         type="checkbox"
                         checked={inquirySettings.notifyAgentByEmail}
                         onChange={(e) => setInquirySettings({ ...inquirySettings, notifyAgentByEmail: e.target.checked })}
-                        className="w-5 h-5 rounded border-white/20 bg-white/5 text-accent-blue focus:ring-accent-blue"
+                        className="w-5 h-5 rounded border-slate-300 bg-slate-100 text-accent-blue focus:ring-accent-blue"
                       />
-                      <span className="text-white/70">Notify agents by email when inquiry is forwarded</span>
+                      <span className="text-slate-600">Notify agents by email when inquiry is forwarded</span>
                     </label>
 
                     <label className="flex items-center space-x-3 cursor-pointer">
@@ -363,9 +364,9 @@ export default function SettingsPage() {
                         type="checkbox"
                         checked={inquirySettings.notifyAgentByApp}
                         onChange={(e) => setInquirySettings({ ...inquirySettings, notifyAgentByApp: e.target.checked })}
-                        className="w-5 h-5 rounded border-white/20 bg-white/5 text-accent-blue focus:ring-accent-blue"
+                        className="w-5 h-5 rounded border-slate-300 bg-slate-100 text-accent-blue focus:ring-accent-blue"
                       />
-                      <span className="text-white/70">Notify agents via in-app notification</span>
+                      <span className="text-slate-600">Notify agents via in-app notification</span>
                     </label>
 
                     <label className="flex items-center space-x-3 cursor-pointer">
@@ -373,9 +374,9 @@ export default function SettingsPage() {
                         type="checkbox"
                         checked={inquirySettings.notifyAdminByEmail}
                         onChange={(e) => setInquirySettings({ ...inquirySettings, notifyAdminByEmail: e.target.checked })}
-                        className="w-5 h-5 rounded border-white/20 bg-white/5 text-accent-blue focus:ring-accent-blue"
+                        className="w-5 h-5 rounded border-slate-300 bg-slate-100 text-accent-blue focus:ring-accent-blue"
                       />
-                      <span className="text-white/70">Notify admin by email for new inquiries</span>
+                      <span className="text-slate-600">Notify admin by email for new inquiries</span>
                     </label>
                   </div>
                 </div>
@@ -388,7 +389,7 @@ export default function SettingsPage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-white/70 text-sm font-medium mb-2">
+                      <label className="block text-slate-600 text-sm font-medium mb-2">
                         Max Images Per Listing
                       </label>
                       <input
@@ -401,7 +402,7 @@ export default function SettingsPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-white/70 text-sm font-medium mb-2">
+                      <label className="block text-slate-600 text-sm font-medium mb-2">
                         Max Image Size (MB)
                       </label>
                       <input
@@ -416,7 +417,7 @@ export default function SettingsPage() {
                   </div>
 
                   <div>
-                    <label className="block text-white/70 text-sm font-medium mb-2">
+                    <label className="block text-slate-600 text-sm font-medium mb-2">
                       Featured Listing Duration (days)
                     </label>
                     <input
@@ -433,9 +434,9 @@ export default function SettingsPage() {
                       type="checkbox"
                       checked={generalSettings.requireApproval}
                       onChange={(e) => setGeneralSettings({ ...generalSettings, requireApproval: e.target.checked })}
-                      className="w-5 h-5 rounded border-white/20 bg-white/5 text-accent-blue focus:ring-accent-blue"
+                      className="w-5 h-5 rounded border-slate-300 bg-slate-100 text-accent-blue focus:ring-accent-blue"
                     />
-                    <span className="text-white/70">Require admin approval for all new listings</span>
+                    <span className="text-slate-600">Require admin approval for all new listings</span>
                   </label>
                 </div>
               )}
@@ -450,7 +451,7 @@ export default function SettingsPage() {
                       <i className="fas fa-exclamation-triangle text-yellow-400 mt-0.5"></i>
                       <div>
                         <p className="text-yellow-400 font-medium text-sm">Security Notice</p>
-                        <p className="text-white/60 text-xs mt-1">
+                        <p className="text-slate-500 text-xs mt-1">
                           PayPal credentials should be configured in environment variables for security.
                           Set PAYPAL_CLIENT_ID and PAYPAL_CLIENT_SECRET in your .env file.
                         </p>
@@ -459,7 +460,7 @@ export default function SettingsPage() {
                   </div>
 
                   <div>
-                    <label className="block text-white/70 text-sm font-medium mb-2">PayPal Client ID</label>
+                    <label className="block text-slate-600 text-sm font-medium mb-2">PayPal Client ID</label>
                     <input
                       type="text"
                       value={apiKeys.paypalClientId}
@@ -468,13 +469,13 @@ export default function SettingsPage() {
                       placeholder="Configure in environment variables"
                       disabled
                     />
-                    <p className="text-white/40 text-xs mt-1">
+                    <p className="text-slate-400 text-xs mt-1">
                       Current: {process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID ? 'Configured' : 'Not set'}
                     </p>
                   </div>
 
                   <div>
-                    <label className="block text-white/70 text-sm font-medium mb-2">PayPal Secret</label>
+                    <label className="block text-slate-600 text-sm font-medium mb-2">PayPal Secret</label>
                     <input
                       type="password"
                       value={apiKeys.paypalSecret}
@@ -483,7 +484,7 @@ export default function SettingsPage() {
                       placeholder="Configure in environment variables"
                       disabled
                     />
-                    <p className="text-white/40 text-xs mt-1">
+                    <p className="text-slate-400 text-xs mt-1">
                       Server-side only. Configure PAYPAL_CLIENT_SECRET in .env
                     </p>
                   </div>
@@ -500,7 +501,7 @@ export default function SettingsPage() {
                       <i className="fas fa-info-circle text-blue-400 mt-0.5"></i>
                       <div>
                         <p className="text-blue-400 font-medium text-sm">Using OpenStreetMap</p>
-                        <p className="text-white/60 text-xs mt-1">
+                        <p className="text-slate-500 text-xs mt-1">
                           This platform uses OpenStreetMap with Nominatim for geocoding, which is free and doesn&apos;t require an API key.
                         </p>
                       </div>
@@ -508,7 +509,7 @@ export default function SettingsPage() {
                   </div>
 
                   <div>
-                    <label className="block text-white/70 text-sm font-medium mb-2">Google Maps API Key (Optional)</label>
+                    <label className="block text-slate-600 text-sm font-medium mb-2">Google Maps API Key (Optional)</label>
                     <input
                       type="text"
                       value={apiKeys.googleMapsApiKey}
@@ -517,7 +518,7 @@ export default function SettingsPage() {
                       placeholder="Not required - using OpenStreetMap"
                       disabled
                     />
-                    <p className="text-white/40 text-xs mt-2">
+                    <p className="text-slate-400 text-xs mt-2">
                       If you want to switch to Google Maps, configure GOOGLE_MAPS_API_KEY in your .env file.
                     </p>
                   </div>
@@ -525,7 +526,7 @@ export default function SettingsPage() {
               )}
 
               {/* Save Button */}
-              <div className="mt-8 pt-6 border-t border-white/10 flex justify-end">
+              <div className="mt-8 pt-6 border-t border-slate-200 flex justify-end">
                 <button
                   onClick={handleSave}
                   disabled={saving}

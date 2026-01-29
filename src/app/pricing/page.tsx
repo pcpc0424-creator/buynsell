@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Header, Footer } from '@/components/layout';
+import { apiUrl } from '@/lib/config';
 
 interface TierPolicy {
   tier: string;
@@ -52,8 +53,8 @@ export default function PricingPage() {
     try {
       setLoading(true);
       const [policiesRes, configRes] = await Promise.all([
-        fetch('/api/admin/tier-policies'),
-        fetch('/api/payments/config'),
+        fetch(apiUrl('/api/admin/tier-policies')),
+        fetch(apiUrl('/api/payments/config')),
       ]);
 
       const policiesData = await policiesRes.json();
@@ -85,7 +86,7 @@ export default function PricingPage() {
       setProcessing(tier);
       setError(null);
 
-      const res = await fetch('/api/payments/orders', {
+      const res = await fetch(apiUrl('/api/payments/orders'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -121,7 +122,7 @@ export default function PricingPage() {
       setProcessing(packageId);
       setError(null);
 
-      const res = await fetch('/api/payments/orders', {
+      const res = await fetch(apiUrl('/api/payments/orders'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -161,13 +162,13 @@ export default function PricingPage() {
           <h1 className="text-4xl lg:text-5xl font-display font-bold text-white mb-4">
             Choose Your <span className="gradient-text">Plan</span>
           </h1>
-          <p className="text-white/60 text-lg max-w-2xl mx-auto mb-8">
+          <p className="text-slate-500 text-lg max-w-2xl mx-auto mb-8">
             Upgrade your account to unlock more features and get the most out of Buy & Sell
           </p>
 
           {session && (
-            <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-white/10 mb-8">
-              <span className="text-white/60">Current Plan:</span>
+            <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-slate-200 mb-8">
+              <span className="text-slate-500">Current Plan:</span>
               <span className={`font-semibold ${tierConfig[currentTier]?.color || 'text-white'}`}>
                 <i className={`fas ${tierConfig[currentTier]?.icon} mr-1`}></i>
                 {tierConfig[currentTier]?.label || currentTier}
@@ -183,7 +184,7 @@ export default function PricingPage() {
                 className={`px-6 py-2 rounded-full font-medium transition-all ${
                   activeTab === 'subscription'
                     ? 'bg-accent-blue text-white'
-                    : 'text-white/60 hover:text-white'
+                    : 'text-slate-500 hover:text-white'
                 }`}
               >
                 <i className="fas fa-crown mr-2"></i>Subscription Plans
@@ -193,7 +194,7 @@ export default function PricingPage() {
                 className={`px-6 py-2 rounded-full font-medium transition-all ${
                   activeTab === 'points'
                     ? 'bg-accent-blue text-white'
-                    : 'text-white/60 hover:text-white'
+                    : 'text-slate-500 hover:text-white'
                 }`}
               >
                 <i className="fas fa-coins mr-2"></i>Buy Points
@@ -209,7 +210,7 @@ export default function PricingPage() {
             <div className="flex items-center text-red-400">
               <i className="fas fa-exclamation-circle mr-3"></i>
               <span>{error}</span>
-              <button onClick={() => setError(null)} className="ml-auto text-white/50 hover:text-white">
+              <button onClick={() => setError(null)} className="ml-auto text-slate-500 hover:text-white">
                 <i className="fas fa-times"></i>
               </button>
             </div>
@@ -254,7 +255,7 @@ export default function PricingPage() {
                       {/* Header */}
                       <div className={`bg-gradient-to-r ${config.gradient} p-6 ${isPopular || isCurrentTier ? 'pt-8' : ''}`}>
                         <div className="flex items-center space-x-3 mb-4">
-                          <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
+                          <div className="w-12 h-12 rounded-xl bg-slate-200 flex items-center justify-center">
                             <i className={`fas ${config.icon} text-white text-xl`}></i>
                           </div>
                           <div>
@@ -269,7 +270,7 @@ export default function PricingPage() {
                               <span className="text-3xl font-bold">
                                 ${policy.monthlySubscriptionPrice?.toFixed(2)}
                               </span>
-                              <span className="text-white/70">/month</span>
+                              <span className="text-slate-600">/month</span>
                             </>
                           )}
                         </div>
@@ -278,19 +279,19 @@ export default function PricingPage() {
                       {/* Features */}
                       <div className="p-6">
                         <ul className="space-y-3 mb-6">
-                          <li className="flex items-center text-white/70">
+                          <li className="flex items-center text-slate-600">
                             <i className="fas fa-check text-green-400 mr-3 w-4"></i>
                             <span>{formatLimit(policy.dailyViewLimit)} daily views</span>
                           </li>
-                          <li className="flex items-center text-white/70">
+                          <li className="flex items-center text-slate-600">
                             <i className="fas fa-check text-green-400 mr-3 w-4"></i>
                             <span>{formatLimit(policy.monthlyViewLimit)} monthly views</span>
                           </li>
-                          <li className="flex items-center text-white/70">
+                          <li className="flex items-center text-slate-600">
                             <i className="fas fa-check text-green-400 mr-3 w-4"></i>
                             <span>{formatLimit(policy.listingLimit)} listings (agents)</span>
                           </li>
-                          <li className="flex items-center text-white/70">
+                          <li className="flex items-center text-slate-600">
                             <i className={`fas ${policy.maxViewablePrice ? 'fa-times text-red-400' : 'fa-check text-green-400'} mr-3 w-4`}></i>
                             <span>
                               {policy.maxViewablePrice
@@ -298,14 +299,14 @@ export default function PricingPage() {
                                 : 'No price limit'}
                             </span>
                           </li>
-                          <li className="flex items-center text-white/70">
+                          <li className="flex items-center text-slate-600">
                             <i className="fas fa-info-circle text-accent-blue mr-3 w-4"></i>
                             <span>{policy.pointsPerView} pts per view</span>
                           </li>
                         </ul>
 
                         {policy.description && (
-                          <p className="text-white/40 text-sm mb-6">{policy.description}</p>
+                          <p className="text-slate-400 text-sm mb-6">{policy.description}</p>
                         )}
 
                         <button
@@ -315,7 +316,7 @@ export default function PricingPage() {
                             isCurrentTier
                               ? 'bg-green-500/20 text-green-400 cursor-default'
                               : isFree
-                              ? 'bg-white/10 text-white/50 cursor-default'
+                              ? 'bg-slate-200 text-slate-500 cursor-default'
                               : 'btn-premium text-white'
                           }`}
                         >
@@ -345,7 +346,7 @@ export default function PricingPage() {
           <div className="max-w-5xl mx-auto px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-2xl font-bold text-white mb-2">Buy Points</h2>
-              <p className="text-white/60">
+              <p className="text-slate-500">
                 Use points to view properties and list your properties
               </p>
               {session && (
@@ -389,7 +390,7 @@ export default function PricingPage() {
                           <div className="text-3xl font-bold text-white mb-1">
                             {totalPoints.toLocaleString()}
                           </div>
-                          <div className="text-white/50 text-sm">points</div>
+                          <div className="text-slate-500 text-sm">points</div>
                           {pkg.bonus > 0 && (
                             <div className="mt-2 inline-block px-3 py-1 rounded-full bg-green-500/20 text-green-400 text-xs font-medium">
                               +{pkg.bonus} bonus
@@ -401,8 +402,8 @@ export default function PricingPage() {
                           <span className="text-2xl font-bold text-white">
                             ${pkg.price.toFixed(2)}
                           </span>
-                          <span className="text-white/50 text-sm ml-1">USD</span>
-                          <p className="text-white/40 text-xs mt-1">
+                          <span className="text-slate-500 text-sm ml-1">USD</span>
+                          <p className="text-slate-400 text-xs mt-1">
                             ${(pkg.price / totalPoints * 100).toFixed(2)} per 100 pts
                           </p>
                         </div>
@@ -432,20 +433,20 @@ export default function PricingPage() {
                 How Points Work
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                <div className="bg-white/5 rounded-xl p-4">
+                <div className="bg-slate-100 rounded-xl p-4">
                   <i className="fas fa-eye text-accent-blue mb-2"></i>
                   <p className="text-white font-medium mb-1">View Properties</p>
-                  <p className="text-white/50">Points are deducted when viewing property details (based on your tier)</p>
+                  <p className="text-slate-500">Points are deducted when viewing property details (based on your tier)</p>
                 </div>
-                <div className="bg-white/5 rounded-xl p-4">
+                <div className="bg-slate-100 rounded-xl p-4">
                   <i className="fas fa-building text-accent-purple mb-2"></i>
                   <p className="text-white font-medium mb-1">List Properties</p>
-                  <p className="text-white/50">Agents can use points to list properties beyond tier limits</p>
+                  <p className="text-slate-500">Agents can use points to list properties beyond tier limits</p>
                 </div>
-                <div className="bg-white/5 rounded-xl p-4">
+                <div className="bg-slate-100 rounded-xl p-4">
                   <i className="fas fa-infinity text-green-400 mb-2"></i>
                   <p className="text-white font-medium mb-1">Never Expire</p>
-                  <p className="text-white/50">Your points never expire and can be used anytime</p>
+                  <p className="text-slate-500">Your points never expire and can be used anytime</p>
                 </div>
               </div>
             </div>
@@ -456,15 +457,15 @@ export default function PricingPage() {
       {/* Payment Methods */}
       <section className="pb-20">
         <div className="max-w-3xl mx-auto px-6 lg:px-8 text-center">
-          <p className="text-white/40 text-sm mb-4">Secure payment powered by</p>
+          <p className="text-slate-400 text-sm mb-4">Secure payment powered by</p>
           <div className="flex items-center justify-center space-x-8">
-            <div className="text-white/60">
+            <div className="text-slate-500">
               <i className="fab fa-paypal text-3xl"></i>
             </div>
-            <div className="text-white/60">
+            <div className="text-slate-500">
               <i className="fab fa-cc-visa text-3xl"></i>
             </div>
-            <div className="text-white/60">
+            <div className="text-slate-500">
               <i className="fab fa-cc-mastercard text-3xl"></i>
             </div>
           </div>

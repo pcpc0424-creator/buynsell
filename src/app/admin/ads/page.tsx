@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { AdminHeader } from '@/components/admin';
+import { apiUrl } from '@/lib/config';
 
 interface Advertisement {
   id: string;
@@ -59,7 +60,7 @@ export default function AdsPage() {
         params.set('position', positionFilter);
       }
 
-      const res = await fetch(`/api/admin/advertisements?${params.toString()}`);
+      const res = await fetch(apiUrl(`/api/admin/advertisements?${params.toString()}`));
       const data = await res.json();
 
       if (!data.success) {
@@ -103,7 +104,7 @@ export default function AdsPage() {
     if (!confirm(`Are you sure you want to delete "${ad.title}"?`)) return;
 
     try {
-      const res = await fetch(`/api/admin/advertisements/${ad.id}`, {
+      const res = await fetch(apiUrl(`/api/admin/advertisements/${ad.id}`), {
         method: 'DELETE',
       });
 
@@ -123,7 +124,7 @@ export default function AdsPage() {
 
   const handleToggleActive = async (ad: Advertisement) => {
     try {
-      const res = await fetch(`/api/admin/advertisements/${ad.id}`, {
+      const res = await fetch(apiUrl(`/api/admin/advertisements/${ad.id}`), {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ isActive: !ad.isActive }),
@@ -150,7 +151,7 @@ export default function AdsPage() {
       const uploadFormData = new FormData();
       uploadFormData.append('file', file);
 
-      const res = await fetch('/api/upload', {
+      const res = await fetch(apiUrl('/api/upload'), {
         method: 'POST',
         body: uploadFormData,
       });
@@ -252,7 +253,7 @@ export default function AdsPage() {
             <div className="flex items-center text-red-400">
               <i className="fas fa-exclamation-circle mr-3"></i>
               <span>{error}</span>
-              <button onClick={() => setError(null)} className="ml-auto text-white/50 hover:text-white">
+              <button onClick={() => setError(null)} className="ml-auto text-slate-500 hover:text-slate-800">
                 <i className="fas fa-times"></i>
               </button>
             </div>
@@ -276,7 +277,7 @@ export default function AdsPage() {
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                 positionFilter === 'ALL'
                   ? 'bg-accent-blue text-white'
-                  : 'bg-white/10 text-white/70 hover:bg-white/20'
+                  : 'bg-slate-200 text-slate-600 hover:bg-slate-200'
               }`}
             >
               All ({ads.length})
@@ -288,7 +289,7 @@ export default function AdsPage() {
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                   positionFilter === pos.value
                     ? 'bg-accent-blue text-white'
-                    : 'bg-white/10 text-white/70 hover:bg-white/20'
+                    : 'bg-slate-200 text-slate-600 hover:bg-slate-200'
                 }`}
               >
                 <i className={`fas ${pos.icon} mr-2`}></i>
@@ -308,8 +309,8 @@ export default function AdsPage() {
         {/* Ads Grid */}
         {ads.length === 0 ? (
           <div className="glass-ultra rounded-2xl p-12 text-center">
-            <i className="fas fa-ad text-4xl text-white/30 mb-4"></i>
-            <p className="text-white/50">No advertisements found</p>
+            <i className="fas fa-ad text-4xl text-slate-400 mb-4"></i>
+            <p className="text-slate-500">No advertisements found</p>
             <button
               onClick={handleCreate}
               className="mt-4 px-6 py-2 bg-accent-blue hover:bg-accent-blue/80 rounded-lg text-white font-medium transition-all"
@@ -327,7 +328,7 @@ export default function AdsPage() {
                 }`}
               >
                 {/* Image */}
-                <div className="relative aspect-video bg-white/5">
+                <div className="relative aspect-video bg-slate-100">
                   {ad.imageUrl && (
                     <Image
                       src={ad.imageUrl}
@@ -346,7 +347,7 @@ export default function AdsPage() {
                     </span>
                   </div>
                   <div className="absolute top-3 right-3">
-                    <span className="px-3 py-1 rounded-full text-xs font-medium bg-white/20 text-white">
+                    <span className="px-3 py-1 rounded-full text-xs font-medium bg-slate-200 text-slate-700">
                       <i className={`fas ${getPositionIcon(ad.position)} mr-1`}></i>
                       {getPositionLabel(ad.position)}
                     </span>
@@ -355,23 +356,23 @@ export default function AdsPage() {
 
                 {/* Content */}
                 <div className="p-4">
-                  <h3 className="text-white font-semibold mb-2 truncate">{ad.title}</h3>
+                  <h3 className="text-slate-800 font-semibold mb-2 truncate">{ad.title}</h3>
 
                   {/* Stats */}
-                  <div className="flex items-center space-x-4 text-sm text-white/50 mb-4">
+                  <div className="flex items-center space-x-4 text-sm text-slate-500 mb-4">
                     <span>
                       <i className="fas fa-eye mr-1"></i>
-                      {ad.viewCount.toLocaleString()} views
+                      {(ad.viewCount ?? 0).toLocaleString()} views
                     </span>
                     <span>
                       <i className="fas fa-mouse-pointer mr-1"></i>
-                      {ad.clickCount.toLocaleString()} clicks
+                      {(ad.clickCount ?? 0).toLocaleString()} clicks
                     </span>
                   </div>
 
                   {/* Date Range */}
                   {(ad.startDate || ad.endDate) && (
-                    <div className="text-xs text-white/40 mb-4">
+                    <div className="text-xs text-slate-400 mb-4">
                       <i className="fas fa-calendar mr-1"></i>
                       {ad.startDate ? new Date(ad.startDate).toLocaleDateString() : 'Always'}
                       {' - '}
@@ -394,7 +395,7 @@ export default function AdsPage() {
                     </button>
                     <button
                       onClick={() => handleEdit(ad)}
-                      className="px-3 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-white text-sm transition-all"
+                      className="px-3 py-2 bg-slate-200 hover:bg-slate-200 rounded-lg text-white text-sm transition-all"
                     >
                       <i className="fas fa-edit"></i>
                     </button>
@@ -415,14 +416,14 @@ export default function AdsPage() {
         {showModal && (
           <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
             <div className="glass-ultra rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
-              <div className="p-6 border-b border-white/10">
+              <div className="p-6 border-b border-slate-200">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-xl font-semibold text-white">
+                  <h3 className="text-xl font-semibold text-slate-800">
                     {editingAd ? 'Edit Advertisement' : 'New Advertisement'}
                   </h3>
                   <button
                     onClick={() => setShowModal(false)}
-                    className="text-white/50 hover:text-white"
+                    className="text-slate-500 hover:text-slate-800"
                   >
                     <i className="fas fa-times text-xl"></i>
                   </button>
@@ -432,7 +433,7 @@ export default function AdsPage() {
               <form onSubmit={handleSubmit} className="p-6 space-y-4">
                 {/* Title */}
                 <div>
-                  <label className="block text-white/70 text-sm font-medium mb-2">Title *</label>
+                  <label className="block text-slate-600 text-sm font-medium mb-2">Title *</label>
                   <input
                     type="text"
                     value={formData.title}
@@ -445,9 +446,9 @@ export default function AdsPage() {
 
                 {/* Image Upload */}
                 <div>
-                  <label className="block text-white/70 text-sm font-medium mb-2">Image *</label>
+                  <label className="block text-slate-600 text-sm font-medium mb-2">Image *</label>
                   {formData.imageUrl ? (
-                    <div className="relative aspect-video bg-white/5 rounded-xl overflow-hidden mb-2">
+                    <div className="relative aspect-video bg-slate-100 rounded-xl overflow-hidden mb-2">
                       <Image
                         src={formData.imageUrl}
                         alt="Preview"
@@ -463,7 +464,7 @@ export default function AdsPage() {
                       </button>
                     </div>
                   ) : (
-                    <label className="block border-2 border-dashed border-white/20 rounded-xl p-8 text-center cursor-pointer hover:border-accent-blue/50 transition-colors">
+                    <label className="block border-2 border-dashed border-slate-300 rounded-xl p-8 text-center cursor-pointer hover:border-accent-blue/50 transition-colors">
                       <input
                         type="file"
                         accept="image/*"
@@ -474,8 +475,8 @@ export default function AdsPage() {
                         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-accent-blue mx-auto"></div>
                       ) : (
                         <>
-                          <i className="fas fa-cloud-upload-alt text-3xl text-white/30 mb-2"></i>
-                          <p className="text-white/50 text-sm">Click to upload image</p>
+                          <i className="fas fa-cloud-upload-alt text-3xl text-slate-400 mb-2"></i>
+                          <p className="text-slate-500 text-sm">Click to upload image</p>
                         </>
                       )}
                     </label>
@@ -491,7 +492,7 @@ export default function AdsPage() {
 
                 {/* Link URL */}
                 <div>
-                  <label className="block text-white/70 text-sm font-medium mb-2">Link URL</label>
+                  <label className="block text-slate-600 text-sm font-medium mb-2">Link URL</label>
                   <input
                     type="url"
                     value={formData.linkUrl}
@@ -503,7 +504,7 @@ export default function AdsPage() {
 
                 {/* Position */}
                 <div>
-                  <label className="block text-white/70 text-sm font-medium mb-2">Position *</label>
+                  <label className="block text-slate-600 text-sm font-medium mb-2">Position *</label>
                   <select
                     value={formData.position}
                     onChange={(e) => setFormData({ ...formData, position: e.target.value })}
@@ -520,7 +521,7 @@ export default function AdsPage() {
                 {/* Date Range */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-white/70 text-sm font-medium mb-2">Start Date</label>
+                    <label className="block text-slate-600 text-sm font-medium mb-2">Start Date</label>
                     <input
                       type="date"
                       value={formData.startDate}
@@ -529,7 +530,7 @@ export default function AdsPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-white/70 text-sm font-medium mb-2">End Date</label>
+                    <label className="block text-slate-600 text-sm font-medium mb-2">End Date</label>
                     <input
                       type="date"
                       value={formData.endDate}
@@ -545,9 +546,9 @@ export default function AdsPage() {
                     type="checkbox"
                     checked={formData.isActive}
                     onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                    className="w-5 h-5 rounded border-white/20 bg-white/5 text-accent-blue focus:ring-accent-blue"
+                    className="w-5 h-5 rounded border-slate-300 bg-slate-100 text-accent-blue focus:ring-accent-blue"
                   />
-                  <span className="text-white/70">Active (visible on site)</span>
+                  <span className="text-slate-600">Active (visible on site)</span>
                 </label>
 
                 {/* Actions */}
@@ -571,7 +572,7 @@ export default function AdsPage() {
                   <button
                     type="button"
                     onClick={() => setShowModal(false)}
-                    className="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl text-white font-semibold transition-all"
+                    className="px-6 py-3 bg-slate-200 hover:bg-slate-200 rounded-xl text-white font-semibold transition-all"
                   >
                     Cancel
                   </button>

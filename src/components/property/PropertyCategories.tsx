@@ -74,7 +74,7 @@ export default function PropertyCategories({ activeType }: PropertyCategoriesPro
                   >
                     <i className={`fas ${category.icon} text-2xl ${category.iconColor}`}></i>
                   </div>
-                  <h3 className="font-medium text-white text-sm">{category.label}</h3>
+                  <h3 className="font-medium text-slate-800 text-sm">{category.label}</h3>
                 </div>
               </Link>
             );

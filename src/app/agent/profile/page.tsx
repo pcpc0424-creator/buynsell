@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import { AgentHeader } from '@/components/agent';
+import { apiUrl } from '@/lib/config';
 
 interface UserProfile {
   id: string;
@@ -69,7 +70,7 @@ export default function AgentProfilePage() {
   const fetchProfile = async () => {
     try {
       setLoading(true);
-      const res = await fetch('/api/users/me');
+      const res = await fetch(apiUrl('/api/users/me'));
       const result = await res.json();
 
       if (!result.success) {
@@ -101,7 +102,7 @@ export default function AgentProfilePage() {
     setSuccess(null);
 
     try {
-      const res = await fetch('/api/users/me', {
+      const res = await fetch(apiUrl('/api/users/me'), {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -157,7 +158,7 @@ export default function AgentProfilePage() {
       reader.onload = async () => {
         const base64 = reader.result as string;
 
-        const res = await fetch('/api/users/me/avatar', {
+        const res = await fetch(apiUrl('/api/users/me/avatar'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ image: base64 }),
@@ -196,7 +197,7 @@ export default function AgentProfilePage() {
     setError(null);
 
     try {
-      const res = await fetch('/api/users/me/avatar', {
+      const res = await fetch(apiUrl('/api/users/me/avatar'), {
         method: 'DELETE',
       });
 
@@ -276,7 +277,7 @@ export default function AgentProfilePage() {
               {/* Profile Image */}
               <div className="relative inline-block mb-4">
                 <div
-                  className="relative w-32 h-32 rounded-full overflow-hidden bg-white/5 cursor-pointer group"
+                  className="relative w-32 h-32 rounded-full overflow-hidden bg-slate-100 cursor-pointer group"
                   onClick={handleImageClick}
                 >
                   {profile?.image ? (
@@ -317,10 +318,10 @@ export default function AgentProfilePage() {
                 )}
               </div>
 
-              <h2 className="text-xl font-bold text-white mb-1">
+              <h2 className="text-xl font-bold text-slate-800 mb-1">
                 {profile?.name || 'Agent'}
               </h2>
-              <p className="text-white/50 text-sm mb-4">{profile?.email}</p>
+              <p className="text-slate-500 text-sm mb-4">{profile?.email}</p>
 
               {/* Verification Badge */}
               {profile?.agentProfile?.isVerified && (
@@ -332,23 +333,23 @@ export default function AgentProfilePage() {
 
               {/* Stats */}
               <div className="grid grid-cols-2 gap-4 mt-6">
-                <div className="bg-white/[0.02] rounded-xl p-4">
-                  <p className="text-2xl font-bold text-white">
+                <div className="bg-slate-100 rounded-xl p-4">
+                  <p className="text-2xl font-bold text-slate-800">
                     {profile?._count?.listings || 0}
                   </p>
-                  <p className="text-white/50 text-xs">Listings</p>
+                  <p className="text-slate-500 text-xs">Listings</p>
                 </div>
-                <div className="bg-white/[0.02] rounded-xl p-4">
-                  <p className="text-2xl font-bold text-white">
+                <div className="bg-slate-100 rounded-xl p-4">
+                  <p className="text-2xl font-bold text-slate-800">
                     {profile?._count?.inquiries || 0}
                   </p>
-                  <p className="text-white/50 text-xs">Inquiries</p>
+                  <p className="text-slate-500 text-xs">Inquiries</p>
                 </div>
               </div>
 
               {/* Rating */}
               {profile?.agentProfile && (
-                <div className="mt-4 bg-white/[0.02] rounded-xl p-4">
+                <div className="mt-4 bg-slate-100 rounded-xl p-4">
                   <div className="flex items-center justify-center space-x-1 mb-1">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <i
@@ -356,19 +357,19 @@ export default function AgentProfilePage() {
                         className={`fas fa-star text-sm ${
                           star <= Math.round(profile.agentProfile!.rating)
                             ? 'text-yellow-400'
-                            : 'text-white/20'
+                            : 'text-slate-300'
                         }`}
                       ></i>
                     ))}
                   </div>
-                  <p className="text-white/50 text-xs">
+                  <p className="text-slate-500 text-xs">
                     {profile.agentProfile.rating.toFixed(1)} ({profile.agentProfile.reviewCount} reviews)
                   </p>
                 </div>
               )}
 
               {/* Member Since */}
-              <div className="mt-4 text-white/40 text-xs">
+              <div className="mt-4 text-slate-400 text-xs">
                 <i className="fas fa-calendar mr-1"></i>
                 Member since{' '}
                 {new Date(profile?.createdAt || '').toLocaleDateString('en-PH', {
@@ -384,14 +385,14 @@ export default function AgentProfilePage() {
             <form onSubmit={handleSubmit}>
               {/* Basic Info */}
               <div className="glass-ultra rounded-2xl p-6 mb-6">
-                <h3 className="text-lg font-semibold text-white mb-6 flex items-center">
+                <h3 className="text-lg font-semibold text-slate-800 mb-6 flex items-center">
                   <i className="fas fa-user mr-3 text-accent-purple"></i>
                   Basic Information
                 </h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-white/70 text-sm mb-2">
+                    <label className="block text-slate-600 text-sm mb-2">
                       Full Name
                     </label>
                     <input
@@ -406,7 +407,7 @@ export default function AgentProfilePage() {
                   </div>
 
                   <div>
-                    <label className="block text-white/70 text-sm mb-2">
+                    <label className="block text-slate-600 text-sm mb-2">
                       Email
                     </label>
                     <input
@@ -415,13 +416,13 @@ export default function AgentProfilePage() {
                       disabled
                       className="form-input opacity-50 cursor-not-allowed"
                     />
-                    <p className="text-white/40 text-xs mt-1">
+                    <p className="text-slate-400 text-xs mt-1">
                       Email cannot be changed
                     </p>
                   </div>
 
                   <div>
-                    <label className="block text-white/70 text-sm mb-2">
+                    <label className="block text-slate-600 text-sm mb-2">
                       Phone Number
                     </label>
                     <input
@@ -436,7 +437,7 @@ export default function AgentProfilePage() {
                   </div>
 
                   <div>
-                    <label className="block text-white/70 text-sm mb-2">
+                    <label className="block text-slate-600 text-sm mb-2">
                       License Number
                     </label>
                     <input
@@ -454,14 +455,14 @@ export default function AgentProfilePage() {
 
               {/* Professional Info */}
               <div className="glass-ultra rounded-2xl p-6 mb-6">
-                <h3 className="text-lg font-semibold text-white mb-6 flex items-center">
+                <h3 className="text-lg font-semibold text-slate-800 mb-6 flex items-center">
                   <i className="fas fa-briefcase mr-3 text-accent-purple"></i>
                   Professional Information
                 </h3>
 
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-white/70 text-sm mb-2">
+                    <label className="block text-slate-600 text-sm mb-2">
                       Years of Experience
                     </label>
                     <input
@@ -480,7 +481,7 @@ export default function AgentProfilePage() {
                   </div>
 
                   <div>
-                    <label className="block text-white/70 text-sm mb-2">
+                    <label className="block text-slate-600 text-sm mb-2">
                       Specializations
                     </label>
                     <div className="flex flex-wrap gap-2">
@@ -492,7 +493,7 @@ export default function AgentProfilePage() {
                           className={`px-4 py-2 rounded-lg text-sm transition-all ${
                             formData.specialization.includes(spec)
                               ? 'bg-accent-purple text-white'
-                              : 'bg-white/5 text-white/60 hover:bg-white/10'
+                              : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
                           }`}
                         >
                           {spec}
@@ -502,7 +503,7 @@ export default function AgentProfilePage() {
                   </div>
 
                   <div>
-                    <label className="block text-white/70 text-sm mb-2">
+                    <label className="block text-slate-600 text-sm mb-2">
                       Bio / About Me
                     </label>
                     <textarea
@@ -515,7 +516,7 @@ export default function AgentProfilePage() {
                       placeholder="Tell potential clients about yourself..."
                       maxLength={1000}
                     />
-                    <p className="text-white/40 text-xs mt-1 text-right">
+                    <p className="text-slate-400 text-xs mt-1 text-right">
                       {formData.bio.length}/1000
                     </p>
                   </div>

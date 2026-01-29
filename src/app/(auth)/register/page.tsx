@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState, useMemo } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { apiUrl } from '@/lib/config';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -60,7 +61,7 @@ export default function RegisterPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/auth/register', {
+      const response = await fetch(apiUrl('/api/auth/register'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -109,7 +110,7 @@ export default function RegisterPage() {
           <h1 className="text-3xl lg:text-4xl font-display font-bold text-white mb-4">
             Create <span className="gradient-text">Account</span>
           </h1>
-          <p className="text-white/50">Join us and start finding your dream property</p>
+          <p className="text-slate-500">Join us and start finding your dream property</p>
         </div>
 
         <div className="glass-ultra rounded-2xl p-8">
@@ -139,7 +140,7 @@ export default function RegisterPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-white/70 text-sm font-medium mb-2">
+                <label className="block text-slate-600 text-sm font-medium mb-2">
                   First Name
                 </label>
                 <input
@@ -153,7 +154,7 @@ export default function RegisterPage() {
                 />
               </div>
               <div>
-                <label className="block text-white/70 text-sm font-medium mb-2">
+                <label className="block text-slate-600 text-sm font-medium mb-2">
                   Last Name
                 </label>
                 <input
@@ -169,11 +170,11 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-white/70 text-sm font-medium mb-2">
+              <label className="block text-slate-600 text-sm font-medium mb-2">
                 Email Address
               </label>
               <div className="relative">
-                <i className="fas fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-white/40"></i>
+                <i className="fas fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
                 <input
                   type="email"
                   name="email"
@@ -187,11 +188,11 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-white/70 text-sm font-medium mb-2">
+              <label className="block text-slate-600 text-sm font-medium mb-2">
                 Phone Number
               </label>
               <div className="relative">
-                <i className="fas fa-phone absolute left-4 top-1/2 -translate-y-1/2 text-white/40"></i>
+                <i className="fas fa-phone absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
                 <input
                   type="tel"
                   name="phone"
@@ -205,11 +206,11 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-white/70 text-sm font-medium mb-2">
+              <label className="block text-slate-600 text-sm font-medium mb-2">
                 Password
               </label>
               <div className="relative">
-                <i className="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-white/40"></i>
+                <i className="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
                 <input
                   type={showPassword ? 'text' : 'password'}
                   name="password"
@@ -221,7 +222,7 @@ export default function RegisterPage() {
                 />
                 <button
                   type="button"
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
@@ -237,7 +238,7 @@ export default function RegisterPage() {
                     }}
                   ></div>
                 </div>
-                <p className="text-xs text-white/40 mt-1">
+                <p className="text-xs text-slate-400 mt-1">
                   {formData.password.length === 0
                     ? 'Password strength'
                     : strengthTexts[passwordStrength - 1] || strengthTexts[0]}
@@ -246,11 +247,11 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-white/70 text-sm font-medium mb-2">
+              <label className="block text-slate-600 text-sm font-medium mb-2">
                 Confirm Password
               </label>
               <div className="relative">
-                <i className="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-white/40"></i>
+                <i className="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
                 <input
                   type="password"
                   name="confirmPassword"
@@ -270,7 +271,7 @@ export default function RegisterPage() {
                 onChange={(e) => setAgreeTerms(e.target.checked)}
                 className="checkbox-custom mt-0.5"
               />
-              <span className="text-white/60 text-sm">
+              <span className="text-slate-500 text-sm">
                 I agree to the{' '}
                 <Link href="/terms" className="text-accent-blue hover:underline">
                   Terms of Service
@@ -298,7 +299,7 @@ export default function RegisterPage() {
             </button>
           </form>
 
-          <p className="text-center text-white/50 mt-6 text-sm">
+          <p className="text-center text-slate-500 mt-6 text-sm">
             Already have an account?{' '}
             <Link href="/login" className="text-accent-blue hover:underline font-medium">
               Sign in

@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useState, useEffect, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
+import { config } from '@/lib/config';
 
 export default function Header() {
   const { data: session, status } = useSession();
@@ -24,9 +25,10 @@ export default function Header() {
 
   const navLinks = [
     { href: '/', label: 'Home' },
-    { href: '/properties', label: 'Properties' },
+    { href: '/properties?transactionType=SALE', label: 'Buy' },
+    { href: '/properties?transactionType=RENT', label: 'Rent' },
     { href: '/agents', label: 'Agents' },
-    { href: '/notice', label: 'Notice' },
+    { href: '/services', label: 'Services' },
   ];
 
   return (
@@ -66,6 +68,12 @@ export default function Header() {
               ) : session ? (
                 <>
                   <Link
+                    href="/properties?transactionType=SALE"
+                    className="text-slate-600 hover:text-accent-blue font-semibold px-5 py-3 rounded-full border border-slate-300 hover:border-accent-blue transition-all"
+                  >
+                    BUY
+                  </Link>
+                  <Link
                     href="/sell"
                     className="btn-premium text-white font-semibold px-7 py-3 rounded-full"
                   >
@@ -102,40 +110,40 @@ export default function Header() {
                           <p className="text-slate-400 text-xs truncate">{session.user?.email}</p>
                         </div>
                         <Link
-                          href="/dashboard"
+                          href="/my/subscription"
                           className="flex items-center px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-800 transition-all text-sm"
                           onClick={() => setShowUserMenu(false)}
                         >
                           <i className="fas fa-tachometer-alt w-5"></i>
-                          Dashboard
+                          My Account
                         </Link>
                         <Link
-                          href="/dashboard/listings"
+                          href="/properties"
                           className="flex items-center px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-800 transition-all text-sm"
                           onClick={() => setShowUserMenu(false)}
                         >
                           <i className="fas fa-building w-5"></i>
-                          My Listings
+                          Browse Properties
                         </Link>
                         <Link
-                          href="/dashboard/favorites"
+                          href="/pricing"
                           className="flex items-center px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-800 transition-all text-sm"
                           onClick={() => setShowUserMenu(false)}
                         >
-                          <i className="fas fa-heart w-5"></i>
-                          Favorites
+                          <i className="fas fa-crown w-5"></i>
+                          Pricing & Plans
                         </Link>
                         <Link
-                          href="/dashboard/settings"
+                          href="/support"
                           className="flex items-center px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-800 transition-all text-sm"
                           onClick={() => setShowUserMenu(false)}
                         >
-                          <i className="fas fa-cog w-5"></i>
-                          Settings
+                          <i className="fas fa-question-circle w-5"></i>
+                          Support
                         </Link>
                         <div className="border-t border-slate-200 mt-2 pt-2">
                           <button
-                            onClick={() => signOut({ callbackUrl: '/' })}
+                            onClick={() => signOut({ callbackUrl: `${config.basePath}/` })}
                             className="flex items-center w-full px-3 py-2 rounded-lg text-red-500 hover:bg-red-50 transition-all text-sm"
                           >
                             <i className="fas fa-sign-out-alt w-5"></i>
@@ -163,6 +171,12 @@ export default function Header() {
                     }`}
                   >
                     Register
+                  </Link>
+                  <Link
+                    href="/properties?transactionType=SALE"
+                    className="text-slate-600 hover:text-accent-blue font-semibold px-5 py-3 rounded-full border border-slate-300 hover:border-accent-blue transition-all"
+                  >
+                    BUY
                   </Link>
                   <Link
                     href="/sell"
@@ -230,19 +244,28 @@ export default function Header() {
                   </div>
                 </div>
                 <Link
-                  href="/dashboard"
+                  href="/my/subscription"
                   className="block text-slate-500 hover:text-slate-800 transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Dashboard
+                  My Account
                 </Link>
-                <Link
-                  href="/sell"
-                  className="btn-premium text-white font-semibold px-10 py-4 rounded-full text-lg inline-block"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  SELL Property
-                </Link>
+                <div className="flex space-x-4 justify-center mt-4">
+                  <Link
+                    href="/properties?transactionType=SALE"
+                    className="text-slate-600 hover:text-accent-blue font-semibold px-8 py-4 rounded-full text-lg border border-slate-300 hover:border-accent-blue transition-all"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    BUY
+                  </Link>
+                  <Link
+                    href="/sell"
+                    className="btn-premium text-white font-semibold px-8 py-4 rounded-full text-lg"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    SELL
+                  </Link>
+                </div>
                 <button
                   onClick={() => {
                     setIsMobileMenuOpen(false);
@@ -269,13 +292,22 @@ export default function Header() {
                 >
                   Register
                 </Link>
-                <Link
-                  href="/sell"
-                  className="btn-premium text-white font-semibold px-10 py-4 rounded-full text-lg inline-block"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  SELL Property
-                </Link>
+                <div className="flex space-x-4 justify-center mt-4">
+                  <Link
+                    href="/properties?transactionType=SALE"
+                    className="text-slate-600 hover:text-accent-blue font-semibold px-8 py-4 rounded-full text-lg border border-slate-300 hover:border-accent-blue transition-all"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    BUY
+                  </Link>
+                  <Link
+                    href="/sell"
+                    className="btn-premium text-white font-semibold px-8 py-4 rounded-full text-lg"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    SELL
+                  </Link>
+                </div>
               </>
             )}
           </div>

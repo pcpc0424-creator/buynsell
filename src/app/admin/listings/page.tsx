@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { AdminHeader } from '@/components/admin';
+import { apiUrl } from '@/lib/config';
 
 interface Listing {
   id: string;
@@ -79,7 +80,7 @@ export default function ListingsPage() {
         params.set('search', searchTerm);
       }
 
-      const res = await fetch(`/api/listings?${params.toString()}`);
+      const res = await fetch(apiUrl(`/api/listings?${params.toString()}`));
       const result = await res.json();
 
       if (!result.success) {
@@ -113,7 +114,7 @@ export default function ListingsPage() {
   // Fetch status counts separately
   const fetchStatusCounts = async () => {
     try {
-      const res = await fetch('/api/listings?limit=1');
+      const res = await fetch(apiUrl('/api/listings?limit=1'));
       const result = await res.json();
       if (result.success && result.counts) {
         setStatusCounts({
@@ -138,7 +139,7 @@ export default function ListingsPage() {
   const handleApprove = async (id: string) => {
     try {
       setActionLoading(id);
-      const res = await fetch(`/api/listings/${id}/status`, {
+      const res = await fetch(apiUrl(`/api/listings/${id}/status`), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'APPROVED' }),
@@ -176,7 +177,7 @@ export default function ListingsPage() {
 
     try {
       setActionLoading(selectedListing);
-      const res = await fetch(`/api/listings/${selectedListing}/status`, {
+      const res = await fetch(apiUrl(`/api/listings/${selectedListing}/status`), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -273,7 +274,7 @@ export default function ListingsPage() {
             {/* Search */}
             <div className="md:col-span-2">
               <div className="relative">
-                <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-white/40"></i>
+                <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
                 <input
                   type="text"
                   placeholder="Search listings, agents..."
@@ -331,7 +332,7 @@ export default function ListingsPage() {
             onClick={() => setStatusFilter(statusFilter === 'PENDING' ? 'ALL' : 'PENDING')}
           >
             <p className="text-2xl font-bold text-yellow-400">{statusCounts.PENDING}</p>
-            <p className="text-white/50 text-sm">Pending</p>
+            <p className="text-slate-500 text-sm">Pending</p>
           </div>
           <div
             className={`glass-ultra rounded-xl p-4 text-center cursor-pointer transition-all ${
@@ -340,7 +341,7 @@ export default function ListingsPage() {
             onClick={() => setStatusFilter(statusFilter === 'APPROVED' ? 'ALL' : 'APPROVED')}
           >
             <p className="text-2xl font-bold text-green-400">{statusCounts.APPROVED}</p>
-            <p className="text-white/50 text-sm">Approved</p>
+            <p className="text-slate-500 text-sm">Approved</p>
           </div>
           <div
             className={`glass-ultra rounded-xl p-4 text-center cursor-pointer transition-all ${
@@ -349,7 +350,7 @@ export default function ListingsPage() {
             onClick={() => setStatusFilter(statusFilter === 'REJECTED' ? 'ALL' : 'REJECTED')}
           >
             <p className="text-2xl font-bold text-red-400">{statusCounts.REJECTED}</p>
-            <p className="text-white/50 text-sm">Rejected</p>
+            <p className="text-slate-500 text-sm">Rejected</p>
           </div>
         </div>
 
@@ -373,25 +374,25 @@ export default function ListingsPage() {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-white/10">
-                  <th className="text-left text-white/50 text-sm font-medium px-6 py-4">Property</th>
-                  <th className="text-left text-white/50 text-sm font-medium px-6 py-4">Agent</th>
-                  <th className="text-left text-white/50 text-sm font-medium px-6 py-4">Type</th>
-                  <th className="text-left text-white/50 text-sm font-medium px-6 py-4">Price</th>
-                  <th className="text-left text-white/50 text-sm font-medium px-6 py-4">Status</th>
-                  <th className="text-left text-white/50 text-sm font-medium px-6 py-4">Date</th>
-                  <th className="text-right text-white/50 text-sm font-medium px-6 py-4">Actions</th>
+                <tr className="border-b border-slate-200">
+                  <th className="text-left text-slate-500 text-sm font-medium px-6 py-4">Property</th>
+                  <th className="text-left text-slate-500 text-sm font-medium px-6 py-4">Agent</th>
+                  <th className="text-left text-slate-500 text-sm font-medium px-6 py-4">Type</th>
+                  <th className="text-left text-slate-500 text-sm font-medium px-6 py-4">Price</th>
+                  <th className="text-left text-slate-500 text-sm font-medium px-6 py-4">Status</th>
+                  <th className="text-left text-slate-500 text-sm font-medium px-6 py-4">Date</th>
+                  <th className="text-right text-slate-500 text-sm font-medium px-6 py-4">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {listings.map((listing) => (
                   <tr
                     key={listing.id}
-                    className="border-b border-white/5 hover:bg-white/[0.02] transition-colors"
+                    className="border-b border-slate-200 hover:bg-white/[0.02] transition-colors"
                   >
                     <td className="px-6 py-4">
                       <div className="flex items-center space-x-4">
-                        <div className="relative w-16 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-white/5">
+                        <div className="relative w-16 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-slate-100">
                           <Image
                             src={getImageUrl(listing)}
                             alt={listing.title}
@@ -404,7 +405,7 @@ export default function ListingsPage() {
                         </div>
                         <div className="min-w-0">
                           <h4 className="text-white font-medium truncate">{listing.title}</h4>
-                          <p className="text-white/40 text-sm truncate">
+                          <p className="text-slate-400 text-sm truncate">
                             {listing.address || `${listing.city}, ${listing.province}`}
                           </p>
                         </div>
@@ -412,10 +413,10 @@ export default function ListingsPage() {
                     </td>
                     <td className="px-6 py-4">
                       <p className="text-white text-sm">{listing.agent?.name || 'N/A'}</p>
-                      <p className="text-white/40 text-xs">{listing.agent?.email || ''}</p>
+                      <p className="text-slate-400 text-xs">{listing.agent?.email || ''}</p>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="text-white/60 text-sm">{listing.propertyType}</span>
+                      <span className="text-slate-500 text-sm">{listing.propertyType}</span>
                     </td>
                     <td className="px-6 py-4">
                       <span className="text-white font-medium">{formatPrice(listing.price)}</span>
@@ -435,14 +436,14 @@ export default function ListingsPage() {
                       )}
                     </td>
                     <td className="px-6 py-4">
-                      <span className="text-white/50 text-sm">{formatDate(listing.createdAt)}</span>
+                      <span className="text-slate-500 text-sm">{formatDate(listing.createdAt)}</span>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-end space-x-2">
                         <Link
-                          href={`/listings/${listing.id}`}
+                          href={`/properties/sale/${listing.id}`}
                           target="_blank"
-                          className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-white/50 hover:bg-white/10 hover:text-white transition-all"
+                          className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200 hover:text-white transition-all"
                           title="View Details"
                         >
                           <i className="fas fa-eye text-sm"></i>
@@ -481,15 +482,15 @@ export default function ListingsPage() {
 
           {listings.length === 0 && !loading && (
             <div className="text-center py-12">
-              <i className="fas fa-building text-4xl text-white/20 mb-4"></i>
-              <p className="text-white/50">No listings found</p>
+              <i className="fas fa-building text-4xl text-slate-300 mb-4"></i>
+              <p className="text-slate-500">No listings found</p>
             </div>
           )}
 
           {/* Pagination */}
           {pagination.totalPages > 1 && (
-            <div className="flex items-center justify-between px-6 py-4 border-t border-white/5">
-              <p className="text-white/50 text-sm">
+            <div className="flex items-center justify-between px-6 py-4 border-t border-slate-200">
+              <p className="text-slate-500 text-sm">
                 Showing {(pagination.page - 1) * pagination.limit + 1} to{' '}
                 {Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total}
               </p>
@@ -497,17 +498,17 @@ export default function ListingsPage() {
                 <button
                   onClick={() => setPagination(prev => ({ ...prev, page: prev.page - 1 }))}
                   disabled={pagination.page === 1}
-                  className="px-3 py-1 rounded-lg bg-white/5 text-white/60 hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-3 py-1 rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Previous
                 </button>
-                <span className="text-white/60 text-sm">
+                <span className="text-slate-500 text-sm">
                   Page {pagination.page} of {pagination.totalPages}
                 </span>
                 <button
                   onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}
                   disabled={pagination.page >= pagination.totalPages}
-                  className="px-3 py-1 rounded-lg bg-white/5 text-white/60 hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-3 py-1 rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Next
                 </button>
@@ -526,7 +527,7 @@ export default function ListingsPage() {
           ></div>
           <div className="relative glass-ultra rounded-2xl p-6 w-full max-w-md">
             <h3 className="text-xl font-semibold text-white mb-4">Reject Listing</h3>
-            <p className="text-white/60 text-sm mb-4">
+            <p className="text-slate-500 text-sm mb-4">
               Please provide a reason for rejecting this listing.
             </p>
             <textarea
@@ -543,7 +544,7 @@ export default function ListingsPage() {
                   setRejectReason('');
                   setSelectedListing(null);
                 }}
-                className="flex-1 py-3 rounded-xl glass-ultra text-white font-medium hover:bg-white/10 transition-all"
+                className="flex-1 py-3 rounded-xl glass-ultra text-white font-medium hover:bg-slate-200 transition-all"
               >
                 Cancel
               </button>

@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { AdminHeader } from '@/components/admin';
+import { apiUrl } from '@/lib/config';
 
 interface Inquiry {
   id: string;
@@ -72,7 +73,7 @@ export default function InquiriesPage() {
         params.set('status', statusFilter);
       }
 
-      const res = await fetch(`/api/inquiries?${params.toString()}`);
+      const res = await fetch(apiUrl(`/api/inquiries?${params.toString()}`));
       const result = await res.json();
 
       if (!result.success) {
@@ -120,7 +121,7 @@ export default function InquiriesPage() {
   const handleForward = async (id: string) => {
     try {
       setActionLoading(id);
-      const res = await fetch(`/api/inquiries/${id}/forward`, {
+      const res = await fetch(apiUrl(`/api/inquiries/${id}/forward`), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({}),
@@ -151,7 +152,7 @@ export default function InquiriesPage() {
   const handleStatusChange = async (id: string, newStatus: string) => {
     try {
       setActionLoading(id);
-      const res = await fetch(`/api/inquiries/${id}/status`, {
+      const res = await fetch(apiUrl(`/api/inquiries/${id}/status`), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus }),
@@ -187,7 +188,7 @@ export default function InquiriesPage() {
 
     try {
       setActionLoading(selectedInquiry.id);
-      const res = await fetch(`/api/inquiries/${selectedInquiry.id}`, {
+      const res = await fetch(apiUrl(`/api/inquiries/${selectedInquiry.id}`), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ adminNotes }),
@@ -253,7 +254,7 @@ export default function InquiriesPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="md:col-span-2">
               <div className="relative">
-                <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-white/40"></i>
+                <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
                 <input
                   type="text"
                   placeholder="Search by name, email, or property..."
@@ -291,7 +292,7 @@ export default function InquiriesPage() {
             onClick={() => setStatusFilter(statusFilter === 'PENDING' ? 'ALL' : 'PENDING')}
           >
             <p className="text-2xl font-bold text-yellow-400">{statusCounts.PENDING}</p>
-            <p className="text-white/50 text-sm">Pending</p>
+            <p className="text-slate-500 text-sm">Pending</p>
           </div>
           <div
             className={`glass-ultra rounded-xl p-4 text-center cursor-pointer transition-all ${
@@ -300,7 +301,7 @@ export default function InquiriesPage() {
             onClick={() => setStatusFilter(statusFilter === 'REVIEWED' ? 'ALL' : 'REVIEWED')}
           >
             <p className="text-2xl font-bold text-blue-400">{statusCounts.REVIEWED}</p>
-            <p className="text-white/50 text-sm">Reviewed</p>
+            <p className="text-slate-500 text-sm">Reviewed</p>
           </div>
           <div
             className={`glass-ultra rounded-xl p-4 text-center cursor-pointer transition-all ${
@@ -309,7 +310,7 @@ export default function InquiriesPage() {
             onClick={() => setStatusFilter(statusFilter === 'FORWARDED' ? 'ALL' : 'FORWARDED')}
           >
             <p className="text-2xl font-bold text-purple-400">{statusCounts.FORWARDED}</p>
-            <p className="text-white/50 text-sm">Forwarded</p>
+            <p className="text-slate-500 text-sm">Forwarded</p>
           </div>
           <div
             className={`glass-ultra rounded-xl p-4 text-center cursor-pointer transition-all ${
@@ -318,7 +319,7 @@ export default function InquiriesPage() {
             onClick={() => setStatusFilter(statusFilter === 'CLOSED' ? 'ALL' : 'CLOSED')}
           >
             <p className="text-2xl font-bold text-gray-400">{statusCounts.CLOSED}</p>
-            <p className="text-white/50 text-sm">Closed</p>
+            <p className="text-slate-500 text-sm">Closed</p>
           </div>
         </div>
 
@@ -351,11 +352,11 @@ export default function InquiriesPage() {
                   </div>
                   <div>
                     <h4 className="text-white font-medium">{inquiry.name}</h4>
-                    <p className="text-white/40 text-sm">{inquiry.email}</p>
+                    <p className="text-slate-400 text-sm">{inquiry.email}</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <span className="text-white/40 text-sm">{formatDate(inquiry.createdAt)}</span>
+                  <span className="text-slate-400 text-sm">{formatDate(inquiry.createdAt)}</span>
                   <span className={`px-3 py-1 rounded-lg text-xs font-medium ${statusColors[inquiry.status] || ''}`}>
                     {inquiry.status}
                   </span>
@@ -363,29 +364,29 @@ export default function InquiriesPage() {
               </div>
 
               <div className="bg-white/[0.02] rounded-xl p-4 mb-4">
-                <p className="text-white/60 text-sm mb-2">
+                <p className="text-slate-500 text-sm mb-2">
                   <i className="fas fa-building mr-2 text-accent-blue"></i>
                   Re: <span className="text-white">{inquiry.listing.title}</span>
                   {inquiry.listing.agent && (
                     <>
-                      <span className="text-white/30 mx-2">|</span>
+                      <span className="text-slate-400 mx-2">|</span>
                       Agent: {inquiry.listing.agent.name}
                     </>
                   )}
                 </p>
-                <p className="text-white/70">{inquiry.message}</p>
+                <p className="text-slate-600">{inquiry.message}</p>
                 {inquiry.adminNotes && (
-                  <div className="mt-3 pt-3 border-t border-white/10">
-                    <p className="text-white/40 text-xs mb-1">
+                  <div className="mt-3 pt-3 border-t border-slate-200">
+                    <p className="text-slate-400 text-xs mb-1">
                       <i className="fas fa-sticky-note mr-1"></i> Admin Notes:
                     </p>
-                    <p className="text-white/60 text-sm">{inquiry.adminNotes}</p>
+                    <p className="text-slate-500 text-sm">{inquiry.adminNotes}</p>
                   </div>
                 )}
               </div>
 
               <div className="flex items-center justify-between">
-                <div className="text-white/40 text-sm">
+                <div className="text-slate-400 text-sm">
                   <i className="fas fa-phone mr-2"></i>
                   {inquiry.phone || 'No phone'}
                 </div>
@@ -395,7 +396,7 @@ export default function InquiriesPage() {
                       setSelectedInquiry(inquiry);
                       setAdminNotes(inquiry.adminNotes || '');
                     }}
-                    className="px-4 py-2 rounded-lg bg-white/5 text-white/70 hover:bg-white/10 hover:text-white transition-all text-sm"
+                    className="px-4 py-2 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-white transition-all text-sm"
                   >
                     <i className="fas fa-edit mr-2"></i>Notes
                   </button>
@@ -417,7 +418,7 @@ export default function InquiriesPage() {
                     <button
                       onClick={() => handleStatusChange(inquiry.id, 'CLOSED')}
                       disabled={actionLoading === inquiry.id}
-                      className="px-4 py-2 rounded-lg bg-white/5 text-white/50 hover:bg-white/10 hover:text-white transition-all text-sm disabled:opacity-50"
+                      className="px-4 py-2 rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-white transition-all text-sm disabled:opacity-50"
                     >
                       {actionLoading === inquiry.id ? (
                         <i className="fas fa-spinner fa-spin mr-2"></i>
@@ -434,8 +435,8 @@ export default function InquiriesPage() {
 
           {filteredInquiries.length === 0 && !loading && (
             <div className="glass-ultra rounded-2xl p-12 text-center">
-              <i className="fas fa-envelope text-4xl text-white/20 mb-4"></i>
-              <p className="text-white/50">No inquiries found</p>
+              <i className="fas fa-envelope text-4xl text-slate-300 mb-4"></i>
+              <p className="text-slate-500">No inquiries found</p>
             </div>
           )}
         </div>
@@ -443,7 +444,7 @@ export default function InquiriesPage() {
         {/* Pagination */}
         {pagination.totalPages > 1 && (
           <div className="flex items-center justify-between mt-6 glass-ultra rounded-xl px-6 py-4">
-            <p className="text-white/50 text-sm">
+            <p className="text-slate-500 text-sm">
               Showing {(pagination.page - 1) * pagination.limit + 1} to{' '}
               {Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total}
             </p>
@@ -451,17 +452,17 @@ export default function InquiriesPage() {
               <button
                 onClick={() => setPagination(prev => ({ ...prev, page: prev.page - 1 }))}
                 disabled={pagination.page === 1}
-                className="px-3 py-1 rounded-lg bg-white/5 text-white/60 hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-3 py-1 rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Previous
               </button>
-              <span className="text-white/60 text-sm">
+              <span className="text-slate-500 text-sm">
                 Page {pagination.page} of {pagination.totalPages}
               </span>
               <button
                 onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}
                 disabled={pagination.page >= pagination.totalPages}
-                className="px-3 py-1 rounded-lg bg-white/5 text-white/60 hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-3 py-1 rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Next
               </button>
@@ -479,7 +480,7 @@ export default function InquiriesPage() {
           ></div>
           <div className="relative glass-ultra rounded-2xl p-6 w-full max-w-lg">
             <h3 className="text-xl font-semibold text-white mb-2">Admin Notes</h3>
-            <p className="text-white/50 text-sm mb-4">
+            <p className="text-slate-500 text-sm mb-4">
               Inquiry from {selectedInquiry.name} about {selectedInquiry.listing.title}
             </p>
             <textarea
@@ -495,7 +496,7 @@ export default function InquiriesPage() {
                   setSelectedInquiry(null);
                   setAdminNotes('');
                 }}
-                className="flex-1 py-3 rounded-xl glass-ultra text-white font-medium hover:bg-white/10 transition-all"
+                className="flex-1 py-3 rounded-xl glass-ultra text-white font-medium hover:bg-slate-200 transition-all"
               >
                 Cancel
               </button>

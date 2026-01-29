@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Header, Footer } from '@/components/layout';
+import { apiUrl } from '@/lib/config';
 
 interface Subscription {
   id: string;
@@ -74,9 +75,9 @@ export default function SubscriptionPage() {
       setError(null);
 
       const [ordersRes, pointsRes, userRes] = await Promise.all([
-        fetch('/api/payments/orders'),
-        fetch('/api/payments/points'),
-        fetch('/api/users/me'),
+        fetch(apiUrl('/api/payments/orders')),
+        fetch(apiUrl('/api/payments/points')),
+        fetch(apiUrl('/api/users/me')),
       ]);
 
       const ordersData = await ordersRes.json();
@@ -119,7 +120,7 @@ export default function SubscriptionPage() {
       setCancellingId(subscriptionId);
       setError(null);
 
-      const res = await fetch(`/api/payments/subscriptions/${subscriptionId}/cancel`, {
+      const res = await fetch(apiUrl(`/api/payments/subscriptions/${subscriptionId}/cancel`), {
         method: 'POST',
       });
 
@@ -174,10 +175,10 @@ export default function SubscriptionPage() {
         <div className="max-w-5xl mx-auto px-6 lg:px-8">
           {/* Header */}
           <div className="text-center mb-12">
-            <h1 className="text-3xl lg:text-4xl font-display font-bold text-white mb-4">
+            <h1 className="text-3xl lg:text-4xl font-display font-bold text-slate-800 mb-4">
               My <span className="gradient-text">Subscription</span>
             </h1>
-            <p className="text-white/60">Manage your subscription and points</p>
+            <p className="text-slate-500">Manage your subscription and points</p>
           </div>
 
           {error && (
@@ -185,7 +186,7 @@ export default function SubscriptionPage() {
               <div className="flex items-center text-red-400">
                 <i className="fas fa-exclamation-circle mr-3"></i>
                 <span>{error}</span>
-                <button onClick={() => setError(null)} className="ml-auto text-white/50 hover:text-white">
+                <button onClick={() => setError(null)} className="ml-auto text-slate-500 hover:text-slate-800">
                   <i className="fas fa-times"></i>
                 </button>
               </div>
@@ -206,17 +207,17 @@ export default function SubscriptionPage() {
             <div className={`bg-gradient-to-r ${config.gradient} p-6`}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
-                  <div className="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center">
+                  <div className="w-16 h-16 rounded-2xl bg-slate-200 flex items-center justify-center">
                     <i className={`fas ${config.icon} text-white text-2xl`}></i>
                   </div>
                   <div>
-                    <p className="text-white/70 text-sm">Current Plan</p>
+                    <p className="text-slate-600 text-sm">Current Plan</p>
                     <h2 className="text-white font-bold text-2xl">{config.label}</h2>
                   </div>
                 </div>
                 <Link
                   href="/pricing"
-                  className="px-6 py-2 bg-white/20 hover:bg-white/30 rounded-xl text-white font-medium transition-all"
+                  className="px-6 py-2 bg-slate-200 hover:bg-white/30 rounded-xl text-white font-medium transition-all"
                 >
                   <i className="fas fa-arrow-up mr-2"></i>Upgrade
                 </Link>
@@ -225,29 +226,29 @@ export default function SubscriptionPage() {
 
             <div className="p-6">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-white/5 rounded-xl p-4 text-center">
+                <div className="bg-slate-100 rounded-xl p-4 text-center">
                   <i className="fas fa-coins text-accent-blue text-xl mb-2"></i>
-                  <p className="text-white/50 text-xs uppercase tracking-wider mb-1">Points Balance</p>
-                  <p className="text-white font-bold text-xl">{userStats?.points?.toLocaleString() || 0}</p>
+                  <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Points Balance</p>
+                  <p className="text-slate-800 font-bold text-xl">{userStats?.points?.toLocaleString() || 0}</p>
                 </div>
-                <div className="bg-white/5 rounded-xl p-4 text-center">
+                <div className="bg-slate-100 rounded-xl p-4 text-center">
                   <i className="fas fa-eye text-green-400 text-xl mb-2"></i>
-                  <p className="text-white/50 text-xs uppercase tracking-wider mb-1">Daily Views</p>
-                  <p className="text-white font-bold text-xl">
+                  <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Daily Views</p>
+                  <p className="text-slate-800 font-bold text-xl">
                     {userStats?.dailyViews || 0} / {formatLimit(userStats?.dailyLimit || -1)}
                   </p>
                 </div>
-                <div className="bg-white/5 rounded-xl p-4 text-center">
+                <div className="bg-slate-100 rounded-xl p-4 text-center">
                   <i className="fas fa-calendar text-purple-400 text-xl mb-2"></i>
-                  <p className="text-white/50 text-xs uppercase tracking-wider mb-1">Monthly Views</p>
-                  <p className="text-white font-bold text-xl">
+                  <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Monthly Views</p>
+                  <p className="text-slate-800 font-bold text-xl">
                     {userStats?.monthlyViews || 0} / {formatLimit(userStats?.monthlyLimit || -1)}
                   </p>
                 </div>
-                <div className="bg-white/5 rounded-xl p-4 text-center">
+                <div className="bg-slate-100 rounded-xl p-4 text-center">
                   <i className="fas fa-star text-yellow-400 text-xl mb-2"></i>
-                  <p className="text-white/50 text-xs uppercase tracking-wider mb-1">Member Since</p>
-                  <p className="text-white font-bold text-lg">
+                  <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Member Since</p>
+                  <p className="text-slate-800 font-bold text-lg">
                     {session?.user && formatDate((session.user as any).createdAt || new Date().toISOString())}
                   </p>
                 </div>
@@ -262,7 +263,7 @@ export default function SubscriptionPage() {
               className={`px-5 py-2 rounded-xl font-medium transition-all ${
                 activeTab === 'overview'
                   ? 'bg-accent-blue text-white'
-                  : 'bg-white/10 text-white/60 hover:bg-white/20'
+                  : 'bg-slate-200 text-slate-500 hover:bg-slate-200'
               }`}
             >
               <i className="fas fa-chart-pie mr-2"></i>Overview
@@ -272,7 +273,7 @@ export default function SubscriptionPage() {
               className={`px-5 py-2 rounded-xl font-medium transition-all ${
                 activeTab === 'subscriptions'
                   ? 'bg-accent-blue text-white'
-                  : 'bg-white/10 text-white/60 hover:bg-white/20'
+                  : 'bg-slate-200 text-slate-500 hover:bg-slate-200'
               }`}
             >
               <i className="fas fa-history mr-2"></i>Subscription History
@@ -282,7 +283,7 @@ export default function SubscriptionPage() {
               className={`px-5 py-2 rounded-xl font-medium transition-all ${
                 activeTab === 'points'
                   ? 'bg-accent-blue text-white'
-                  : 'bg-white/10 text-white/60 hover:bg-white/20'
+                  : 'bg-slate-200 text-slate-500 hover:bg-slate-200'
               }`}
             >
               <i className="fas fa-coins mr-2"></i>Points History
@@ -293,21 +294,21 @@ export default function SubscriptionPage() {
           <div className="glass-ultra rounded-2xl p-6">
             {activeTab === 'overview' && (
               <div className="space-y-6">
-                <h3 className="text-lg font-semibold text-white mb-4">Account Overview</h3>
+                <h3 className="text-lg font-semibold text-slate-800 mb-4">Account Overview</h3>
 
                 {/* Active Subscription */}
                 {subscriptions.filter((s) => s.status === 'ACTIVE').length > 0 ? (
                   <div className="space-y-4">
-                    <h4 className="text-white/70 text-sm font-medium">Active Subscription</h4>
+                    <h4 className="text-slate-600 text-sm font-medium">Active Subscription</h4>
                     {subscriptions
                       .filter((s) => s.status === 'ACTIVE')
                       .map((sub) => (
-                        <div key={sub.id} className="bg-white/5 rounded-xl p-4 flex items-center justify-between">
+                        <div key={sub.id} className="bg-slate-100 rounded-xl p-4 flex items-center justify-between">
                           <div>
-                            <p className="text-white font-medium">
+                            <p className="text-slate-800 font-medium">
                               {tierConfig[sub.tier]?.label} Plan
                             </p>
-                            <p className="text-white/50 text-sm">
+                            <p className="text-slate-500 text-sm">
                               Renews on {formatDate(sub.endDate)}
                             </p>
                           </div>
@@ -331,9 +332,9 @@ export default function SubscriptionPage() {
                       ))}
                   </div>
                 ) : (
-                  <div className="bg-white/5 rounded-xl p-6 text-center">
-                    <i className="fas fa-info-circle text-3xl text-white/30 mb-3"></i>
-                    <p className="text-white/50">No active subscription</p>
+                  <div className="bg-slate-100 rounded-xl p-6 text-center">
+                    <i className="fas fa-info-circle text-3xl text-slate-400 mb-3"></i>
+                    <p className="text-slate-500">No active subscription</p>
                     <Link
                       href="/pricing"
                       className="inline-block mt-4 px-6 py-2 btn-premium rounded-xl text-white font-medium"
@@ -347,26 +348,26 @@ export default function SubscriptionPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Link
                     href="/pricing"
-                    className="bg-white/5 hover:bg-white/10 rounded-xl p-4 flex items-center space-x-4 transition-all"
+                    className="bg-slate-100 hover:bg-slate-200 rounded-xl p-4 flex items-center space-x-4 transition-all"
                   >
                     <div className="w-12 h-12 rounded-xl bg-accent-blue/20 flex items-center justify-center">
                       <i className="fas fa-arrow-up text-accent-blue"></i>
                     </div>
                     <div>
-                      <p className="text-white font-medium">Upgrade Plan</p>
-                      <p className="text-white/50 text-sm">Get more views and features</p>
+                      <p className="text-slate-800 font-medium">Upgrade Plan</p>
+                      <p className="text-slate-500 text-sm">Get more views and features</p>
                     </div>
                   </Link>
                   <Link
                     href="/pricing?tab=points"
-                    className="bg-white/5 hover:bg-white/10 rounded-xl p-4 flex items-center space-x-4 transition-all"
+                    className="bg-slate-100 hover:bg-slate-200 rounded-xl p-4 flex items-center space-x-4 transition-all"
                   >
                     <div className="w-12 h-12 rounded-xl bg-accent-purple/20 flex items-center justify-center">
                       <i className="fas fa-coins text-accent-purple"></i>
                     </div>
                     <div>
-                      <p className="text-white font-medium">Buy Points</p>
-                      <p className="text-white/50 text-sm">Top up your points balance</p>
+                      <p className="text-slate-800 font-medium">Buy Points</p>
+                      <p className="text-slate-500 text-sm">Top up your points balance</p>
                     </div>
                   </Link>
                 </div>
@@ -375,27 +376,27 @@ export default function SubscriptionPage() {
 
             {activeTab === 'subscriptions' && (
               <div>
-                <h3 className="text-lg font-semibold text-white mb-4">Subscription History</h3>
+                <h3 className="text-lg font-semibold text-slate-800 mb-4">Subscription History</h3>
 
                 {subscriptions.length === 0 ? (
                   <div className="text-center py-12">
-                    <i className="fas fa-receipt text-4xl text-white/20 mb-4"></i>
-                    <p className="text-white/50">No subscription history</p>
+                    <i className="fas fa-receipt text-4xl text-slate-300 mb-4"></i>
+                    <p className="text-slate-500">No subscription history</p>
                   </div>
                 ) : (
                   <div className="space-y-3">
                     {subscriptions.map((sub) => (
                       <div
                         key={sub.id}
-                        className="bg-white/5 rounded-xl p-4 flex items-center justify-between"
+                        className="bg-slate-100 rounded-xl p-4 flex items-center justify-between"
                       >
                         <div className="flex items-center space-x-4">
                           <div className={`w-10 h-10 rounded-xl bg-gradient-to-r ${tierConfig[sub.tier]?.gradient} flex items-center justify-center`}>
                             <i className={`fas ${tierConfig[sub.tier]?.icon} text-white text-sm`}></i>
                           </div>
                           <div>
-                            <p className="text-white font-medium">{tierConfig[sub.tier]?.label} Plan</p>
-                            <p className="text-white/50 text-sm">
+                            <p className="text-slate-800 font-medium">{tierConfig[sub.tier]?.label} Plan</p>
+                            <p className="text-slate-500 text-sm">
                               {formatDate(sub.startDate)} - {formatDate(sub.endDate)}
                             </p>
                           </div>
@@ -404,7 +405,7 @@ export default function SubscriptionPage() {
                           <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusColors[sub.status]}`}>
                             {sub.status}
                           </span>
-                          <p className="text-white/50 text-sm mt-1">${sub.amount.toFixed(2)}</p>
+                          <p className="text-slate-500 text-sm mt-1">${sub.amount.toFixed(2)}</p>
                         </div>
                       </div>
                     ))}
@@ -416,17 +417,17 @@ export default function SubscriptionPage() {
             {activeTab === 'points' && (
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-white">Points History</h3>
-                  <div className="flex items-center space-x-2 text-white/50">
+                  <h3 className="text-lg font-semibold text-slate-800">Points History</h3>
+                  <div className="flex items-center space-x-2 text-slate-500">
                     <i className="fas fa-coins text-accent-blue"></i>
-                    <span>Balance: <strong className="text-white">{userStats?.points?.toLocaleString() || 0}</strong></span>
+                    <span>Balance: <strong className="text-slate-800">{userStats?.points?.toLocaleString() || 0}</strong></span>
                   </div>
                 </div>
 
                 {pointsHistory.length === 0 ? (
                   <div className="text-center py-12">
-                    <i className="fas fa-coins text-4xl text-white/20 mb-4"></i>
-                    <p className="text-white/50">No points transactions</p>
+                    <i className="fas fa-coins text-4xl text-slate-300 mb-4"></i>
+                    <p className="text-slate-500">No points transactions</p>
                     <Link
                       href="/pricing?tab=points"
                       className="inline-block mt-4 px-6 py-2 btn-premium rounded-xl text-white font-medium"
@@ -439,7 +440,7 @@ export default function SubscriptionPage() {
                     {pointsHistory.map((tx) => (
                       <div
                         key={tx.id}
-                        className="bg-white/5 rounded-xl p-4 flex items-center justify-between"
+                        className="bg-slate-100 rounded-xl p-4 flex items-center justify-between"
                       >
                         <div className="flex items-center space-x-4">
                           <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
@@ -450,15 +451,15 @@ export default function SubscriptionPage() {
                             }`}></i>
                           </div>
                           <div>
-                            <p className="text-white font-medium">{tx.description || tx.type}</p>
-                            <p className="text-white/50 text-sm">{formatDate(tx.createdAt)}</p>
+                            <p className="text-slate-800 font-medium">{tx.description || tx.type}</p>
+                            <p className="text-slate-500 text-sm">{formatDate(tx.createdAt)}</p>
                           </div>
                         </div>
                         <div className="text-right">
                           <p className={`font-semibold ${tx.type === 'CREDIT' ? 'text-green-400' : 'text-red-400'}`}>
-                            {tx.type === 'CREDIT' ? '+' : '-'}{Math.abs(tx.amount).toLocaleString()}
+                            {tx.type === 'CREDIT' ? '+' : '-'}{Math.abs(tx.amount ?? 0).toLocaleString()}
                           </p>
-                          <p className="text-white/40 text-xs">Balance: {tx.balanceAfter.toLocaleString()}</p>
+                          <p className="text-slate-400 text-xs">Balance: {(tx.balanceAfter ?? 0).toLocaleString()}</p>
                         </div>
                       </div>
                     ))}

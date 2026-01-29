@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
+import { config } from '@/lib/config';
 
 const menuItems = [
   {
@@ -118,7 +119,7 @@ export default function AdminSidebar({ pendingListings = 0, pendingInquiries = 0
           <span className="font-medium">View Site</span>
         </Link>
         <button
-          onClick={() => signOut({ callbackUrl: '/login' })}
+          onClick={() => signOut({ callbackUrl: `${config.basePath}/login` })}
           className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 transition-all"
         >
           <i className="fas fa-sign-out-alt w-5 text-center"></i>
