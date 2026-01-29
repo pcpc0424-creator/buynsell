@@ -1,0 +1,96 @@
+/* Custom marker styles */
+.custom-marker {
+  background: transparent;
+  border: none;
+}
+
+/* Leaflet popup customization */
+.leaflet-popup-content-wrapper {
+  padding: 0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.leaflet-popup-content {
+  margin: 0;
+  min-width: 250px;
+}
+
+.leaflet-popup-tip {
+  background: white;
+}
+
+/* Remove default Leaflet marker shadow for custom markers */
+.custom-marker .leaflet-marker-shadow {
+  display: none;
+}
+
+/* Bounce animation for location picker */
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+.animate-bounce {
+  animation: bounce 2s infinite;
+}
+
+/* Map container styling */
+.leaflet-container {
+  font-family: inherit;
+  z-index: 0;
+}
+
+/* Cluster marker styles (if using clustering) */
+.marker-cluster-small {
+  background-color: rgba(59, 130, 246, 0.6);
+}
+
+.marker-cluster-small div {
+  background-color: rgba(59, 130, 246, 0.8);
+}
+
+.marker-cluster-medium {
+  background-color: rgba(245, 158, 11, 0.6);
+}
+
+.marker-cluster-medium div {
+  background-color: rgba(245, 158, 11, 0.8);
+}
+
+.marker-cluster-large {
+  background-color: rgba(239, 68, 68, 0.6);
+}
+
+.marker-cluster-large div {
+  background-color: rgba(239, 68, 68, 0.8);
+}
+
+.marker-cluster {
+  background-clip: padding-box;
+  border-radius: 50%;
+}
+
+.marker-cluster div {
+  width: 30px;
+  height: 30px;
+  margin-left: 5px;
+  margin-top: 5px;
+  text-align: center;
+  border-radius: 50%;
+  font: 12px "Helvetica Neue", Arial, Helvetica, sans-serif;
+  color: white;
+  font-weight: bold;
+  line-height: 30px;
+}
+
+.marker-cluster span {
+  line-height: 30px;
+}

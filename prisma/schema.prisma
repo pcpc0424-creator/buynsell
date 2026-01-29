@@ -1,0 +1,432 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum Role {
+  USER
+  AGENT
+  ADMIN
+}
+
+enum Tier {
+  GREEN
+  SILVER
+  GOLD
+  PREMIUM
+}
+
+enum ListingStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum TransactionType {
+  RENT
+  SALE
+}
+
+enum PropertyType {
+  HOUSE
+  CONDO
+  TOWNHOUSE
+  COMMERCIAL
+  LOT
+  NEW_DEVELOPMENT
+}
+
+enum PropertyStatus {
+  NEW
+  USED
+  UNDER_CONSTRUCTION
+}
+
+enum InquiryMode {
+  MODE_A  // Admin only
+  MODE_B  // Admin confirms then forwards to agent
+}
+
+enum InquiryStatus {
+  PENDING
+  REVIEWED
+  FORWARDED
+  CLOSED
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  EXPIRED
+  CANCELLED
+}
+
+enum PointTransactionType {
+  CREDIT
+  DEBIT
+}
+
+enum AdPosition {
+  MAIN_BANNER
+  SIDEBAR
+  LIST_TOP
+  LIST_BOTTOM
+  PROPERTY_DETAIL
+}
+
+// ============================================
+// USER & AUTHENTICATION
+// ============================================
+
+model User {
+  id              String    @id @default(cuid())
+  name            String?
+  email           String    @unique
+  emailVerified   DateTime?
+  password        String?
+  phone           String?
+  image           String?
+  role            Role      @default(USER)
+  tier            Tier      @default(GREEN)
+  points          Int       @default(0)
+  isActive        Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relations
+  agentProfile    AgentProfile?
+  listings        Listing[]
+  inquiries       Inquiry[]
+  subscriptions   Subscription[]
+  pointsLedger    PointsLedger[]
+  favorites       Favorite[]
+  accounts        Account[]
+  sessions        Session[]
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ============================================
+// AGENT PROFILE
+// ============================================
+
+model AgentProfile {
+  id              String    @id @default(cuid())
+  userId          String    @unique
+  bio             String?   @db.Text
+  licenseNumber   String?
+  specialization  String[]
+  yearsExperience Int       @default(0)
+  rating          Float     @default(0)
+  reviewCount     Int       @default(0)
+  isVerified      Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("agent_profiles")
+}
+
+// ============================================
+// LISTING (PROPERTY)
+// ============================================
+
+model Listing {
+  id              String          @id @default(cuid())
+  agentId         String
+  title           String
+  description     String?         @db.Text
+  price           Float
+  transactionType TransactionType
+  propertyType    PropertyType
+  propertyStatus  PropertyStatus  @default(NEW)
+  status          ListingStatus   @default(PENDING)
+  rejectionReason String?
+
+  // Location
+  address         String
+  city            String
+  barangay        String?
+  latitude        Float?
+  longitude       Float?
+
+  // Property Details
+  area            Float?          // sqm
+  bedrooms        Int?
+  bathrooms       Int?
+  parking         Int?
+  floorNumber     Int?
+  totalFloors     Int?
+
+  // Images
+  mainImage       String
+
+  // Metadata
+  viewCount       Int             @default(0)
+  isFeatured      Boolean         @default(false)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  approvedAt      DateTime?
+  approvedBy      String?
+
+  // Relations
+  agent           User            @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  images          ListingImage[]
+  inquiries       Inquiry[]
+  favorites       Favorite[]
+  featuredListing FeaturedListing?
+
+  @@index([agentId])
+  @@index([status])
+  @@index([propertyType])
+  @@index([transactionType])
+  @@index([city])
+  @@map("listings")
+}
+
+model ListingImage {
+  id        String   @id @default(cuid())
+  listingId String
+  url       String
+  caption   String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@index([listingId])
+  @@map("listing_images")
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  listingId String
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, listingId])
+  @@map("favorites")
+}
+
+// ============================================
+// TIER POLICY (Admin Configurable)
+// ============================================
+
+model TierPolicy {
+  id                    String   @id @default(cuid())
+  tier                  Tier     @unique
+  dailyViewLimit        Int      @default(-1)  // -1 = unlimited
+  monthlyViewLimit      Int      @default(-1)  // -1 = unlimited
+  listingLimit          Int      @default(0)   // For agents only
+  maxViewablePrice      Float?                  // null = no limit
+  monthlySubscriptionPrice Float?
+  pointsPerView         Int      @default(0)
+  pointsPerListing      Int      @default(0)
+  description           String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@map("tier_policies")
+}
+
+// ============================================
+// SUBSCRIPTION
+// ============================================
+
+model Subscription {
+  id              String             @id @default(cuid())
+  userId          String
+  tier            Tier
+  status          SubscriptionStatus @default(ACTIVE)
+  startDate       DateTime           @default(now())
+  endDate         DateTime
+  paypalOrderId   String?
+  amount          Float
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@map("subscriptions")
+}
+
+// ============================================
+// POINTS LEDGER
+// ============================================
+
+model PointsLedger {
+  id              String               @id @default(cuid())
+  userId          String
+  amount          Int
+  type            PointTransactionType
+  description     String?
+  referenceId     String?              // Can reference listing/subscription/etc
+  referenceType   String?
+  balanceAfter    Int
+  createdAt       DateTime             @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("points_ledger")
+}
+
+// ============================================
+// INQUIRY
+// ============================================
+
+model Inquiry {
+  id            String        @id @default(cuid())
+  userId        String
+  listingId     String
+  name          String
+  email         String
+  phone         String?
+  message       String        @db.Text
+  status        InquiryStatus @default(PENDING)
+  adminNotes    String?       @db.Text
+  forwardedAt   DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([listingId])
+  @@index([status])
+  @@map("inquiries")
+}
+
+// ============================================
+// INQUIRY SETTINGS
+// ============================================
+
+model InquirySetting {
+  id                  String      @id @default(cuid())
+  mode                InquiryMode @default(MODE_A)
+  notifyAgentByEmail  Boolean     @default(false)
+  notifyAgentByApp    Boolean     @default(false)
+  autoForwardDelay    Int?        // Minutes before auto-forward (null = manual only)
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+
+  @@map("inquiry_settings")
+}
+
+// ============================================
+// ADVERTISEMENT / BANNER
+// ============================================
+
+model Advertisement {
+  id            String      @id @default(cuid())
+  title         String
+  imageUrl      String
+  linkUrl       String?
+  position      AdPosition
+  isActive      Boolean     @default(true)
+  startDate     DateTime?
+  endDate       DateTime?
+  clickCount    Int         @default(0)
+  viewCount     Int         @default(0)
+  order         Int         @default(0)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@index([position])
+  @@index([isActive])
+  @@map("advertisements")
+}
+
+// ============================================
+// FEATURED LISTING (Top Exposure)
+// ============================================
+
+model FeaturedListing {
+  id          String    @id @default(cuid())
+  listingId   String    @unique
+  position    Int       @default(0)   // Lower = higher priority
+  startDate   DateTime  @default(now())
+  endDate     DateTime?
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@index([isActive])
+  @@map("featured_listings")
+}
+
+// ============================================
+// SYSTEM SETTINGS
+// ============================================
+
+model SystemSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String   @db.Text
+  type      String   @default("string") // string, number, boolean, json
+  category  String   @default("general")
+  description String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([category])
+  @@map("system_settings")
+}
