@@ -56,13 +56,13 @@ export default function RecentProperties() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between mb-16">
           <div>
-            <span className="inline-block px-5 py-2 glass-ultra rounded-full text-sm text-white/60 mb-6">
+            <span className="inline-block px-5 py-2 glass-ultra rounded-full text-sm text-slate-600 mb-6">
               <i className="fas fa-fire mr-2 text-accent-pink"></i>Featured
             </span>
-            <h2 className="section-title text-4xl sm:text-5xl lg:text-6xl font-display font-bold">
+            <h2 className="section-title text-4xl sm:text-5xl lg:text-6xl font-display font-bold text-slate-800">
               Recent <span className="gradient-text">Real Estate</span>
             </h2>
-            <p className="text-white/40 text-lg mt-4">Find Your Perfect Properties at the best prices</p>
+            <p className="text-slate-500 text-lg mt-4">Find Your Perfect Properties at the best prices</p>
           </div>
           <Link
             href="/properties"
@@ -89,20 +89,20 @@ export default function RecentProperties() {
                     className="card-image object-cover transition-transform duration-700 hover:scale-110"
                   />
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-dark-950 via-dark-950/20 to-transparent rounded-3xl"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent rounded-3xl"></div>
 
                 {/* Tags */}
                 <div className="absolute top-6 left-6 flex items-center space-x-3 z-10">
                   <span className="px-4 py-1.5 rounded-full bg-accent-pink text-white text-xs font-semibold uppercase">
                     Featured
                   </span>
-                  <span className="px-4 py-1.5 rounded-full glass-ultra text-white text-xs font-semibold">
+                  <span className="px-4 py-1.5 rounded-full bg-white/90 text-slate-800 text-xs font-semibold shadow-sm">
                     {properties[0].type}
                   </span>
                 </div>
 
                 {/* Favorite Button */}
-                <button className="absolute top-6 right-6 w-12 h-12 rounded-full glass-ultra flex items-center justify-center text-white/70 hover:text-accent-pink hover:bg-white/10 transition-all z-10">
+                <button className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/90 flex items-center justify-center text-slate-600 hover:text-accent-pink hover:bg-white transition-all z-10 shadow-sm">
                   <i className="far fa-heart text-lg"></i>
                 </button>
 
@@ -112,11 +112,11 @@ export default function RecentProperties() {
                     {properties[0].price}
                   </div>
                   <h3 className="text-2xl font-bold text-white mb-2">{properties[0].title}</h3>
-                  <p className="text-white/50 flex items-center mb-4">
+                  <p className="text-white/70 flex items-center mb-4">
                     <i className="fas fa-map-marker-alt mr-2 text-accent-blue"></i>
                     {properties[0].address}
                   </p>
-                  <div className="flex items-center space-x-6 text-white/60">
+                  <div className="flex items-center space-x-6 text-white/80">
                     <span className="flex items-center">
                       <i className="fas fa-bed mr-2"></i>{properties[0].bedrooms} Beds
                     </span>
@@ -145,17 +145,17 @@ export default function RecentProperties() {
                     loading="lazy"
                     className="card-image object-cover transition-transform duration-700 hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-dark-950 via-dark-950/20 to-transparent"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent"></div>
 
                   {/* Tags */}
                   <div className="absolute top-4 left-4 flex items-center space-x-2 z-10">
-                    <span className="px-3 py-1 rounded-full glass-ultra text-white text-xs font-semibold">
+                    <span className="px-3 py-1 rounded-full bg-white/90 text-slate-800 text-xs font-semibold shadow-sm">
                       {property.type}
                     </span>
                   </div>
 
                   {/* Favorite Button */}
-                  <button className="absolute top-4 right-4 w-10 h-10 rounded-full glass-ultra flex items-center justify-center text-white/70 hover:text-accent-pink transition-all z-10">
+                  <button className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 flex items-center justify-center text-slate-600 hover:text-accent-pink transition-all z-10 shadow-sm">
                     <i className="far fa-heart"></i>
                   </button>
 
@@ -165,7 +165,7 @@ export default function RecentProperties() {
                       {property.price}
                     </div>
                     <h3 className="text-lg font-semibold text-white mb-1">{property.title}</h3>
-                    <p className="text-white/50 text-sm flex items-center">
+                    <p className="text-white/70 text-sm flex items-center">
                       <i className="fas fa-map-marker-alt mr-2 text-accent-blue"></i>
                       {property.address}
                     </p>

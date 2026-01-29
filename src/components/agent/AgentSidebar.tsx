@@ -28,7 +28,7 @@ const menuItems = [
     label: 'Profile',
   },
   {
-    href: '/sell',
+    href: '/agent/listings/new',
     icon: 'fa-plus-circle',
     label: 'Add Listing',
   },
@@ -43,16 +43,16 @@ export default function AgentSidebar({ listingsCount = 0, inquiriesCount = 0 }: 
   const pathname = usePathname();
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-64 bg-dark-900 border-r border-white/5 flex flex-col z-40">
+    <aside className="fixed left-0 top-0 h-screen w-64 bg-white border-r border-slate-200 flex flex-col z-40 shadow-sm">
       {/* Logo */}
-      <div className="p-6 border-b border-white/5">
+      <div className="p-6 border-b border-slate-200">
         <Link href="/agent" className="flex items-center space-x-3">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-purple to-accent-pink flex items-center justify-center">
             <i className="fas fa-home text-white"></i>
           </div>
           <div>
-            <span className="text-lg font-bold font-display text-white">Buy & Sell</span>
-            <span className="block text-xs text-white/40">Agent Portal</span>
+            <span className="text-lg font-bold font-display text-slate-800">Buy & Sell</span>
+            <span className="block text-xs text-slate-500">Agent Portal</span>
           </div>
         </Link>
       </div>
@@ -76,7 +76,7 @@ export default function AgentSidebar({ listingsCount = 0, inquiriesCount = 0 }: 
                   className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all ${
                     isActive
                       ? 'bg-accent-purple/10 text-accent-purple'
-                      : 'text-white/60 hover:bg-white/5 hover:text-white'
+                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-800'
                   }`}
                 >
                   <div className="flex items-center space-x-3">
@@ -96,17 +96,17 @@ export default function AgentSidebar({ listingsCount = 0, inquiriesCount = 0 }: 
       </nav>
 
       {/* Footer */}
-      <div className="p-4 border-t border-white/5">
+      <div className="p-4 border-t border-slate-200">
         <Link
           href="/"
-          className="flex items-center space-x-3 px-4 py-3 rounded-xl text-white/60 hover:bg-white/5 hover:text-white transition-all"
+          className="flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-800 transition-all"
         >
           <i className="fas fa-external-link-alt w-5 text-center"></i>
           <span className="font-medium">View Site</span>
         </Link>
         <button
           onClick={() => signOut({ callbackUrl: '/login' })}
-          className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-red-400 hover:bg-red-500/10 transition-all"
+          className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 transition-all"
         >
           <i className="fas fa-sign-out-alt w-5 text-center"></i>
           <span className="font-medium">Sign Out</span>

@@ -34,9 +34,9 @@ interface StatusCounts {
 const statusOptions = ['ALL', 'PENDING', 'APPROVED', 'REJECTED'];
 
 const statusColors: Record<string, string> = {
-  PENDING: 'bg-yellow-500/20 text-yellow-400',
-  APPROVED: 'bg-green-500/20 text-green-400',
-  REJECTED: 'bg-red-500/20 text-red-400',
+  PENDING: 'bg-yellow-100 text-yellow-700',
+  APPROVED: 'bg-green-100 text-green-700',
+  REJECTED: 'bg-red-100 text-red-700',
 };
 
 export default function AgentListingsPage() {
@@ -160,36 +160,36 @@ export default function AgentListingsPage() {
           <div className="flex gap-4">
             <div
               className={`glass-ultra rounded-xl px-6 py-3 text-center cursor-pointer transition-all ${
-                statusFilter === 'PENDING' ? 'ring-2 ring-yellow-400' : ''
+                statusFilter === 'PENDING' ? 'ring-2 ring-yellow-500' : ''
               }`}
               onClick={() => setStatusFilter(statusFilter === 'PENDING' ? 'ALL' : 'PENDING')}
             >
-              <p className="text-xl font-bold text-yellow-400">{statusCounts.PENDING}</p>
-              <p className="text-white/50 text-xs">Pending</p>
+              <p className="text-xl font-bold text-yellow-600">{statusCounts.PENDING}</p>
+              <p className="text-slate-500 text-xs">Pending</p>
             </div>
             <div
               className={`glass-ultra rounded-xl px-6 py-3 text-center cursor-pointer transition-all ${
-                statusFilter === 'APPROVED' ? 'ring-2 ring-green-400' : ''
+                statusFilter === 'APPROVED' ? 'ring-2 ring-green-500' : ''
               }`}
               onClick={() => setStatusFilter(statusFilter === 'APPROVED' ? 'ALL' : 'APPROVED')}
             >
-              <p className="text-xl font-bold text-green-400">{statusCounts.APPROVED}</p>
-              <p className="text-white/50 text-xs">Active</p>
+              <p className="text-xl font-bold text-green-600">{statusCounts.APPROVED}</p>
+              <p className="text-slate-500 text-xs">Active</p>
             </div>
             <div
               className={`glass-ultra rounded-xl px-6 py-3 text-center cursor-pointer transition-all ${
-                statusFilter === 'REJECTED' ? 'ring-2 ring-red-400' : ''
+                statusFilter === 'REJECTED' ? 'ring-2 ring-red-500' : ''
               }`}
               onClick={() => setStatusFilter(statusFilter === 'REJECTED' ? 'ALL' : 'REJECTED')}
             >
-              <p className="text-xl font-bold text-red-400">{statusCounts.REJECTED}</p>
-              <p className="text-white/50 text-xs">Rejected</p>
+              <p className="text-xl font-bold text-red-600">{statusCounts.REJECTED}</p>
+              <p className="text-slate-500 text-xs">Rejected</p>
             </div>
           </div>
 
           <Link
             href="/agent/listings/new"
-            className="btn-premium px-6 py-3 rounded-xl text-white font-semibold flex items-center justify-center space-x-2"
+            className="btn-premium px-6 py-3 rounded-xl text-slate-800 font-semibold flex items-center justify-center space-x-2"
           >
             <i className="fas fa-plus"></i>
             <span>Add New Listing</span>
@@ -201,7 +201,7 @@ export default function AgentListingsPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="md:col-span-2">
               <div className="relative">
-                <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-white/40"></i>
+                <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
                 <input
                   type="text"
                   placeholder="Search your listings..."
@@ -231,8 +231,8 @@ export default function AgentListingsPage() {
         </div>
 
         {error && (
-          <div className="glass-ultra rounded-2xl p-6 mb-6 border border-red-500/20">
-            <div className="flex items-center text-red-400">
+          <div className="glass-ultra rounded-2xl p-6 mb-6 border border-red-200">
+            <div className="flex items-center text-red-600">
               <i className="fas fa-exclamation-circle mr-3"></i>
               <span>{error}</span>
               <button
@@ -251,10 +251,10 @@ export default function AgentListingsPage() {
             {filteredListings.map((listing) => (
               <div
                 key={listing.id}
-                className="glass-ultra rounded-2xl overflow-hidden hover:bg-white/[0.04] transition-all group"
+                className="glass-ultra rounded-2xl overflow-hidden hover:bg-slate-50 transition-all group"
               >
                 {/* Image */}
-                <div className="relative h-48 bg-white/5">
+                <div className="relative h-48 bg-slate-100">
                   {getImageUrl(listing) ? (
                     <Image
                       src={getImageUrl(listing)!}
@@ -263,7 +263,7 @@ export default function AgentListingsPage() {
                       className="object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-white/20">
+                    <div className="w-full h-full flex items-center justify-center text-slate-300">
                       <i className="fas fa-image text-4xl"></i>
                     </div>
                   )}
@@ -273,7 +273,7 @@ export default function AgentListingsPage() {
                     </span>
                   </div>
                   <div className="absolute top-3 right-3">
-                    <span className="px-3 py-1 rounded-lg text-xs font-medium bg-black/50 text-white">
+                    <span className="px-3 py-1 rounded-lg text-xs font-medium bg-black/50 text-slate-800">
                       {listing.transactionType === 'SALE' ? 'For Sale' : 'For Rent'}
                     </span>
                   </div>
@@ -281,18 +281,18 @@ export default function AgentListingsPage() {
 
                 {/* Content */}
                 <div className="p-5">
-                  <h3 className="text-white font-semibold text-lg mb-1 truncate">{listing.title}</h3>
-                  <p className="text-white/40 text-sm mb-3 truncate">
+                  <h3 className="text-slate-800 font-semibold text-lg mb-1 truncate">{listing.title}</h3>
+                  <p className="text-slate-400 text-sm mb-3 truncate">
                     <i className="fas fa-map-marker-alt mr-1"></i>
                     {listing.address || `${listing.city}, ${listing.province}`}
                   </p>
 
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-accent-purple font-bold text-lg">{formatPrice(listing.price)}</span>
-                    <span className="text-white/30 text-xs">{formatDate(listing.createdAt)}</span>
+                    <span className="text-slate-400 text-xs">{formatDate(listing.createdAt)}</span>
                   </div>
 
-                  <div className="flex items-center text-white/50 text-sm space-x-4 mb-4">
+                  <div className="flex items-center text-slate-500 text-sm space-x-4 mb-4">
                     {listing.bedrooms > 0 && (
                       <span><i className="fas fa-bed mr-1"></i> {listing.bedrooms}</span>
                     )}
@@ -303,8 +303,8 @@ export default function AgentListingsPage() {
                   </div>
 
                   {listing.rejectionReason && listing.status === 'REJECTED' && (
-                    <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 mb-4">
-                      <p className="text-red-400 text-xs">
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
+                      <p className="text-red-600 text-xs">
                         <i className="fas fa-exclamation-circle mr-1"></i>
                         {listing.rejectionReason}
                       </p>
@@ -315,7 +315,7 @@ export default function AgentListingsPage() {
                     <Link
                       href={`/listings/${listing.id}`}
                       target="_blank"
-                      className="flex-1 py-2 rounded-lg bg-white/5 text-white/70 text-center text-sm hover:bg-white/10 transition-colors"
+                      className="flex-1 py-2 rounded-lg bg-slate-100 text-slate-700 text-center text-sm hover:bg-slate-200 transition-colors"
                     >
                       <i className="fas fa-eye mr-1"></i> View
                     </Link>
@@ -332,16 +332,16 @@ export default function AgentListingsPage() {
           </div>
         ) : (
           <div className="glass-ultra rounded-2xl p-12 text-center">
-            <i className="fas fa-building text-5xl text-white/20 mb-4"></i>
-            <h3 className="text-white font-semibold text-lg mb-2">No listings found</h3>
-            <p className="text-white/50 mb-6">
+            <i className="fas fa-building text-5xl text-slate-300 mb-4"></i>
+            <h3 className="text-slate-800 font-semibold text-lg mb-2">No listings found</h3>
+            <p className="text-slate-500 mb-6">
               {statusFilter !== 'ALL'
                 ? `You don't have any ${statusFilter.toLowerCase()} listings.`
                 : 'Start by creating your first property listing.'}
             </p>
             <Link
               href="/sell"
-              className="inline-block px-6 py-3 btn-premium rounded-xl text-white font-semibold"
+              className="inline-block px-6 py-3 btn-premium rounded-xl text-slate-800 font-semibold"
             >
               <i className="fas fa-plus mr-2"></i>
               Create New Listing
@@ -352,7 +352,7 @@ export default function AgentListingsPage() {
         {/* Pagination */}
         {pagination.totalPages > 1 && (
           <div className="flex items-center justify-between mt-6 glass-ultra rounded-xl px-6 py-4">
-            <p className="text-white/50 text-sm">
+            <p className="text-slate-500 text-sm">
               Showing {(pagination.page - 1) * pagination.limit + 1} to{' '}
               {Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total}
             </p>
@@ -360,17 +360,17 @@ export default function AgentListingsPage() {
               <button
                 onClick={() => setPagination(prev => ({ ...prev, page: prev.page - 1 }))}
                 disabled={pagination.page === 1}
-                className="px-3 py-1 rounded-lg bg-white/5 text-white/60 hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-3 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Previous
               </button>
-              <span className="text-white/60 text-sm">
+              <span className="text-slate-600 text-sm">
                 Page {pagination.page} of {pagination.totalPages}
               </span>
               <button
                 onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}
                 disabled={pagination.page >= pagination.totalPages}
-                className="px-3 py-1 rounded-lg bg-white/5 text-white/60 hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-3 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Next
               </button>

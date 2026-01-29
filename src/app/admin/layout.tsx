@@ -28,7 +28,7 @@ export default async function AdminLayout({
   ]);
 
   return (
-    <div className="min-h-screen bg-dark-950">
+    <div className="min-h-screen bg-slate-50">
       <AdminSidebar pendingListings={pendingListings} pendingInquiries={pendingInquiries} />
       <main className="ml-64">
         {children}

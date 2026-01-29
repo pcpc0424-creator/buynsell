@@ -50,16 +50,16 @@ function LoginForm() {
     <section className="py-12">
       <div className="max-w-md mx-auto px-6 lg:px-8">
         <div className="text-center mb-10">
-          <h1 className="text-3xl lg:text-4xl font-display font-bold text-white mb-4">
+          <h1 className="text-3xl lg:text-4xl font-display font-bold text-slate-800 mb-4">
             Welcome <span className="gradient-text">Back</span>
           </h1>
-          <p className="text-white/50">Sign in to continue to your account</p>
+          <p className="text-slate-500">Sign in to continue to your account</p>
         </div>
 
         <div className="glass-ultra rounded-2xl p-8">
           {/* Error Message */}
           {error && (
-            <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+            <div className="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm">
               <i className="fas fa-exclamation-circle mr-2"></i>
               {error}
             </div>
@@ -82,11 +82,11 @@ function LoginForm() {
           {/* Login Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-white/70 text-sm font-medium mb-2">
+              <label className="block text-slate-700 text-sm font-medium mb-2">
                 Email Address
               </label>
               <div className="relative">
-                <i className="fas fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-white/40"></i>
+                <i className="fas fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
                 <input
                   type="email"
                   value={email}
@@ -99,11 +99,11 @@ function LoginForm() {
             </div>
 
             <div>
-              <label className="block text-white/70 text-sm font-medium mb-2">
+              <label className="block text-slate-700 text-sm font-medium mb-2">
                 Password
               </label>
               <div className="relative">
-                <i className="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-white/40"></i>
+                <i className="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={password}
@@ -114,7 +114,7 @@ function LoginForm() {
                 />
                 <button
                   type="button"
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
@@ -130,7 +130,7 @@ function LoginForm() {
                   onChange={(e) => setRememberMe(e.target.checked)}
                   className="checkbox-custom"
                 />
-                <span className="text-white/60 text-sm">Remember me</span>
+                <span className="text-slate-600 text-sm">Remember me</span>
               </label>
               <Link
                 href="/forgot-password"
@@ -156,7 +156,7 @@ function LoginForm() {
             </button>
           </form>
 
-          <p className="text-center text-white/50 mt-6 text-sm">
+          <p className="text-center text-slate-500 mt-6 text-sm">
             Don&apos;t have an account?{' '}
             <Link href="/register" className="text-accent-blue hover:underline font-medium">
               Sign up
@@ -173,15 +173,15 @@ function LoginFormFallback() {
     <section className="py-12">
       <div className="max-w-md mx-auto px-6 lg:px-8">
         <div className="text-center mb-10">
-          <h1 className="text-3xl lg:text-4xl font-display font-bold text-white mb-4">
+          <h1 className="text-3xl lg:text-4xl font-display font-bold text-slate-800 mb-4">
             Welcome <span className="gradient-text">Back</span>
           </h1>
-          <p className="text-white/50">Sign in to continue to your account</p>
+          <p className="text-slate-500">Sign in to continue to your account</p>
         </div>
         <div className="glass-ultra rounded-2xl p-8 animate-pulse">
-          <div className="h-12 bg-white/10 rounded-xl mb-4"></div>
-          <div className="h-12 bg-white/10 rounded-xl mb-4"></div>
-          <div className="h-12 bg-white/10 rounded-xl"></div>
+          <div className="h-12 bg-slate-200 rounded-xl mb-4"></div>
+          <div className="h-12 bg-slate-200 rounded-xl mb-4"></div>
+          <div className="h-12 bg-slate-200 rounded-xl"></div>
         </div>
       </div>
     </section>

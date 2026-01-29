@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className="py-16 border-t border-white/5">
+    <footer className="py-16 border-t border-slate-200 bg-white">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           {/* Brand */}
@@ -11,29 +11,29 @@ export default function Footer() {
               <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-accent-blue to-accent-purple flex items-center justify-center">
                 <i className="fas fa-home text-white text-lg"></i>
               </div>
-              <span className="text-xl font-bold font-display">
+              <span className="text-xl font-bold font-display text-slate-800">
                 Buy <span className="gradient-text">&</span> Sell
               </span>
             </Link>
-            <p className="text-white/40 mb-6">
+            <p className="text-slate-500 mb-6">
               Your trusted partner in finding the perfect property.
             </p>
             <div className="flex space-x-4">
               <a
                 href="#"
-                className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white/50 hover:bg-accent-blue hover:text-white transition-all"
+                className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-accent-blue hover:text-white transition-all"
               >
                 <i className="fab fa-facebook-f"></i>
               </a>
               <a
                 href="#"
-                className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white/50 hover:bg-accent-blue hover:text-white transition-all"
+                className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-accent-blue hover:text-white transition-all"
               >
                 <i className="fab fa-instagram"></i>
               </a>
               <a
                 href="#"
-                className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white/50 hover:bg-accent-blue hover:text-white transition-all"
+                className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-accent-blue hover:text-white transition-all"
               >
                 <i className="fab fa-twitter"></i>
               </a>
@@ -42,20 +42,20 @@ export default function Footer() {
 
           {/* Help */}
           <div>
-            <h4 className="text-white font-semibold mb-6">Help</h4>
+            <h4 className="text-slate-800 font-semibold mb-6">Help</h4>
             <ul className="space-y-3">
               <li>
-                <Link href="/faq" className="text-white/40 hover:text-white transition-colors">
+                <Link href="/faq" className="text-slate-500 hover:text-slate-800 transition-colors">
                   FAQ
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-white/40 hover:text-white transition-colors">
+                <Link href="/contact" className="text-slate-500 hover:text-slate-800 transition-colors">
                   Contact Us
                 </Link>
               </li>
               <li>
-                <Link href="/support" className="text-white/40 hover:text-white transition-colors">
+                <Link href="/support" className="text-slate-500 hover:text-slate-800 transition-colors">
                   Support
                 </Link>
               </li>
@@ -64,20 +64,20 @@ export default function Footer() {
 
           {/* Company */}
           <div>
-            <h4 className="text-white font-semibold mb-6">Company</h4>
+            <h4 className="text-slate-800 font-semibold mb-6">Company</h4>
             <ul className="space-y-3">
               <li>
-                <Link href="/about" className="text-white/40 hover:text-white transition-colors">
+                <Link href="/about" className="text-slate-500 hover:text-slate-800 transition-colors">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link href="/privacy" className="text-white/40 hover:text-white transition-colors">
+                <Link href="/privacy" className="text-slate-500 hover:text-slate-800 transition-colors">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="text-white/40 hover:text-white transition-colors">
+                <Link href="/terms" className="text-slate-500 hover:text-slate-800 transition-colors">
                   Terms of Service
                 </Link>
               </li>
@@ -86,20 +86,20 @@ export default function Footer() {
 
           {/* Follow Us */}
           <div>
-            <h4 className="text-white font-semibold mb-6">Follow Us</h4>
+            <h4 className="text-slate-800 font-semibold mb-6">Follow Us</h4>
             <ul className="space-y-3">
               <li>
-                <a href="#" className="text-white/40 hover:text-white transition-colors">
+                <a href="#" className="text-slate-500 hover:text-slate-800 transition-colors">
                   <i className="fab fa-facebook mr-2"></i>Facebook
                 </a>
               </li>
               <li>
-                <a href="#" className="text-white/40 hover:text-white transition-colors">
+                <a href="#" className="text-slate-500 hover:text-slate-800 transition-colors">
                   <i className="fab fa-instagram mr-2"></i>Instagram
                 </a>
               </li>
               <li>
-                <a href="#" className="text-white/40 hover:text-white transition-colors">
+                <a href="#" className="text-slate-500 hover:text-slate-800 transition-colors">
                   <i className="fab fa-twitter mr-2"></i>Twitter
                 </a>
               </li>
@@ -107,8 +107,8 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-white/5 pt-8 text-center">
-          <p className="text-white/30 text-sm">
+        <div className="border-t border-slate-200 pt-8 text-center">
+          <p className="text-slate-400 text-sm">
             &copy; {new Date().getFullYear()} Buy & Sell. All rights reserved.
           </p>
         </div>

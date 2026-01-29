@@ -7,7 +7,7 @@ const categories = [
     label: 'HOUSE & LOT',
     count: '2,450+',
     gradient: 'from-blue-500/20 to-blue-600/30',
-    iconColor: 'text-blue-400',
+    iconColor: 'text-blue-500',
   },
   {
     href: '/properties?type=condo',
@@ -15,7 +15,7 @@ const categories = [
     label: 'CONDOMINIUM',
     count: '1,850+',
     gradient: 'from-purple-500/20 to-purple-600/30',
-    iconColor: 'text-purple-400',
+    iconColor: 'text-purple-500',
   },
   {
     href: '/properties?type=townhouse',
@@ -23,7 +23,7 @@ const categories = [
     label: 'TOWNHOUSE',
     count: '980+',
     gradient: 'from-pink-500/20 to-pink-600/30',
-    iconColor: 'text-pink-400',
+    iconColor: 'text-pink-500',
   },
   {
     href: '/properties?type=commercial',
@@ -31,7 +31,7 @@ const categories = [
     label: 'COMMERCIAL',
     count: '560+',
     gradient: 'from-amber-500/20 to-amber-600/30',
-    iconColor: 'text-amber-400',
+    iconColor: 'text-amber-500',
   },
   {
     href: '/properties?type=lot',
@@ -39,7 +39,7 @@ const categories = [
     label: 'LOT',
     count: '320+',
     gradient: 'from-green-500/20 to-green-600/30',
-    iconColor: 'text-green-400',
+    iconColor: 'text-green-500',
   },
   {
     href: '/properties?type=new-development',
@@ -47,7 +47,7 @@ const categories = [
     label: 'NEW DEVELOP',
     count: '180+',
     gradient: 'from-cyan-500/20 to-cyan-600/30',
-    iconColor: 'text-cyan-400',
+    iconColor: 'text-cyan-500',
   },
 ];
 
@@ -56,13 +56,13 @@ export default function CategoriesSection() {
     <section className="py-32 relative">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="text-center mb-20">
-          <span className="inline-block px-5 py-2 glass-ultra rounded-full text-sm text-white/60 mb-6">
+          <span className="inline-block px-5 py-2 glass-ultra rounded-full text-sm text-slate-600 mb-6">
             <i className="fas fa-th-large mr-2 text-accent-blue"></i>Categories
           </span>
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold text-slate-800">
             Find your <span className="gradient-text">needs</span>
           </h2>
-          <p className="text-white/40 text-lg mt-4">Buy & Sell has it all</p>
+          <p className="text-slate-500 text-lg mt-4">Buy & Sell has it all</p>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
@@ -78,8 +78,8 @@ export default function CategoriesSection() {
                 >
                   <i className={`fas ${category.icon} text-3xl ${category.iconColor}`}></i>
                 </div>
-                <h3 className="font-semibold text-white mb-1">{category.label}</h3>
-                <p className="text-sm text-white/30">{category.count}</p>
+                <h3 className="font-semibold text-slate-800 mb-1">{category.label}</h3>
+                <p className="text-sm text-slate-400">{category.count}</p>
               </div>
             </Link>
           ))}

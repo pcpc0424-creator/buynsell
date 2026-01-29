@@ -46,20 +46,20 @@ export default function AgentsSection() {
     <section id="agents" className="py-32 relative">
       {/* Background Decoration */}
       <div className="absolute inset-0 opacity-30 pointer-events-none">
-        <div className="absolute top-0 right-0 w-[800px] h-[800px] rounded-full bg-gradient-to-br from-accent-purple/20 to-transparent blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-accent-blue/20 to-transparent blur-3xl"></div>
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] rounded-full bg-gradient-to-br from-accent-purple/10 to-transparent blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-accent-blue/10 to-transparent blur-3xl"></div>
       </div>
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative">
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between mb-16">
           <div>
-            <span className="inline-block px-5 py-2 glass-ultra rounded-full text-sm text-white/60 mb-6">
+            <span className="inline-block px-5 py-2 glass-ultra rounded-full text-sm text-slate-600 mb-6">
               <i className="fas fa-users mr-2 text-accent-cyan"></i>Our Team
             </span>
-            <h2 className="section-title text-4xl sm:text-5xl lg:text-6xl font-display font-bold">
+            <h2 className="section-title text-4xl sm:text-5xl lg:text-6xl font-display font-bold text-slate-800">
               Meet our <span className="gradient-text">Agents</span>
             </h2>
-            <p className="text-white/40 text-lg mt-4">Professional agents ready to help you</p>
+            <p className="text-slate-500 text-lg mt-4">Professional agents ready to help you</p>
           </div>
           <Link
             href="/agents"
@@ -84,11 +84,11 @@ export default function AgentsSection() {
                   loading="lazy"
                   className="agent-image object-cover transition-all duration-600 group-hover:scale-110 group-hover:brightness-110"
                 />
-                <div className="agent-overlay absolute inset-0 bg-gradient-to-t from-dark-950 via-transparent to-transparent"></div>
+                <div className="agent-overlay absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent"></div>
 
                 {/* Badge */}
                 <div className="absolute top-4 right-4">
-                  <span className="px-3 py-1 rounded-full glass-ultra text-white text-xs font-semibold">
+                  <span className="px-3 py-1 rounded-full bg-white/90 text-slate-800 text-xs font-semibold shadow-sm">
                     Top Rated
                   </span>
                 </div>
@@ -96,7 +96,7 @@ export default function AgentsSection() {
                 {/* Name Overlay */}
                 <div className="absolute bottom-4 left-4 right-4">
                   <h3 className="text-xl font-bold text-white">{agent.name}</h3>
-                  <p className="text-white/60 text-sm">{agent.role}</p>
+                  <p className="text-white/80 text-sm">{agent.role}</p>
                 </div>
               </div>
 
@@ -108,19 +108,19 @@ export default function AgentsSection() {
                       <i
                         key={i}
                         className={`fas fa-star text-sm ${
-                          i < Math.floor(agent.rating) ? 'text-yellow-400' : 'text-white/20'
+                          i < Math.floor(agent.rating) ? 'text-yellow-400' : 'text-slate-200'
                         }`}
                       ></i>
                     ))}
-                    <span className="text-white font-semibold ml-2">{agent.rating}</span>
+                    <span className="text-slate-800 font-semibold ml-2">{agent.rating}</span>
                   </div>
-                  <span className="text-white/30 text-sm">{agent.reviews} reviews</span>
+                  <span className="text-slate-400 text-sm">{agent.reviews} reviews</span>
                 </div>
 
                 <div className="flex space-x-3">
                   <Link
                     href={`/agents/${agent.id}`}
-                    className="flex-1 py-3 rounded-xl glass-ultra text-white text-sm font-medium text-center hover:bg-white/10 transition-all"
+                    className="flex-1 py-3 rounded-xl bg-slate-100 text-slate-700 text-sm font-medium text-center hover:bg-slate-200 transition-all"
                   >
                     <i className="fas fa-user mr-2"></i>Profile
                   </Link>

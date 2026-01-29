@@ -39,7 +39,7 @@ export default function Header() {
               <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-accent-blue to-accent-purple flex items-center justify-center shadow-lg shadow-accent-blue/30">
                 <i className="fas fa-home text-white text-lg"></i>
               </div>
-              <span className="text-xl font-bold font-display">
+              <span className="text-xl font-bold font-display text-slate-800">
                 Buy <span className="gradient-text">&</span> Sell
               </span>
             </Link>
@@ -50,8 +50,8 @@ export default function Header() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`nav-link text-white/70 hover:text-white font-medium transition-colors ${
-                    pathname === link.href ? 'active text-white' : ''
+                  className={`nav-link text-slate-500 hover:text-slate-800 font-medium transition-colors ${
+                    pathname === link.href ? 'active text-slate-800' : ''
                   }`}
                 >
                   {link.label}
@@ -62,7 +62,7 @@ export default function Header() {
             {/* Desktop Auth Buttons */}
             <div className="hidden lg:flex items-center space-x-4">
               {status === 'loading' ? (
-                <div className="w-8 h-8 rounded-full bg-white/10 animate-pulse"></div>
+                <div className="w-8 h-8 rounded-full bg-slate-200 animate-pulse"></div>
               ) : session ? (
                 <>
                   <Link
@@ -74,7 +74,7 @@ export default function Header() {
                   <div className="relative">
                     <button
                       onClick={() => setShowUserMenu(!showUserMenu)}
-                      className="flex items-center space-x-3 glass-ultra rounded-full px-3 py-2 hover:bg-white/10 transition-all"
+                      className="flex items-center space-x-3 glass-ultra rounded-full px-3 py-2 hover:bg-slate-50 transition-all"
                     >
                       {session.user?.image ? (
                         <Image
@@ -90,20 +90,20 @@ export default function Header() {
                           {session.user?.name?.charAt(0).toUpperCase() || 'U'}
                         </div>
                       )}
-                      <span className="text-white/80 text-sm">{session.user?.name?.split(' ')[0]}</span>
-                      <i className={`fas fa-chevron-down text-xs text-white/50 transition-transform ${showUserMenu ? 'rotate-180' : ''}`}></i>
+                      <span className="text-slate-600 text-sm">{session.user?.name?.split(' ')[0]}</span>
+                      <i className={`fas fa-chevron-down text-xs text-slate-400 transition-transform ${showUserMenu ? 'rotate-180' : ''}`}></i>
                     </button>
 
                     {/* User Dropdown Menu */}
                     {showUserMenu && (
                       <div className="absolute right-0 top-full mt-2 w-56 glass-ultra rounded-xl p-2 shadow-xl">
-                        <div className="px-3 py-2 border-b border-white/10 mb-2">
-                          <p className="text-white font-medium text-sm">{session.user?.name}</p>
-                          <p className="text-white/50 text-xs truncate">{session.user?.email}</p>
+                        <div className="px-3 py-2 border-b border-slate-200 mb-2">
+                          <p className="text-slate-800 font-medium text-sm">{session.user?.name}</p>
+                          <p className="text-slate-400 text-xs truncate">{session.user?.email}</p>
                         </div>
                         <Link
                           href="/dashboard"
-                          className="flex items-center px-3 py-2 rounded-lg text-white/70 hover:bg-white/10 hover:text-white transition-all text-sm"
+                          className="flex items-center px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-800 transition-all text-sm"
                           onClick={() => setShowUserMenu(false)}
                         >
                           <i className="fas fa-tachometer-alt w-5"></i>
@@ -111,7 +111,7 @@ export default function Header() {
                         </Link>
                         <Link
                           href="/dashboard/listings"
-                          className="flex items-center px-3 py-2 rounded-lg text-white/70 hover:bg-white/10 hover:text-white transition-all text-sm"
+                          className="flex items-center px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-800 transition-all text-sm"
                           onClick={() => setShowUserMenu(false)}
                         >
                           <i className="fas fa-building w-5"></i>
@@ -119,7 +119,7 @@ export default function Header() {
                         </Link>
                         <Link
                           href="/dashboard/favorites"
-                          className="flex items-center px-3 py-2 rounded-lg text-white/70 hover:bg-white/10 hover:text-white transition-all text-sm"
+                          className="flex items-center px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-800 transition-all text-sm"
                           onClick={() => setShowUserMenu(false)}
                         >
                           <i className="fas fa-heart w-5"></i>
@@ -127,16 +127,16 @@ export default function Header() {
                         </Link>
                         <Link
                           href="/dashboard/settings"
-                          className="flex items-center px-3 py-2 rounded-lg text-white/70 hover:bg-white/10 hover:text-white transition-all text-sm"
+                          className="flex items-center px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-800 transition-all text-sm"
                           onClick={() => setShowUserMenu(false)}
                         >
                           <i className="fas fa-cog w-5"></i>
                           Settings
                         </Link>
-                        <div className="border-t border-white/10 mt-2 pt-2">
+                        <div className="border-t border-slate-200 mt-2 pt-2">
                           <button
                             onClick={() => signOut({ callbackUrl: '/' })}
-                            className="flex items-center w-full px-3 py-2 rounded-lg text-red-400 hover:bg-red-500/10 transition-all text-sm"
+                            className="flex items-center w-full px-3 py-2 rounded-lg text-red-500 hover:bg-red-50 transition-all text-sm"
                           >
                             <i className="fas fa-sign-out-alt w-5"></i>
                             Sign Out
@@ -151,7 +151,7 @@ export default function Header() {
                   <Link
                     href="/login"
                     className={`transition-colors px-4 py-2 ${
-                      pathname === '/login' ? 'text-white font-medium' : 'text-white/60 hover:text-white'
+                      pathname === '/login' ? 'text-slate-800 font-medium' : 'text-slate-500 hover:text-slate-800'
                     }`}
                   >
                     Login
@@ -159,7 +159,7 @@ export default function Header() {
                   <Link
                     href="/register"
                     className={`transition-colors px-4 py-2 ${
-                      pathname === '/register' ? 'text-white font-medium' : 'text-white/60 hover:text-white'
+                      pathname === '/register' ? 'text-slate-800 font-medium' : 'text-slate-500 hover:text-slate-800'
                     }`}
                   >
                     Register
@@ -176,7 +176,7 @@ export default function Header() {
 
             {/* Mobile Menu Button */}
             <button
-              className="lg:hidden text-white text-2xl"
+              className="lg:hidden text-slate-700 text-2xl"
               onClick={() => setIsMobileMenuOpen(true)}
             >
               <i className="fas fa-bars"></i>
@@ -189,7 +189,7 @@ export default function Header() {
       <div className={`mobile-menu ${isMobileMenuOpen ? 'active' : ''}`}>
         <div className="h-full flex flex-col justify-center items-center p-8">
           <button
-            className="absolute top-8 right-8 text-white text-3xl"
+            className="absolute top-8 right-8 text-slate-700 text-3xl"
             onClick={() => setIsMobileMenuOpen(false)}
           >
             <i className="fas fa-times"></i>
@@ -199,7 +199,7 @@ export default function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="block text-4xl font-display font-bold text-white hover:text-accent-blue transition-colors"
+                className="block text-4xl font-display font-bold text-slate-800 hover:text-accent-blue transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {link.label}
@@ -225,13 +225,13 @@ export default function Header() {
                     </div>
                   )}
                   <div className="text-left">
-                    <p className="text-white font-medium">{session.user?.name}</p>
-                    <p className="text-white/50 text-sm">{session.user?.email}</p>
+                    <p className="text-slate-800 font-medium">{session.user?.name}</p>
+                    <p className="text-slate-400 text-sm">{session.user?.email}</p>
                   </div>
                 </div>
                 <Link
                   href="/dashboard"
-                  className="block text-white/60 hover:text-white transition-colors"
+                  className="block text-slate-500 hover:text-slate-800 transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Dashboard
@@ -248,7 +248,7 @@ export default function Header() {
                     setIsMobileMenuOpen(false);
                     signOut({ callbackUrl: '/' });
                   }}
-                  className="block text-red-400 hover:text-red-300 transition-colors mx-auto mt-4"
+                  className="block text-red-500 hover:text-red-600 transition-colors mx-auto mt-4"
                 >
                   Sign Out
                 </button>
@@ -257,14 +257,14 @@ export default function Header() {
               <>
                 <Link
                   href="/login"
-                  className="block text-white/60 hover:text-white transition-colors"
+                  className="block text-slate-500 hover:text-slate-800 transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Login
                 </Link>
                 <Link
                   href="/register"
-                  className="block text-white/60 hover:text-white transition-colors"
+                  className="block text-slate-500 hover:text-slate-800 transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Register
