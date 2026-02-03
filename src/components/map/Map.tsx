@@ -4,12 +4,13 @@ import { useEffect } from 'react';
 import L from 'leaflet';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import { config } from '@/lib/config';
 
 // Fix for default marker icons in Next.js
 const DefaultIcon = L.icon({
-  iconUrl: '/images/marker-icon.png',
-  iconRetinaUrl: '/images/marker-icon-2x.png',
-  shadowUrl: '/images/marker-shadow.png',
+  iconUrl: `${config.basePath}/images/marker-icon.png`,
+  iconRetinaUrl: `${config.basePath}/images/marker-icon-2x.png`,
+  shadowUrl: `${config.basePath}/images/marker-shadow.png`,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],

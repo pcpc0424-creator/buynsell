@@ -29,6 +29,16 @@ export default function Header() {
     { href: '/properties?transactionType=RENT', label: 'Rent' },
     { href: '/agents', label: 'Agents' },
     { href: '/services', label: 'Services' },
+    { href: '/pricing', label: 'Membership' },
+  ];
+
+  const propertyCategories = [
+    { href: '/properties/house', icon: 'fa-home', label: 'House' },
+    { href: '/properties/condo', icon: 'fa-building', label: 'Condo' },
+    { href: '/properties/townhouse', icon: 'fa-city', label: 'Townhouse' },
+    { href: '/properties/commercial', icon: 'fa-store', label: 'Commercial' },
+    { href: '/properties/lot', icon: 'fa-map', label: 'Lot' },
+    { href: '/properties/new-development', icon: 'fa-hammer', label: 'New' },
   ];
 
   return (
@@ -109,6 +119,26 @@ export default function Header() {
                           <p className="text-slate-800 font-medium text-sm">{session.user?.name}</p>
                           <p className="text-slate-400 text-xs truncate">{session.user?.email}</p>
                         </div>
+                        {session.user?.role === 'ADMIN' && (
+                          <Link
+                            href="/admin"
+                            className="flex items-center px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-800 transition-all text-sm"
+                            onClick={() => setShowUserMenu(false)}
+                          >
+                            <i className="fas fa-shield-alt w-5"></i>
+                            Admin Dashboard
+                          </Link>
+                        )}
+                        {session.user?.role === 'AGENT' && (
+                          <Link
+                            href="/agent"
+                            className="flex items-center px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-800 transition-all text-sm"
+                            onClick={() => setShowUserMenu(false)}
+                          >
+                            <i className="fas fa-briefcase w-5"></i>
+                            Agent Dashboard
+                          </Link>
+                        )}
                         <Link
                           href="/my/subscription"
                           className="flex items-center px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-800 transition-all text-sm"
@@ -201,26 +231,48 @@ export default function Header() {
 
       {/* Mobile Menu */}
       <div className={`mobile-menu ${isMobileMenuOpen ? 'active' : ''}`}>
-        <div className="h-full flex flex-col justify-center items-center p-8">
+        <div className="h-full w-full flex flex-col justify-start items-center px-6 pt-20 pb-8 overflow-y-auto box-border">
           <button
             className="absolute top-8 right-8 text-slate-700 text-3xl"
             onClick={() => setIsMobileMenuOpen(false)}
           >
             <i className="fas fa-times"></i>
           </button>
-          <div className="space-y-8 text-center">
+
+          {/* Navigation Links */}
+          <div className="space-y-6 text-center mb-8">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="block text-4xl font-display font-bold text-slate-800 hover:text-accent-blue transition-colors"
+                className="block text-2xl font-display font-bold text-slate-800 hover:text-accent-blue transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {link.label}
               </Link>
             ))}
           </div>
-          <div className="mt-12 space-y-4 text-center">
+
+          {/* Property Categories */}
+          <div className="w-full max-w-xs mb-8">
+            <p className="text-slate-400 text-sm text-center mb-4">Property Categories</p>
+            <div className="grid grid-cols-3 gap-2">
+              {propertyCategories.map((category) => (
+                <Link
+                  key={category.href}
+                  href={category.href}
+                  className="flex flex-col items-center p-3 rounded-xl bg-slate-100 hover:bg-accent-blue/10 transition-all"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <i className={`fas ${category.icon} text-accent-blue text-lg mb-1`}></i>
+                  <span className="text-slate-700 text-xs font-medium">{category.label}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* User Section */}
+          <div className="space-y-4 text-center">
             {session ? (
               <>
                 <div className="flex items-center justify-center space-x-3 mb-6">
@@ -243,6 +295,24 @@ export default function Header() {
                     <p className="text-slate-400 text-sm">{session.user?.email}</p>
                   </div>
                 </div>
+                {session.user?.role === 'ADMIN' && (
+                  <Link
+                    href="/admin"
+                    className="block text-slate-500 hover:text-slate-800 transition-colors"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Admin Dashboard
+                  </Link>
+                )}
+                {session.user?.role === 'AGENT' && (
+                  <Link
+                    href="/agent"
+                    className="block text-slate-500 hover:text-slate-800 transition-colors"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Agent Dashboard
+                  </Link>
+                )}
                 <Link
                   href="/my/subscription"
                   className="block text-slate-500 hover:text-slate-800 transition-colors"

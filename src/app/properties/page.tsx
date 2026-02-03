@@ -39,7 +39,7 @@ function PropertiesPageContent() {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [sort, setSort] = useState('newest');
-  const [viewMode, setViewMode] = useState<ViewMode>('list');
+  const [viewMode, setViewMode] = useState<ViewMode>('split');
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
   const [filters, setFilters] = useState<FilterState>(() => {
     // Initialize from URL params
@@ -52,6 +52,19 @@ function PropertiesPageContent() {
       bedrooms: searchParams.get('bedrooms') || '',
     };
   });
+
+  // Sync filters when URL params change (e.g., navigation from header links)
+  useEffect(() => {
+    const newFilters = {
+      transactionType: searchParams.get('transactionType') || '',
+      propertyType: searchParams.get('propertyType') || '',
+      city: searchParams.get('city') || '',
+      minPrice: searchParams.get('minPrice') || '',
+      maxPrice: searchParams.get('maxPrice') || '',
+      bedrooms: searchParams.get('bedrooms') || '',
+    };
+    setFilters(newFilters);
+  }, [searchParams]);
 
   const fetchProperties = useCallback(async () => {
     try {
@@ -202,36 +215,39 @@ function PropertiesPageContent() {
             </div>
 
             {/* View Mode Toggle */}
-            <div className="flex items-center gap-2 glass-ultra rounded-xl p-1">
+            <div className="w-full md:w-auto flex items-center justify-center gap-1 glass-ultra rounded-xl p-1.5">
               <button
-                onClick={() => setViewMode('list')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                  viewMode === 'list'
-                    ? 'bg-accent-blue text-white'
-                    : 'text-slate-500 hover:text-slate-800'
+                onClick={() => setViewMode('split')}
+                className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                  viewMode === 'split'
+                    ? 'bg-accent-blue text-white shadow-sm'
+                    : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
                 }`}
               >
-                <i className="fas fa-list mr-2"></i>List
+                <i className="fas fa-columns"></i>
+                <span className="text-xs md:text-sm">Split</span>
               </button>
               <button
                 onClick={() => setViewMode('map')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
                   viewMode === 'map'
-                    ? 'bg-accent-blue text-white'
-                    : 'text-slate-500 hover:text-slate-800'
+                    ? 'bg-accent-blue text-white shadow-sm'
+                    : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
                 }`}
               >
-                <i className="fas fa-map mr-2"></i>Map
+                <i className="fas fa-map"></i>
+                <span className="text-xs md:text-sm">Map</span>
               </button>
               <button
-                onClick={() => setViewMode('split')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all hidden lg:block ${
-                  viewMode === 'split'
-                    ? 'bg-accent-blue text-white'
-                    : 'text-slate-500 hover:text-slate-800'
+                onClick={() => setViewMode('list')}
+                className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                  viewMode === 'list'
+                    ? 'bg-accent-blue text-white shadow-sm'
+                    : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
                 }`}
               >
-                <i className="fas fa-columns mr-2"></i>Split
+                <i className="fas fa-list"></i>
+                <span className="text-xs md:text-sm">List</span>
               </button>
             </div>
           </div>
@@ -317,7 +333,7 @@ function PropertiesPageContent() {
 
               {/* Property List - Scrollable */}
               <div className="lg:col-span-5">
-                <div className="sticky top-24">
+                <div className="lg:sticky lg:top-24">
                   <div className="glass-ultra rounded-2xl p-4 mb-4">
                     <div className="flex items-center justify-between">
                       <p className="text-slate-500 text-sm">
@@ -336,7 +352,7 @@ function PropertiesPageContent() {
                     </div>
                   </div>
 
-                  <div className="overflow-y-auto pr-2" style={{ maxHeight: 'calc(100vh - 250px)' }}>
+                  <div className="overflow-y-auto pr-2 max-h-[400px] lg:max-h-[calc(100vh-250px)]">
                     {loading ? (
                       <div className="space-y-4">
                         {[1, 2, 3].map((i) => (
@@ -420,9 +436,9 @@ function PropertiesPageContent() {
                 </div>
               </div>
 
-              {/* Map - Sticky */}
+              {/* Map - Sticky on desktop, fixed height on mobile */}
               <div className="lg:col-span-5">
-                <div className="sticky top-24 glass-ultra rounded-2xl overflow-hidden" style={{ height: 'calc(100vh - 150px)' }}>
+                <div className="lg:sticky lg:top-24 glass-ultra rounded-2xl overflow-hidden h-[350px] lg:h-[calc(100vh-150px)]">
                   {loading ? (
                     <div className="h-full flex items-center justify-center">
                       <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent-blue"></div>

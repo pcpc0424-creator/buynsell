@@ -4,6 +4,7 @@ import { Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import Link from 'next/link';
 import Image from 'next/image';
+import { config } from '@/lib/config';
 
 // Custom marker icon for properties
 const createPropertyIcon = (price: string, isSelected: boolean = false) => {
@@ -81,7 +82,7 @@ export default function PropertyMarker({
           <Link href={`/properties/${property.propertyType.toLowerCase()}/${property.id}`}>
             <div className="relative h-32 w-full">
               <Image
-                src={property.mainImage || '/images/placeholder-property.jpg'}
+                src={property.mainImage || `${config.basePath}/images/placeholder-property.svg`}
                 alt={property.title}
                 fill
                 className="object-cover rounded-t-lg"

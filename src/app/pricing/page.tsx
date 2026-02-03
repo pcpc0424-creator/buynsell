@@ -26,11 +26,11 @@ interface PointsPackage {
   bonus: number;
 }
 
-const tierConfig: Record<string, { label: string; color: string; gradient: string; icon: string }> = {
-  GREEN: { label: 'Green', color: 'text-green-400', gradient: 'from-green-500 to-emerald-600', icon: 'fa-leaf' },
-  SILVER: { label: 'Silver', color: 'text-gray-300', gradient: 'from-gray-400 to-gray-500', icon: 'fa-medal' },
-  GOLD: { label: 'Gold', color: 'text-yellow-400', gradient: 'from-yellow-400 to-amber-500', icon: 'fa-crown' },
-  PREMIUM: { label: 'Premium', color: 'text-purple-400', gradient: 'from-purple-500 to-indigo-600', icon: 'fa-gem' },
+const tierConfig: Record<string, { label: string; color: string; bgColor: string; gradient: string; icon: string }> = {
+  GREEN: { label: 'Green', color: 'text-green-600', bgColor: 'bg-green-100', gradient: 'from-green-500 to-emerald-600', icon: 'fa-leaf' },
+  SILVER: { label: 'Silver', color: 'text-gray-600', bgColor: 'bg-gray-100', gradient: 'from-gray-400 to-gray-500', icon: 'fa-medal' },
+  GOLD: { label: 'Gold', color: 'text-yellow-600', bgColor: 'bg-yellow-100', gradient: 'from-yellow-400 to-amber-500', icon: 'fa-crown' },
+  PREMIUM: { label: 'Premium', color: 'text-purple-600', bgColor: 'bg-purple-100', gradient: 'from-purple-500 to-indigo-600', icon: 'fa-gem' },
 };
 
 export default function PricingPage() {
@@ -40,10 +40,8 @@ export default function PricingPage() {
   const [policies, setPolicies] = useState<TierPolicy[]>([]);
   const [pointsPackages, setPointsPackages] = useState<PointsPackage[]>([]);
   const [loading, setLoading] = useState(true);
-  const [processing, setProcessing] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
 
-  const currentTier = (session?.user as any)?.tier || 'GREEN';
+  const currentTier = (session?.user as { tier?: string })?.tier || 'GREEN';
 
   useEffect(() => {
     fetchData();
@@ -53,7 +51,7 @@ export default function PricingPage() {
     try {
       setLoading(true);
       const [policiesRes, configRes] = await Promise.all([
-        fetch(apiUrl('/api/admin/tier-policies')),
+        fetch(apiUrl('/api/tier-policies')),
         fetch(apiUrl('/api/payments/config')),
       ]);
 
@@ -74,78 +72,26 @@ export default function PricingPage() {
     }
   };
 
-  const handleSubscribe = async (tier: string) => {
+  const handleSubscribe = (tier: string) => {
     if (status !== 'authenticated') {
-      router.push('/login?callbackUrl=/pricing');
+      router.push(`/login?callbackUrl=/checkout?type=subscription&tier=${tier}`);
       return;
     }
 
     if (tier === currentTier) return;
 
-    try {
-      setProcessing(tier);
-      setError(null);
-
-      const res = await fetch(apiUrl('/api/payments/orders'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'subscription',
-          tier,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (!data.success) {
-        throw new Error(data.error || 'Failed to create order');
-      }
-
-      // Redirect to PayPal
-      if (data.data.approveUrl) {
-        window.location.href = data.data.approveUrl;
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setProcessing(null);
-    }
+    // Redirect to checkout page
+    router.push(`/checkout?type=subscription&tier=${tier}`);
   };
 
-  const handleBuyPoints = async (packageId: string) => {
+  const handleBuyPoints = (packageId: string) => {
     if (status !== 'authenticated') {
-      router.push('/login?callbackUrl=/pricing');
+      router.push(`/login?callbackUrl=/checkout?type=points&package=${packageId}`);
       return;
     }
 
-    try {
-      setProcessing(packageId);
-      setError(null);
-
-      const res = await fetch(apiUrl('/api/payments/orders'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'points',
-          packageId,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (!data.success) {
-        throw new Error(data.error || 'Failed to create order');
-      }
-
-      // Redirect to PayPal
-      if (data.data.approveUrl) {
-        window.location.href = data.data.approveUrl;
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setProcessing(null);
-    }
+    // Redirect to checkout page
+    router.push(`/checkout?type=points&package=${packageId}`);
   };
 
   const formatLimit = (value: number) => {
@@ -157,9 +103,9 @@ export default function PricingPage() {
       <Header />
 
       {/* Hero Section */}
-      <section className="pt-32 pb-12">
+      <section className="pt-32 pb-12 bg-gradient-to-b from-slate-50 to-white">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
-          <h1 className="text-4xl lg:text-5xl font-display font-bold text-white mb-4">
+          <h1 className="text-4xl lg:text-5xl font-display font-bold text-slate-800 mb-4">
             Choose Your <span className="gradient-text">Plan</span>
           </h1>
           <p className="text-slate-500 text-lg max-w-2xl mx-auto mb-8">
@@ -167,9 +113,9 @@ export default function PricingPage() {
           </p>
 
           {session && (
-            <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-slate-200 mb-8">
+            <div className={`inline-flex items-center space-x-2 px-4 py-2 rounded-full ${tierConfig[currentTier]?.bgColor || 'bg-slate-100'} mb-8`}>
               <span className="text-slate-500">Current Plan:</span>
-              <span className={`font-semibold ${tierConfig[currentTier]?.color || 'text-white'}`}>
+              <span className={`font-semibold ${tierConfig[currentTier]?.color || 'text-slate-800'}`}>
                 <i className={`fas ${tierConfig[currentTier]?.icon} mr-1`}></i>
                 {tierConfig[currentTier]?.label || currentTier}
               </span>
@@ -178,13 +124,13 @@ export default function PricingPage() {
 
           {/* Tab Switcher */}
           <div className="flex justify-center mb-12">
-            <div className="glass-ultra rounded-full p-1 inline-flex">
+            <div className="bg-slate-100 rounded-full p-1 inline-flex">
               <button
                 onClick={() => setActiveTab('subscription')}
                 className={`px-6 py-2 rounded-full font-medium transition-all ${
                   activeTab === 'subscription'
-                    ? 'bg-accent-blue text-white'
-                    : 'text-slate-500 hover:text-white'
+                    ? 'bg-white text-slate-800 shadow-sm'
+                    : 'text-slate-500 hover:text-slate-700'
                 }`}
               >
                 <i className="fas fa-crown mr-2"></i>Subscription Plans
@@ -193,8 +139,8 @@ export default function PricingPage() {
                 onClick={() => setActiveTab('points')}
                 className={`px-6 py-2 rounded-full font-medium transition-all ${
                   activeTab === 'points'
-                    ? 'bg-accent-blue text-white'
-                    : 'text-slate-500 hover:text-white'
+                    ? 'bg-white text-slate-800 shadow-sm'
+                    : 'text-slate-500 hover:text-slate-700'
                 }`}
               >
                 <i className="fas fa-coins mr-2"></i>Buy Points
@@ -203,20 +149,6 @@ export default function PricingPage() {
           </div>
         </div>
       </section>
-
-      {error && (
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 mb-8">
-          <div className="glass-ultra rounded-2xl p-4 border border-red-500/20">
-            <div className="flex items-center text-red-400">
-              <i className="fas fa-exclamation-circle mr-3"></i>
-              <span>{error}</span>
-              <button onClick={() => setError(null)} className="ml-auto text-slate-500 hover:text-white">
-                <i className="fas fa-times"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Subscription Plans */}
       {activeTab === 'subscription' && (
@@ -237,9 +169,9 @@ export default function PricingPage() {
                   return (
                     <div
                       key={policy.tier}
-                      className={`glass-ultra rounded-2xl overflow-hidden relative ${
-                        isPopular ? 'ring-2 ring-accent-blue' : ''
-                      } ${isCurrentTier ? 'ring-2 ring-green-500' : ''}`}
+                      className={`bg-white rounded-2xl overflow-hidden relative shadow-lg border-2 transition-all hover:shadow-xl flex flex-col ${
+                        isPopular ? 'border-accent-blue' : ''
+                      } ${isCurrentTier ? 'border-green-500' : 'border-transparent'}`}
                     >
                       {isPopular && (
                         <div className="absolute top-0 left-0 right-0 bg-accent-blue text-white text-center text-xs py-1 font-medium">
@@ -255,7 +187,7 @@ export default function PricingPage() {
                       {/* Header */}
                       <div className={`bg-gradient-to-r ${config.gradient} p-6 ${isPopular || isCurrentTier ? 'pt-8' : ''}`}>
                         <div className="flex items-center space-x-3 mb-4">
-                          <div className="w-12 h-12 rounded-xl bg-slate-200 flex items-center justify-center">
+                          <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
                             <i className={`fas ${config.icon} text-white text-xl`}></i>
                           </div>
                           <div>
@@ -270,29 +202,29 @@ export default function PricingPage() {
                               <span className="text-3xl font-bold">
                                 ${policy.monthlySubscriptionPrice?.toFixed(2)}
                               </span>
-                              <span className="text-slate-600">/month</span>
+                              <span className="text-white/70">/month</span>
                             </>
                           )}
                         </div>
                       </div>
 
                       {/* Features */}
-                      <div className="p-6">
+                      <div className="p-6 flex-1 flex flex-col">
                         <ul className="space-y-3 mb-6">
                           <li className="flex items-center text-slate-600">
-                            <i className="fas fa-check text-green-400 mr-3 w-4"></i>
+                            <i className="fas fa-check text-green-500 mr-3 w-4"></i>
                             <span>{formatLimit(policy.dailyViewLimit)} daily views</span>
                           </li>
                           <li className="flex items-center text-slate-600">
-                            <i className="fas fa-check text-green-400 mr-3 w-4"></i>
+                            <i className="fas fa-check text-green-500 mr-3 w-4"></i>
                             <span>{formatLimit(policy.monthlyViewLimit)} monthly views</span>
                           </li>
                           <li className="flex items-center text-slate-600">
-                            <i className="fas fa-check text-green-400 mr-3 w-4"></i>
+                            <i className="fas fa-check text-green-500 mr-3 w-4"></i>
                             <span>{formatLimit(policy.listingLimit)} listings (agents)</span>
                           </li>
                           <li className="flex items-center text-slate-600">
-                            <i className={`fas ${policy.maxViewablePrice ? 'fa-times text-red-400' : 'fa-check text-green-400'} mr-3 w-4`}></i>
+                            <i className={`fas ${policy.maxViewablePrice ? 'fa-times text-red-400' : 'fa-check text-green-500'} mr-3 w-4`}></i>
                             <span>
                               {policy.maxViewablePrice
                                 ? `Max ₱${policy.maxViewablePrice.toLocaleString()}`
@@ -311,23 +243,21 @@ export default function PricingPage() {
 
                         <button
                           onClick={() => handleSubscribe(policy.tier)}
-                          disabled={isCurrentTier || isFree || processing === policy.tier}
-                          className={`w-full py-3 rounded-xl font-semibold transition-all ${
+                          disabled={isCurrentTier || isFree}
+                          className={`w-full py-3 rounded-xl font-semibold transition-all mt-auto ${
                             isCurrentTier
-                              ? 'bg-green-500/20 text-green-400 cursor-default'
+                              ? 'bg-green-100 text-green-600 cursor-default'
                               : isFree
-                              ? 'bg-slate-200 text-slate-500 cursor-default'
-                              : 'btn-premium text-white'
+                              ? 'bg-slate-100 text-slate-400 cursor-default'
+                              : 'btn-premium text-white hover:shadow-lg'
                           }`}
                         >
-                          {processing === policy.tier ? (
-                            <i className="fas fa-spinner fa-spin"></i>
-                          ) : isCurrentTier ? (
+                          {isCurrentTier ? (
                             'Current Plan'
                           ) : isFree ? (
                             'Free Tier'
                           ) : (
-                            'Subscribe Now'
+                            'Get Started'
                           )}
                         </button>
                       </div>
@@ -345,15 +275,15 @@ export default function PricingPage() {
         <section className="pb-20">
           <div className="max-w-5xl mx-auto px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-2xl font-bold text-white mb-2">Buy Points</h2>
+              <h2 className="text-2xl font-bold text-slate-800 mb-2">Buy Points</h2>
               <p className="text-slate-500">
                 Use points to view properties and list your properties
               </p>
               {session && (
-                <div className="mt-4 inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-accent-blue/20">
+                <div className="mt-4 inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-accent-blue/10">
                   <i className="fas fa-coins text-accent-blue"></i>
-                  <span className="text-white">
-                    Current Balance: <strong>{(session.user as any)?.points || 0}</strong> points
+                  <span className="text-slate-700">
+                    Current Balance: <strong>{(session.user as { points?: number })?.points || 0}</strong> points
                   </span>
                 </div>
               )}
@@ -372,34 +302,34 @@ export default function PricingPage() {
                   return (
                     <div
                       key={pkg.id}
-                      className={`glass-ultra rounded-2xl overflow-hidden relative ${
-                        isBestValue ? 'ring-2 ring-accent-purple' : ''
+                      className={`bg-white rounded-2xl overflow-hidden relative shadow-lg border-2 transition-all hover:shadow-xl flex flex-col ${
+                        isBestValue ? 'border-purple-500' : 'border-transparent'
                       }`}
                     >
                       {isBestValue && (
-                        <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-accent-purple to-accent-blue text-white text-center text-xs py-1 font-medium">
+                        <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-purple-500 to-accent-blue text-white text-center text-xs py-1 font-medium">
                           BEST VALUE
                         </div>
                       )}
 
-                      <div className="p-6">
+                      <div className="p-6 flex-1 flex flex-col">
                         <div className={`text-center mb-4 ${isBestValue ? 'pt-4' : ''}`}>
                           <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent-blue to-accent-purple flex items-center justify-center mx-auto mb-4">
                             <i className="fas fa-coins text-white text-2xl"></i>
                           </div>
-                          <div className="text-3xl font-bold text-white mb-1">
+                          <div className="text-3xl font-bold text-slate-800 mb-1">
                             {totalPoints.toLocaleString()}
                           </div>
                           <div className="text-slate-500 text-sm">points</div>
                           {pkg.bonus > 0 && (
-                            <div className="mt-2 inline-block px-3 py-1 rounded-full bg-green-500/20 text-green-400 text-xs font-medium">
+                            <div className="mt-2 inline-block px-3 py-1 rounded-full bg-green-100 text-green-600 text-xs font-medium">
                               +{pkg.bonus} bonus
                             </div>
                           )}
                         </div>
 
                         <div className="text-center mb-6">
-                          <span className="text-2xl font-bold text-white">
+                          <span className="text-2xl font-bold text-slate-800">
                             ${pkg.price.toFixed(2)}
                           </span>
                           <span className="text-slate-500 text-sm ml-1">USD</span>
@@ -410,14 +340,9 @@ export default function PricingPage() {
 
                         <button
                           onClick={() => handleBuyPoints(pkg.id)}
-                          disabled={processing === pkg.id}
-                          className="w-full py-3 rounded-xl font-semibold btn-premium text-white transition-all"
+                          className="w-full py-3 rounded-xl font-semibold btn-premium text-white transition-all hover:shadow-lg mt-auto"
                         >
-                          {processing === pkg.id ? (
-                            <i className="fas fa-spinner fa-spin"></i>
-                          ) : (
-                            'Buy Now'
-                          )}
+                          Buy Now
                         </button>
                       </div>
                     </div>
@@ -427,25 +352,25 @@ export default function PricingPage() {
             )}
 
             {/* Points Info */}
-            <div className="mt-12 glass-ultra rounded-2xl p-6">
-              <h3 className="text-white font-semibold mb-4">
+            <div className="mt-12 bg-white rounded-2xl p-6 shadow-lg">
+              <h3 className="text-slate-800 font-semibold mb-4">
                 <i className="fas fa-info-circle text-accent-blue mr-2"></i>
                 How Points Work
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                <div className="bg-slate-100 rounded-xl p-4">
-                  <i className="fas fa-eye text-accent-blue mb-2"></i>
-                  <p className="text-white font-medium mb-1">View Properties</p>
+                <div className="bg-slate-50 rounded-xl p-4">
+                  <i className="fas fa-eye text-accent-blue mb-2 text-lg"></i>
+                  <p className="text-slate-800 font-medium mb-1">View Properties</p>
                   <p className="text-slate-500">Points are deducted when viewing property details (based on your tier)</p>
                 </div>
-                <div className="bg-slate-100 rounded-xl p-4">
-                  <i className="fas fa-building text-accent-purple mb-2"></i>
-                  <p className="text-white font-medium mb-1">List Properties</p>
+                <div className="bg-slate-50 rounded-xl p-4">
+                  <i className="fas fa-building text-accent-purple mb-2 text-lg"></i>
+                  <p className="text-slate-800 font-medium mb-1">List Properties</p>
                   <p className="text-slate-500">Agents can use points to list properties beyond tier limits</p>
                 </div>
-                <div className="bg-slate-100 rounded-xl p-4">
-                  <i className="fas fa-infinity text-green-400 mb-2"></i>
-                  <p className="text-white font-medium mb-1">Never Expire</p>
+                <div className="bg-slate-50 rounded-xl p-4">
+                  <i className="fas fa-infinity text-green-500 mb-2 text-lg"></i>
+                  <p className="text-slate-800 font-medium mb-1">Never Expire</p>
                   <p className="text-slate-500">Your points never expire and can be used anytime</p>
                 </div>
               </div>
@@ -459,13 +384,13 @@ export default function PricingPage() {
         <div className="max-w-3xl mx-auto px-6 lg:px-8 text-center">
           <p className="text-slate-400 text-sm mb-4">Secure payment powered by</p>
           <div className="flex items-center justify-center space-x-8">
-            <div className="text-slate-500">
+            <div className="text-slate-400">
               <i className="fab fa-paypal text-3xl"></i>
             </div>
-            <div className="text-slate-500">
+            <div className="text-slate-400">
               <i className="fab fa-cc-visa text-3xl"></i>
             </div>
-            <div className="text-slate-500">
+            <div className="text-slate-400">
               <i className="fab fa-cc-mastercard text-3xl"></i>
             </div>
           </div>

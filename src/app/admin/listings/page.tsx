@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { AdminHeader } from '@/components/admin';
-import { apiUrl } from '@/lib/config';
+import { apiUrl, config } from '@/lib/config';
 
 interface Listing {
   id: string;
@@ -235,7 +235,7 @@ export default function ListingsPage() {
   const getImageUrl = (listing: Listing) => {
     if (listing.mainImage) return listing.mainImage;
     if (listing.images && listing.images.length > 0) return listing.images[0].url;
-    return '/images/placeholder-property.jpg';
+    return `${config.basePath}/images/placeholder-property.svg`;
   };
 
   const handleSearch = (e: React.FormEvent) => {
@@ -399,7 +399,7 @@ export default function ListingsPage() {
                             fill
                             className="object-cover"
                             onError={(e) => {
-                              (e.target as HTMLImageElement).src = '/images/placeholder-property.jpg';
+                              (e.target as HTMLImageElement).src = `${config.basePath}/images/placeholder-property.svg`;
                             }}
                           />
                         </div>

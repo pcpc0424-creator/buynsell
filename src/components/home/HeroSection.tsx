@@ -64,20 +64,55 @@ export default function HeroSection() {
             </div>
 
             {/* Stats */}
-            <div className="flex items-center gap-12 mt-12">
+            <div className="flex items-center justify-center sm:justify-start gap-6 sm:gap-12 mt-12">
               {stats.map((stat, index) => (
-                <div key={index} className={`stat-item ${index < stats.length - 1 ? 'pr-12' : ''}`}>
-                  <div className="text-4xl font-bold font-display text-slate-800">
+                <div key={index} className={`stat-item ${index < stats.length - 1 ? 'sm:pr-12' : ''}`}>
+                  <div className="text-2xl sm:text-4xl font-bold font-display text-slate-800">
                     {stat.value}
                     <span className="gradient-text">{stat.suffix}</span>
                   </div>
-                  <div className="text-slate-500 text-sm mt-1">{stat.label}</div>
+                  <div className="text-slate-500 text-xs sm:text-sm mt-1">{stat.label}</div>
                 </div>
               ))}
             </div>
+
+            {/* Mobile Hero Image */}
+            <div className="lg:hidden mt-10 relative">
+              <div className="relative rounded-2xl overflow-hidden shadow-xl">
+                <Image
+                  src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                  alt="Luxury Property"
+                  width={800}
+                  height={400}
+                  className="w-full h-[250px] object-cover"
+                  priority
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
+              </div>
+              {/* Mobile Floating Cards */}
+              <div className="absolute -bottom-4 left-4 glass-ultra rounded-xl p-3 z-20 shadow-lg">
+                <div className="flex items-center space-x-2">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-blue to-accent-purple flex items-center justify-center">
+                    <i className="fas fa-chart-line text-white text-sm"></i>
+                  </div>
+                  <div>
+                    <div className="text-sm font-bold text-slate-800">Best Prices</div>
+                    <div className="text-slate-500 text-xs">Guaranteed</div>
+                  </div>
+                </div>
+              </div>
+              <div className="absolute -top-3 right-4 glass-ultra rounded-xl p-2 z-20 shadow-lg">
+                <div className="flex items-center space-x-1 mb-1">
+                  {[...Array(5)].map((_, i) => (
+                    <i key={i} className="fas fa-star text-yellow-400 text-xs"></i>
+                  ))}
+                </div>
+                <div className="text-slate-800 text-xs font-semibold">12,000+ Reviews</div>
+              </div>
+            </div>
           </div>
 
-          {/* Hero Visual */}
+          {/* Hero Visual - Desktop */}
           <div className="hidden lg:block relative">
             <div className="relative">
               {/* Main Image */}

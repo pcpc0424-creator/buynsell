@@ -39,6 +39,11 @@ const menuItems = [
     label: 'Advertisements',
   },
   {
+    href: '/admin/payments',
+    icon: 'fa-credit-card',
+    label: 'Payments',
+  },
+  {
     href: '/admin/tiers',
     icon: 'fa-layer-group',
     label: 'Tier Policies',
