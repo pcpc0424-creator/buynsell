@@ -1,7 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  basePath: '/buynsell',
-  assetPrefix: '/buynsell',
   images: {
     remotePatterns: [
       {
@@ -11,6 +9,14 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'res.cloudinary.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'wwlbns.com',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
       },
     ],
   },

@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react';
 import { Header, Footer, Services } from '@/components/layout';
 import { PropertyCategories } from '@/components/property';
+import { PHILIPPINE_CITIES } from '@/lib/geocoding';
 
 const propertyTypes = [
   { value: 'HOUSE', label: 'House', icon: 'fa-home' },
@@ -41,6 +42,17 @@ export default function SellPage() {
     },
     []
   );
+
+  const formatPrice = (value: string) => {
+    const num = value.replace(/[^\d]/g, '');
+    if (!num) return '';
+    return new Intl.NumberFormat('en-PH').format(parseInt(num));
+  };
+
+  const handlePriceChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatPrice(e.target.value);
+    setFormData((prev) => ({ ...prev, price: formatted }));
+  }, []);
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
@@ -113,8 +125,8 @@ export default function SellPage() {
                         type="text"
                         name="price"
                         value={formData.price}
-                        onChange={handleChange}
-                        placeholder="0.00"
+                        onChange={handlePriceChange}
+                        placeholder="0"
                         className="form-input pl-10"
                         required
                       />
@@ -224,12 +236,9 @@ export default function SellPage() {
                       required
                     >
                       <option value="">Select city</option>
-                      <option value="makati">Makati City</option>
-                      <option value="bgc">BGC, Taguig</option>
-                      <option value="quezon">Quezon City</option>
-                      <option value="manila">Manila</option>
-                      <option value="pasig">Pasig City</option>
-                      <option value="cebu">Cebu City</option>
+                      {PHILIPPINE_CITIES.map((city) => (
+                        <option key={city} value={city}>{city}</option>
+                      ))}
                     </select>
                   </div>
                   <div>

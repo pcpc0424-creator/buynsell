@@ -6,10 +6,17 @@
  * - Max 1 request per second
  * - Provide a valid User-Agent
  * - Cache results when possible
+ *
+ * Client-side requests are proxied through /api/geocoding to avoid CORS issues.
  */
+
+import { apiUrl } from './config';
 
 const NOMINATIM_BASE_URL = 'https://nominatim.openstreetmap.org';
 const USER_AGENT = 'BuyNSell-Philippines/1.0';
+
+// Check if running on client side
+const isClient = typeof window !== 'undefined';
 
 interface NominatimResult {
   place_id: number;
@@ -61,6 +68,7 @@ export interface GeocodingResult {
 
 /**
  * Forward geocoding - convert address to coordinates
+ * Uses proxy API on client-side to avoid CORS issues
  */
 export async function geocodeAddress(
   address: string,
@@ -71,27 +79,42 @@ export async function geocodeAddress(
 ): Promise<GeocodingResult[]> {
   const { countryCode = 'ph', limit = 5 } = options || {};
 
-  const params = new URLSearchParams({
-    q: address,
-    format: 'json',
-    addressdetails: '1',
-    limit: limit.toString(),
-    countrycodes: countryCode,
-  });
-
   try {
-    const response = await fetch(`${NOMINATIM_BASE_URL}/search?${params}`, {
-      headers: {
-        'User-Agent': USER_AGENT,
-        'Accept-Language': 'en',
-      },
-    });
+    let data: NominatimResult[];
 
-    if (!response.ok) {
-      throw new Error(`Geocoding failed: ${response.status}`);
+    if (isClient) {
+      // Client-side: use proxy API to avoid CORS
+      const params = new URLSearchParams({
+        type: 'search',
+        q: address,
+        limit: limit.toString(),
+        countrycodes: countryCode,
+      });
+      const response = await fetch(apiUrl(`/api/geocoding?${params}`));
+      if (!response.ok) {
+        throw new Error(`Geocoding failed: ${response.status}`);
+      }
+      data = await response.json();
+    } else {
+      // Server-side: call Nominatim directly
+      const params = new URLSearchParams({
+        q: address,
+        format: 'json',
+        addressdetails: '1',
+        limit: limit.toString(),
+        countrycodes: countryCode,
+      });
+      const response = await fetch(`${NOMINATIM_BASE_URL}/search?${params}`, {
+        headers: {
+          'User-Agent': USER_AGENT,
+          'Accept-Language': 'en',
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`Geocoding failed: ${response.status}`);
+      }
+      data = await response.json();
     }
-
-    const data: NominatimResult[] = await response.json();
 
     return data.map((result) => ({
       latitude: parseFloat(result.lat),
@@ -126,31 +149,46 @@ export async function geocodeAddress(
 
 /**
  * Reverse geocoding - convert coordinates to address
+ * Uses proxy API on client-side to avoid CORS issues
  */
 export async function reverseGeocode(
   latitude: number,
   longitude: number
 ): Promise<GeocodingResult | null> {
-  const params = new URLSearchParams({
-    lat: latitude.toString(),
-    lon: longitude.toString(),
-    format: 'json',
-    addressdetails: '1',
-  });
-
   try {
-    const response = await fetch(`${NOMINATIM_BASE_URL}/reverse?${params}`, {
-      headers: {
-        'User-Agent': USER_AGENT,
-        'Accept-Language': 'en',
-      },
-    });
+    let result: NominatimResult;
 
-    if (!response.ok) {
-      throw new Error(`Reverse geocoding failed: ${response.status}`);
+    if (isClient) {
+      // Client-side: use proxy API to avoid CORS
+      const params = new URLSearchParams({
+        type: 'reverse',
+        lat: latitude.toString(),
+        lon: longitude.toString(),
+      });
+      const response = await fetch(apiUrl(`/api/geocoding?${params}`));
+      if (!response.ok) {
+        throw new Error(`Reverse geocoding failed: ${response.status}`);
+      }
+      result = await response.json();
+    } else {
+      // Server-side: call Nominatim directly
+      const params = new URLSearchParams({
+        lat: latitude.toString(),
+        lon: longitude.toString(),
+        format: 'json',
+        addressdetails: '1',
+      });
+      const response = await fetch(`${NOMINATIM_BASE_URL}/reverse?${params}`, {
+        headers: {
+          'User-Agent': USER_AGENT,
+          'Accept-Language': 'en',
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`Reverse geocoding failed: ${response.status}`);
+      }
+      result = await response.json();
     }
-
-    const result: NominatimResult = await response.json();
 
     if (result.error) {
       return null;
@@ -217,50 +255,145 @@ function toRadians(degrees: number): number {
 
 /**
  * Philippine cities for autocomplete/dropdown
+ * Complete list of 148 cities in the Philippines
  */
 export const PHILIPPINE_CITIES = [
-  // Metro Manila
-  'Manila',
-  'Quezon City',
-  'Makati',
-  'Taguig',
-  'Pasig',
-  'Mandaluyong',
-  'San Juan',
-  'Pasay',
-  'Parañaque',
-  'Las Piñas',
-  'Muntinlupa',
-  'Marikina',
+  // Metro Manila (NCR)
+  'BGC, Taguig',
   'Caloocan',
+  'Las Piñas',
+  'Makati',
   'Malabon',
+  'Mandaluyong',
+  'Manila',
+  'Marikina',
+  'Muntinlupa',
   'Navotas',
-  'Valenzuela',
+  'Parañaque',
+  'Pasay',
+  'Pasig',
   'Pateros',
-  // Major cities
-  'Cebu City',
-  'Davao City',
-  'Baguio',
-  'Iloilo City',
-  'Bacolod',
-  'Cagayan de Oro',
-  'Zamboanga City',
-  'General Santos',
-  'Tagaytay',
-  'Angeles City',
-  'Olongapo',
-  'Subic',
-  'San Fernando (Pampanga)',
+  'Quezon City',
+  'San Juan',
+  'Taguig',
+  'Valenzuela',
+  // Luzon
+  'Alaminos',
+  'Angeles',
+  'Antipolo',
+  'Balanga',
+  'Batac',
   'Batangas City',
+  'Biñan',
+  'Cabuyao',
+  'Calamba',
+  'Candon',
+  'Cauayan',
+  'Dagupan',
+  'Ilagan',
+  'Laoag',
+  'Legazpi',
+  'Ligao',
   'Lipa',
   'Lucena',
-  'Naga (Camarines Sur)',
-  'Legazpi',
+  'Malolos',
+  'Meycauayan',
+  'Naga',
+  'Olongapo',
+  'Palayan',
   'Puerto Princesa',
-  'Tacloban',
-  'Ormoc',
+  'San Carlos',
+  'San Fernando (La Union)',
+  'San Fernando (Pampanga)',
+  'San Jose del Monte',
+  'San Pablo',
+  'Santa Rosa',
+  'Santiago',
+  'Sorsogon City',
+  'Tabaco',
+  'Tabuk',
+  'Tagaytay',
+  'Tanauan',
+  'Tarlac City',
+  'Tuguegarao',
+  'Urdaneta',
+  'Vigan',
+  // Visayas
+  'Bacolod',
+  'Bago',
+  'Bais',
+  'Bayawan',
+  'Bogo',
+  'Cadiz',
+  'Canlaon',
+  'Carcar',
+  'Cebu City',
+  'Danao',
   'Dumaguete',
+  'Escalante',
+  'Guihulngan',
+  'Himamaylan',
+  'Iloilo City',
+  'Kabankalan',
+  'La Carlota',
+  'Lapu-Lapu',
+  'Mandaue',
+  'Naga (Cebu)',
+  'Ormoc',
+  'Passi',
+  'Roxas',
+  'Sagay',
+  'San Carlos (Negros)',
+  'Silay',
+  'Sipalay',
+  'Tacloban',
   'Tagbilaran',
+  'Talisay',
+  'Tanjay',
+  'Toledo',
+  'Victorias',
+  'Baybay',
+  'Borongan',
+  'Calbayog',
+  'Catbalogan',
+  'Maasin',
+  // Mindanao
+  'Butuan',
+  'Bayugan',
+  'Bislig',
+  'Cagayan de Oro',
+  'Cotabato City',
+  'Dapitan',
+  'Davao City',
+  'Digos',
+  'Dipolog',
+  'El Salvador',
+  'General Santos',
+  'Gingoog',
+  'Iligan',
+  'Isabela City',
+  'Kidapawan',
+  'Koronadal',
+  'Lamitan',
+  'Malaybalay',
+  'Marawi',
+  'Masbate City',
+  'Mati',
+  'Oroquieta',
+  'Ozamiz',
+  'Pagadian',
+  'Panabo',
+  'Samal',
+  'Surigao',
+  'Tacurong',
+  'Tagum',
+  'Tandag',
+  'Tangub',
+  'Valencia',
+  'Zamboanga City',
+  // Additional cities
+  'Baguio',
+  'Subic',
 ].sort();
 
 /**

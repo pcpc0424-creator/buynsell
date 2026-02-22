@@ -400,7 +400,7 @@ export default function AdminDashboard() {
                       <tr key={user.id} className="text-slate-700">
                         <td className="py-3">
                           <div>
-                            <p className="font-medium text-white">{user.name || 'N/A'}</p>
+                            <p className="font-medium text-slate-800">{user.name || 'N/A'}</p>
                             <p className="text-sm text-slate-400">{user.email}</p>
                           </div>
                         </td>

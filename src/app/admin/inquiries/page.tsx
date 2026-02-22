@@ -347,11 +347,11 @@ export default function InquiriesPage() {
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent-blue to-accent-purple flex items-center justify-center text-white font-semibold">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent-blue to-accent-purple flex items-center justify-center text-slate-800 font-semibold">
                     {inquiry.name.charAt(0).toUpperCase()}
                   </div>
                   <div>
-                    <h4 className="text-white font-medium">{inquiry.name}</h4>
+                    <h4 className="text-slate-800 font-medium">{inquiry.name}</h4>
                     <p className="text-slate-400 text-sm">{inquiry.email}</p>
                   </div>
                 </div>
@@ -366,7 +366,7 @@ export default function InquiriesPage() {
               <div className="bg-white/[0.02] rounded-xl p-4 mb-4">
                 <p className="text-slate-500 text-sm mb-2">
                   <i className="fas fa-building mr-2 text-accent-blue"></i>
-                  Re: <span className="text-white">{inquiry.listing.title}</span>
+                  Re: <span className="text-slate-800">{inquiry.listing.title}</span>
                   {inquiry.listing.agent && (
                     <>
                       <span className="text-slate-400 mx-2">|</span>
@@ -396,7 +396,7 @@ export default function InquiriesPage() {
                       setSelectedInquiry(inquiry);
                       setAdminNotes(inquiry.adminNotes || '');
                     }}
-                    className="px-4 py-2 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-white transition-all text-sm"
+                    className="px-4 py-2 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-800 transition-all text-sm"
                   >
                     <i className="fas fa-edit mr-2"></i>Notes
                   </button>
@@ -418,7 +418,7 @@ export default function InquiriesPage() {
                     <button
                       onClick={() => handleStatusChange(inquiry.id, 'CLOSED')}
                       disabled={actionLoading === inquiry.id}
-                      className="px-4 py-2 rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-white transition-all text-sm disabled:opacity-50"
+                      className="px-4 py-2 rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-800 transition-all text-sm disabled:opacity-50"
                     >
                       {actionLoading === inquiry.id ? (
                         <i className="fas fa-spinner fa-spin mr-2"></i>
@@ -479,7 +479,7 @@ export default function InquiriesPage() {
             onClick={() => setSelectedInquiry(null)}
           ></div>
           <div className="relative glass-ultra rounded-2xl p-6 w-full max-w-lg">
-            <h3 className="text-xl font-semibold text-white mb-2">Admin Notes</h3>
+            <h3 className="text-xl font-semibold text-slate-800 mb-2">Admin Notes</h3>
             <p className="text-slate-500 text-sm mb-4">
               Inquiry from {selectedInquiry.name} about {selectedInquiry.listing.title}
             </p>
@@ -496,14 +496,14 @@ export default function InquiriesPage() {
                   setSelectedInquiry(null);
                   setAdminNotes('');
                 }}
-                className="flex-1 py-3 rounded-xl glass-ultra text-white font-medium hover:bg-slate-200 transition-all"
+                className="flex-1 py-3 rounded-xl glass-ultra text-slate-800 font-medium hover:bg-slate-200 transition-all"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSaveNotes}
                 disabled={actionLoading === selectedInquiry.id}
-                className="flex-1 py-3 rounded-xl btn-premium text-white font-medium disabled:opacity-50"
+                className="flex-1 py-3 rounded-xl btn-premium text-slate-800 font-medium disabled:opacity-50"
               >
                 {actionLoading === selectedInquiry.id ? (
                   <i className="fas fa-spinner fa-spin"></i>

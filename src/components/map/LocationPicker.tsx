@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import { Marker, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import { Search, MapPin, Loader2 } from 'lucide-react';
+import { apiUrl } from '@/lib/config';
 
 const Map = dynamic(() => import('./Map'), {
   ssr: false,
@@ -75,18 +76,16 @@ export default function LocationPicker({
     setMounted(true);
   }, []);
 
-  // Reverse geocode to get address from coordinates
+  // Reverse geocode to get address from coordinates (via proxy API)
   const reverseGeocode = useCallback(
     async (lat: number, lng: number) => {
       try {
-        const response = await fetch(
-          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1`,
-          {
-            headers: {
-              'Accept-Language': 'en',
-            },
-          }
-        );
+        const params = new URLSearchParams({
+          type: 'reverse',
+          lat: lat.toString(),
+          lon: lng.toString(),
+        });
+        const response = await fetch(apiUrl(`/api/geocoding?${params}`));
         const data = await response.json();
         return data.display_name;
       } catch (error) {
@@ -107,7 +106,7 @@ export default function LocationPicker({
     [onLocationChange, reverseGeocode]
   );
 
-  // Search for location
+  // Search for location (via proxy API)
   const handleSearch = useCallback(async () => {
     if (!searchQuery.trim()) return;
 
@@ -115,16 +114,13 @@ export default function LocationPicker({
     setShowResults(true);
 
     try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-          searchQuery + ', Philippines'
-        )}&limit=5&addressdetails=1`,
-        {
-          headers: {
-            'Accept-Language': 'en',
-          },
-        }
-      );
+      const params = new URLSearchParams({
+        type: 'search',
+        q: searchQuery + ', Philippines',
+        limit: '5',
+        countrycodes: 'ph',
+      });
+      const response = await fetch(apiUrl(`/api/geocoding?${params}`));
       const data = await response.json();
       setSearchResults(data);
     } catch (error) {

@@ -262,6 +262,7 @@ export default function AgentListingsPage() {
                       alt={listing.title}
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      unoptimized
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-slate-300">
@@ -314,7 +315,7 @@ export default function AgentListingsPage() {
 
                   <div className="flex space-x-2">
                     <Link
-                      href={`/properties/sale/${listing.id}`}
+                      href={`/properties/${listing.transactionType.toLowerCase()}/${listing.id}`}
                       target="_blank"
                       className="flex-1 py-2 rounded-lg bg-slate-100 text-slate-700 text-center text-sm hover:bg-slate-200 transition-colors"
                     >

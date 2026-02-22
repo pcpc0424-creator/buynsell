@@ -277,7 +277,7 @@ export default function UsersPage() {
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <div className="glass-ultra rounded-xl p-4 text-center">
-            <p className="text-2xl font-bold text-white">{stats.total}</p>
+            <p className="text-2xl font-bold text-slate-900">{stats.total}</p>
             <p className="text-slate-500 text-sm">Total Users</p>
           </div>
           <div className="glass-ultra rounded-xl p-4 text-center">
@@ -346,11 +346,11 @@ export default function UsersPage() {
                             {(user.name || user.email).charAt(0).toUpperCase()}
                           </div>
                         )}
-                        <span className="text-white font-medium">{user.name || 'N/A'}</span>
+                        <span className="text-slate-900 font-semibold">{user.name || 'N/A'}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <p className="text-white text-sm">{user.email}</p>
+                      <p className="text-slate-800 text-sm">{user.email}</p>
                       <p className="text-slate-400 text-xs">{user.phone || 'No phone'}</p>
                     </td>
                     <td className="px-6 py-4">
@@ -364,7 +364,7 @@ export default function UsersPage() {
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="text-white">{(user.loyaltyPoints ?? 0).toLocaleString()}</span>
+                      <span className="text-slate-800">{(user.loyaltyPoints ?? 0).toLocaleString()}</span>
                     </td>
                     <td className="px-6 py-4">
                       <span
@@ -457,7 +457,7 @@ export default function UsersPage() {
             onClick={() => setSelectedUser(null)}
           ></div>
           <div className="relative glass-ultra rounded-2xl p-6 w-full max-w-md">
-            <h3 className="text-xl font-semibold text-white mb-6">Edit User</h3>
+            <h3 className="text-xl font-semibold text-slate-900 mb-6">Edit User</h3>
 
             <div className="flex items-center space-x-4 mb-6">
               {selectedUser.image ? (
@@ -474,7 +474,7 @@ export default function UsersPage() {
                 </div>
               )}
               <div>
-                <p className="text-white font-medium">{selectedUser.name || 'N/A'}</p>
+                <p className="text-slate-900 font-medium">{selectedUser.name || 'N/A'}</p>
                 <p className="text-slate-500 text-sm">{selectedUser.email}</p>
               </div>
             </div>
@@ -522,7 +522,7 @@ export default function UsersPage() {
             <div className="flex space-x-3 mt-6">
               <button
                 onClick={() => setSelectedUser(null)}
-                className="flex-1 py-3 rounded-xl glass-ultra text-white font-medium hover:bg-slate-200 transition-all"
+                className="flex-1 py-3 rounded-xl glass-ultra text-slate-700 font-medium hover:bg-slate-200 transition-all"
               >
                 Cancel
               </button>

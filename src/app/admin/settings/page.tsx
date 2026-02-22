@@ -213,7 +213,7 @@ export default function SettingsPage() {
               <span>{error}</span>
               <button
                 onClick={() => setError(null)}
-                className="ml-auto text-slate-500 hover:text-white"
+                className="ml-auto text-slate-500 hover:text-slate-800"
               >
                 <i className="fas fa-times"></i>
               </button>
@@ -228,7 +228,7 @@ export default function SettingsPage() {
               <span>{success}</span>
               <button
                 onClick={() => setSuccess(null)}
-                className="ml-auto text-slate-500 hover:text-white"
+                className="ml-auto text-slate-500 hover:text-slate-800"
               >
                 <i className="fas fa-times"></i>
               </button>
@@ -248,7 +248,7 @@ export default function SettingsPage() {
                     className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all ${
                       activeTab === tab.id
                         ? 'bg-accent-blue/10 text-accent-blue'
-                        : 'text-slate-500 hover:bg-slate-100 hover:text-white'
+                        : 'text-slate-500 hover:bg-slate-100 hover:text-slate-800'
                     }`}
                   >
                     <i className={`fas ${tab.icon} w-5`}></i>
@@ -265,7 +265,7 @@ export default function SettingsPage() {
               {/* General Settings */}
               {activeTab === 'general' && (
                 <div className="space-y-6">
-                  <h3 className="text-lg font-semibold text-white mb-4">General Settings</h3>
+                  <h3 className="text-lg font-semibold text-slate-800 mb-4">General Settings</h3>
 
                   <div>
                     <label className="block text-slate-600 text-sm font-medium mb-2">Site Name</label>
@@ -313,7 +313,7 @@ export default function SettingsPage() {
               {/* Inquiry Settings */}
               {activeTab === 'inquiry' && (
                 <div className="space-y-6">
-                  <h3 className="text-lg font-semibold text-white mb-4">Inquiry Settings</h3>
+                  <h3 className="text-lg font-semibold text-slate-800 mb-4">Inquiry Settings</h3>
 
                   <div>
                     <label className="block text-slate-600 text-sm font-medium mb-2">Inquiry Mode</label>
@@ -385,7 +385,7 @@ export default function SettingsPage() {
               {/* Listing Settings */}
               {activeTab === 'listing' && (
                 <div className="space-y-6">
-                  <h3 className="text-lg font-semibold text-white mb-4">Listing Settings</h3>
+                  <h3 className="text-lg font-semibold text-slate-800 mb-4">Listing Settings</h3>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -444,7 +444,7 @@ export default function SettingsPage() {
               {/* Payment Settings */}
               {activeTab === 'payment' && (
                 <div className="space-y-6">
-                  <h3 className="text-lg font-semibold text-white mb-4">Payment Settings (PayPal)</h3>
+                  <h3 className="text-lg font-semibold text-slate-800 mb-4">Payment Settings (PayPal)</h3>
 
                   <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-4 mb-6">
                     <div className="flex items-start space-x-3">
@@ -494,7 +494,7 @@ export default function SettingsPage() {
               {/* API Keys */}
               {activeTab === 'api' && (
                 <div className="space-y-6">
-                  <h3 className="text-lg font-semibold text-white mb-4">API Keys</h3>
+                  <h3 className="text-lg font-semibold text-slate-800 mb-4">API Keys</h3>
 
                   <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4 mb-6">
                     <div className="flex items-start space-x-3">
@@ -530,7 +530,7 @@ export default function SettingsPage() {
                 <button
                   onClick={handleSave}
                   disabled={saving}
-                  className="btn-premium px-8 py-3 rounded-xl text-white font-semibold disabled:opacity-50"
+                  className="btn-premium px-8 py-3 rounded-xl text-slate-800 font-semibold disabled:opacity-50"
                 >
                   {saving ? (
                     <>

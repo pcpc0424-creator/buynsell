@@ -6,6 +6,7 @@ import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { AgentHeader } from '@/components/agent';
 import { apiUrl } from '@/lib/config';
+import { PHILIPPINE_CITIES } from '@/lib/geocoding';
 
 const LocationPicker = dynamic(() => import('@/components/map/LocationPicker'), {
   ssr: false,
@@ -29,12 +30,6 @@ const propertyStatuses = [
   { value: 'NEW', label: 'Brand New' },
   { value: 'USED', label: 'Resale/Used' },
   { value: 'UNDER_CONSTRUCTION', label: 'Under Construction' },
-];
-
-const cities = [
-  'Makati', 'Taguig', 'Quezon City', 'Manila', 'Pasig', 'Mandaluyong',
-  'San Juan', 'Pasay', 'Parañaque', 'Las Piñas', 'Muntinlupa', 'Marikina',
-  'Caloocan', 'Cebu City', 'Davao City', 'Tagaytay',
 ];
 
 interface FormData {
@@ -542,7 +537,7 @@ export default function NewListingPage() {
                     required
                   >
                     <option value="">Select city</option>
-                    {cities.map((city) => (
+                    {PHILIPPINE_CITIES.map((city) => (
                       <option key={city} value={city}>{city}</option>
                     ))}
                   </select>
@@ -649,6 +644,7 @@ export default function NewListingPage() {
                       alt="Main property image"
                       fill
                       className="object-cover"
+                      unoptimized
                     />
                     <button
                       type="button"
@@ -678,6 +674,7 @@ export default function NewListingPage() {
                           alt={`Property image ${idx + 2}`}
                           fill
                           className="object-cover"
+                          unoptimized
                         />
                         <button
                           type="button"

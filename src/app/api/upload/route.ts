@@ -1,20 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import cloudinary, {
-  uploadOptions,
-  validateBase64Image,
-  UploadType,
-} from '@/lib/cloudinary';
+import { writeFile, mkdir } from 'fs/promises';
+import path from 'path';
+import { v4 as uuidv4 } from 'uuid';
 
-interface UploadResult {
-  url: string;
-  publicId: string;
-  width: number;
-  height: number;
-  format: string;
-  bytes: number;
-}
+// Allowed file types
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
+// Upload directories by type
+const UPLOAD_DIRS: Record<string, string> = {
+  listing: 'properties',
+  avatar: 'avatars',
+  advertisement: 'advertisements',
+};
 
 // POST /api/upload - Upload single image
 export async function POST(request: NextRequest) {
@@ -28,38 +28,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if Cloudinary is configured
-    if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY) {
-      return NextResponse.json(
-        { success: false, error: 'Image upload service not configured' },
-        { status: 503 }
-      );
-    }
+    const formData = await request.formData();
+    const file = formData.get('file') as File | null;
+    const type = (formData.get('type') as string) || 'listing';
 
-    const body = await request.json();
-    const { image, type = 'listing' } = body;
-
-    if (!image) {
+    if (!file) {
       return NextResponse.json(
-        { success: false, error: 'No image provided' },
+        { success: false, error: 'No file provided' },
         { status: 400 }
       );
     }
 
-    // Validate upload type
-    if (!Object.keys(uploadOptions).includes(type)) {
+    // Validate file type
+    if (!ALLOWED_TYPES.includes(file.type)) {
       return NextResponse.json(
-        { success: false, error: 'Invalid upload type' },
+        { success: false, error: 'Invalid file type. Allowed: JPG, PNG, WebP, GIF' },
         { status: 400 }
       );
     }
 
-    const options = uploadOptions[type as UploadType] as {
-      folder: string;
-      allowed_formats: string[];
-      max_file_size?: number;
-      transformation?: { width: number; height: number; crop: string; quality: string; }[];
-    };
+    // Validate file size
+    if (file.size > MAX_FILE_SIZE) {
+      return NextResponse.json(
+        { success: false, error: 'File too large. Maximum size: 5MB' },
+        { status: 400 }
+      );
+    }
 
     // Check permissions based on type
     if (type === 'advertisement' && session.user.role !== 'ADMIN') {
@@ -76,51 +70,37 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate image
-    const validation = validateBase64Image(
-      image,
-      options.allowed_formats,
-      options.max_file_size || 10 * 1024 * 1024
-    );
+    // Get upload directory
+    const uploadDir = UPLOAD_DIRS[type] || 'properties';
+    const uploadPath = path.join(process.cwd(), 'public', 'uploads', uploadDir);
 
-    if (!validation.valid) {
-      return NextResponse.json(
-        { success: false, error: validation.error },
-        { status: 400 }
-      );
-    }
+    // Ensure directory exists
+    await mkdir(uploadPath, { recursive: true });
 
-    // Upload to Cloudinary
-    const result = await cloudinary.uploader.upload(image, {
-      folder: options.folder,
-      transformation: options.transformation,
-      resource_type: 'image',
-    });
+    // Generate unique filename
+    const ext = path.extname(file.name) || `.${file.type.split('/')[1]}`;
+    const filename = `${uuidv4()}${ext}`;
+    const filePath = path.join(uploadPath, filename);
 
-    const uploadResult: UploadResult = {
-      url: result.secure_url,
-      publicId: result.public_id,
-      width: result.width,
-      height: result.height,
-      format: result.format,
-      bytes: result.bytes,
-    };
+    // Convert file to buffer and save
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+    await writeFile(filePath, buffer);
+
+    // Generate URL
+    const url = `/uploads/${uploadDir}/${filename}`;
 
     return NextResponse.json({
       success: true,
-      data: uploadResult,
+      data: {
+        url,
+        filename,
+        size: file.size,
+        type: file.type,
+      },
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error uploading image:', error);
-
-    // Handle Cloudinary specific errors
-    if (error.http_code) {
-      return NextResponse.json(
-        { success: false, error: error.message || 'Upload failed' },
-        { status: error.http_code }
-      );
-    }
-
     return NextResponse.json(
       { success: false, error: 'Failed to upload image' },
       { status: 500 }

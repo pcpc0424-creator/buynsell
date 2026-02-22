@@ -404,7 +404,7 @@ export default function ListingsPage() {
                           />
                         </div>
                         <div className="min-w-0">
-                          <h4 className="text-white font-medium truncate">{listing.title}</h4>
+                          <h4 className="text-slate-800 font-medium truncate">{listing.title}</h4>
                           <p className="text-slate-400 text-sm truncate">
                             {listing.address || `${listing.city}, ${listing.province}`}
                           </p>
@@ -412,14 +412,14 @@ export default function ListingsPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <p className="text-white text-sm">{listing.agent?.name || 'N/A'}</p>
+                      <p className="text-slate-800 text-sm">{listing.agent?.name || 'N/A'}</p>
                       <p className="text-slate-400 text-xs">{listing.agent?.email || ''}</p>
                     </td>
                     <td className="px-6 py-4">
                       <span className="text-slate-500 text-sm">{listing.propertyType}</span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="text-white font-medium">{formatPrice(listing.price)}</span>
+                      <span className="text-slate-800 font-medium">{formatPrice(listing.price)}</span>
                     </td>
                     <td className="px-6 py-4">
                       <span
@@ -441,9 +441,9 @@ export default function ListingsPage() {
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-end space-x-2">
                         <Link
-                          href={`/properties/sale/${listing.id}`}
+                          href={`/properties/${listing.transactionType.toLowerCase()}/${listing.id}`}
                           target="_blank"
-                          className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200 hover:text-white transition-all"
+                          className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200 hover:text-slate-800 transition-all"
                           title="View Details"
                         >
                           <i className="fas fa-eye text-sm"></i>
@@ -526,7 +526,7 @@ export default function ListingsPage() {
             onClick={() => setShowRejectModal(false)}
           ></div>
           <div className="relative glass-ultra rounded-2xl p-6 w-full max-w-md">
-            <h3 className="text-xl font-semibold text-white mb-4">Reject Listing</h3>
+            <h3 className="text-xl font-semibold text-slate-800 mb-4">Reject Listing</h3>
             <p className="text-slate-500 text-sm mb-4">
               Please provide a reason for rejecting this listing.
             </p>
@@ -544,14 +544,14 @@ export default function ListingsPage() {
                   setRejectReason('');
                   setSelectedListing(null);
                 }}
-                className="flex-1 py-3 rounded-xl glass-ultra text-white font-medium hover:bg-slate-200 transition-all"
+                className="flex-1 py-3 rounded-xl glass-ultra text-slate-800 font-medium hover:bg-slate-200 transition-all"
               >
                 Cancel
               </button>
               <button
                 onClick={confirmReject}
                 disabled={!rejectReason.trim() || actionLoading === selectedListing}
-                className="flex-1 py-3 rounded-xl bg-red-500 text-white font-medium hover:bg-red-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 py-3 rounded-xl bg-red-500 text-slate-800 font-medium hover:bg-red-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {actionLoading === selectedListing ? (
                   <i className="fas fa-spinner fa-spin"></i>

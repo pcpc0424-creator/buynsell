@@ -218,6 +218,7 @@ export default function PropertyDetailPage({
                     fill
                     className="object-cover"
                     priority
+                    unoptimized={(allImages[selectedImageIndex] || listing.mainImage)?.startsWith('/uploads')}
                   />
                   <div className="absolute top-4 left-4 flex gap-2">
                     <span
@@ -249,7 +250,7 @@ export default function PropertyDetailPage({
                           index === selectedImageIndex ? 'ring-2 ring-accent-blue' : 'opacity-60 hover:opacity-100'
                         }`}
                       >
-                        <Image src={image} alt={`View ${index + 1}`} fill sizes="96px" loading="lazy" className="object-cover" />
+                        <Image src={image} alt={`View ${index + 1}`} fill sizes="96px" loading="lazy" className="object-cover" unoptimized={image?.startsWith('/uploads')} />
                       </button>
                     ))}
                   </div>

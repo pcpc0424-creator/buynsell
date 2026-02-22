@@ -339,7 +339,7 @@ export default function FeaturedListingsPage() {
                 <p className="text-3xl font-bold text-slate-800 mt-1">{featured.length}</p>
               </div>
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-400 to-amber-500 flex items-center justify-center">
-                <i className="fas fa-star text-white text-xl"></i>
+                <i className="fas fa-star text-slate-800 text-xl"></i>
               </div>
             </div>
           </div>
@@ -351,7 +351,7 @@ export default function FeaturedListingsPage() {
                 <p className="text-3xl font-bold text-green-400 mt-1">{activeCount}</p>
               </div>
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center">
-                <i className="fas fa-check text-white text-xl"></i>
+                <i className="fas fa-check text-slate-800 text-xl"></i>
               </div>
             </div>
           </div>
@@ -363,7 +363,7 @@ export default function FeaturedListingsPage() {
                 <p className="text-3xl font-bold text-yellow-400 mt-1">{inactiveCount}</p>
               </div>
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center">
-                <i className="fas fa-pause text-white text-xl"></i>
+                <i className="fas fa-pause text-slate-800 text-xl"></i>
               </div>
             </div>
           </div>
@@ -406,7 +406,7 @@ export default function FeaturedListingsPage() {
 
           <button
             onClick={() => setShowAddModal(true)}
-            className="btn-premium px-6 py-2 rounded-lg text-white font-medium"
+            className="btn-premium px-6 py-2 rounded-lg text-slate-800 font-medium"
           >
             <i className="fas fa-plus mr-2"></i>Add Featured
           </button>
@@ -419,7 +419,7 @@ export default function FeaturedListingsPage() {
             <p className="text-slate-500">No featured listings</p>
             <button
               onClick={() => setShowAddModal(true)}
-              className="mt-4 px-6 py-2 bg-accent-blue hover:bg-accent-blue/80 rounded-lg text-white font-medium transition-all"
+              className="mt-4 px-6 py-2 bg-accent-blue hover:bg-accent-blue/80 rounded-lg text-slate-800 font-medium transition-all"
             >
               Add your first featured listing
             </button>
@@ -480,7 +480,7 @@ export default function FeaturedListingsPage() {
                   <div className="flex-1 p-4">
                     <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                       <div className="flex-1">
-                        <h3 className="text-lg font-semibold text-white mb-1">
+                        <h3 className="text-lg font-semibold text-slate-800 mb-1">
                           {item.listing.title}
                         </h3>
                         <p className="text-slate-500 text-sm mb-2">
@@ -548,7 +548,7 @@ export default function FeaturedListingsPage() {
                     </button>
                     <button
                       onClick={() => handleEdit(item)}
-                      className="px-4 py-2 bg-slate-200 hover:bg-slate-200 rounded-lg text-white text-sm transition-all"
+                      className="px-4 py-2 bg-slate-200 hover:bg-slate-200 rounded-lg text-slate-800 text-sm transition-all"
                     >
                       <i className="fas fa-edit mr-1"></i>Edit
                     </button>
@@ -571,7 +571,7 @@ export default function FeaturedListingsPage() {
             <div className="glass-ultra rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
               <div className="p-6 border-b border-slate-200">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-xl font-semibold text-white">Add Featured Listing</h3>
+                  <h3 className="text-xl font-semibold text-slate-800">Add Featured Listing</h3>
                   <button
                     onClick={() => setShowAddModal(false)}
                     className="text-slate-500 hover:text-slate-800"
@@ -618,7 +618,7 @@ export default function FeaturedListingsPage() {
                           />
                         </div>
                         <div className="ml-4 flex-1 min-w-0">
-                          <h4 className="text-white font-medium truncate">{listing.title}</h4>
+                          <h4 className="text-slate-800 font-medium truncate">{listing.title}</h4>
                           <p className="text-slate-500 text-sm truncate">{listing.city}</p>
                           <p className="text-accent-blue text-sm font-medium">
                             {formatPrice(listing.price)}
@@ -626,7 +626,7 @@ export default function FeaturedListingsPage() {
                         </div>
                         <button
                           disabled={saving}
-                          className="ml-4 px-4 py-2 bg-accent-blue hover:bg-accent-blue/80 rounded-lg text-white text-sm font-medium transition-all disabled:opacity-50"
+                          className="ml-4 px-4 py-2 bg-accent-blue hover:bg-accent-blue/80 rounded-lg text-slate-800 text-sm font-medium transition-all disabled:opacity-50"
                         >
                           {saving ? (
                             <i className="fas fa-spinner fa-spin"></i>
@@ -651,7 +651,7 @@ export default function FeaturedListingsPage() {
             <div className="glass-ultra rounded-2xl w-full max-w-md">
               <div className="p-6 border-b border-slate-200">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-xl font-semibold text-white">Edit Featured Listing</h3>
+                  <h3 className="text-xl font-semibold text-slate-800">Edit Featured Listing</h3>
                   <button
                     onClick={() => {
                       setShowEditModal(false);
@@ -676,7 +676,7 @@ export default function FeaturedListingsPage() {
                     />
                   </div>
                   <div className="ml-3 flex-1 min-w-0">
-                    <h4 className="text-white font-medium truncate">{editingItem.listing.title}</h4>
+                    <h4 className="text-slate-800 font-medium truncate">{editingItem.listing.title}</h4>
                     <p className="text-slate-500 text-sm">{editingItem.listing.city}</p>
                   </div>
                 </div>
@@ -732,7 +732,7 @@ export default function FeaturedListingsPage() {
                   <button
                     type="submit"
                     disabled={saving}
-                    className="btn-premium flex-1 px-6 py-3 rounded-xl text-white font-semibold disabled:opacity-50"
+                    className="btn-premium flex-1 px-6 py-3 rounded-xl text-slate-800 font-semibold disabled:opacity-50"
                   >
                     {saving ? (
                       <>
@@ -750,7 +750,7 @@ export default function FeaturedListingsPage() {
                       setShowEditModal(false);
                       setEditingItem(null);
                     }}
-                    className="px-6 py-3 bg-slate-200 hover:bg-slate-200 rounded-xl text-white font-semibold transition-all"
+                    className="px-6 py-3 bg-slate-200 hover:bg-slate-200 rounded-xl text-slate-800 font-semibold transition-all"
                   >
                     Cancel
                   </button>

@@ -300,7 +300,7 @@ export default function AdsPage() {
 
           <button
             onClick={handleCreate}
-            className="btn-premium px-6 py-2 rounded-lg text-white font-medium"
+            className="btn-premium px-6 py-2 rounded-lg text-slate-800 font-medium"
           >
             <i className="fas fa-plus mr-2"></i>New Ad
           </button>
@@ -313,7 +313,7 @@ export default function AdsPage() {
             <p className="text-slate-500">No advertisements found</p>
             <button
               onClick={handleCreate}
-              className="mt-4 px-6 py-2 bg-accent-blue hover:bg-accent-blue/80 rounded-lg text-white font-medium transition-all"
+              className="mt-4 px-6 py-2 bg-accent-blue hover:bg-accent-blue/80 rounded-lg text-slate-800 font-medium transition-all"
             >
               Create your first ad
             </button>
@@ -395,7 +395,7 @@ export default function AdsPage() {
                     </button>
                     <button
                       onClick={() => handleEdit(ad)}
-                      className="px-3 py-2 bg-slate-200 hover:bg-slate-200 rounded-lg text-white text-sm transition-all"
+                      className="px-3 py-2 bg-slate-200 hover:bg-slate-200 rounded-lg text-slate-800 text-sm transition-all"
                     >
                       <i className="fas fa-edit"></i>
                     </button>
@@ -556,7 +556,7 @@ export default function AdsPage() {
                   <button
                     type="submit"
                     disabled={saving}
-                    className="btn-premium flex-1 px-6 py-3 rounded-xl text-white font-semibold disabled:opacity-50"
+                    className="btn-premium flex-1 px-6 py-3 rounded-xl text-slate-800 font-semibold disabled:opacity-50"
                   >
                     {saving ? (
                       <>
@@ -572,7 +572,7 @@ export default function AdsPage() {
                   <button
                     type="button"
                     onClick={() => setShowModal(false)}
-                    className="px-6 py-3 bg-slate-200 hover:bg-slate-200 rounded-xl text-white font-semibold transition-all"
+                    className="px-6 py-3 bg-slate-200 hover:bg-slate-200 rounded-xl text-slate-800 font-semibold transition-all"
                   >
                     Cancel
                   </button>

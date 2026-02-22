@@ -23,9 +23,9 @@ const createListingSchema = z.object({
   parking: z.number().int().min(0).optional(),
   floorNumber: z.number().int().optional(),
   totalFloors: z.number().int().optional(),
-  mainImage: z.string().url('Main image must be a valid URL'),
+  mainImage: z.string().min(1, 'Main image is required'),
   images: z.array(z.object({
-    url: z.string().url(),
+    url: z.string().min(1),
     caption: z.string().optional(),
     order: z.number().int().optional(),
   })).optional(),
@@ -108,7 +108,7 @@ export async function GET(request: NextRequest) {
     orderBy.push({ createdAt: 'desc' });
 
     // Execute query
-    const [listings, total] = await Promise.all([
+    const [listings, total, statusCounts] = await Promise.all([
       prisma.listing.findMany({
         where,
         skip,
@@ -142,7 +142,18 @@ export async function GET(request: NextRequest) {
         },
       }),
       prisma.listing.count({ where }),
+      // Get status counts for admin
+      isAdmin ? prisma.listing.groupBy({
+        by: ['status'],
+        _count: true,
+      }) : Promise.resolve([]),
     ]);
+
+    // Transform status counts
+    const counts = isAdmin ? statusCounts.reduce((acc: Record<string, number>, item: { status: string; _count: number }) => {
+      acc[item.status] = item._count;
+      return acc;
+    }, {}) : undefined;
 
     return NextResponse.json({
       success: true,
@@ -153,6 +164,7 @@ export async function GET(request: NextRequest) {
         total,
         totalPages: Math.ceil(total / limit),
       },
+      counts,
     });
   } catch (error) {
     console.error('Error fetching listings:', error);

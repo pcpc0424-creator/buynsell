@@ -17,6 +17,7 @@ interface Inquiry {
     title: string;
     mainImage: string | null;
     price: number;
+    transactionType: string;
   };
   user: { id: string; name: string | null; email: string; image: string | null } | null;
   status: string;
@@ -432,7 +433,7 @@ export default function AgentInquiriesPage() {
                 <h4 className="text-slate-800 font-medium">{selectedInquiry.listing.title}</h4>
                 <p className="text-accent-purple font-semibold">{formatPrice(selectedInquiry.listing.price)}</p>
                 <Link
-                  href={`/properties/sale/${selectedInquiry.listing.id}`}
+                  href={`/properties/${selectedInquiry.listing.transactionType.toLowerCase()}/${selectedInquiry.listing.id}`}
                   target="_blank"
                   className="text-slate-400 text-sm hover:text-slate-800 transition-colors"
                 >
