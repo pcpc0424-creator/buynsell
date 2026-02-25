@@ -1,6 +1,7 @@
 'use client';
 
 import { memo } from 'react';
+import { PHILIPPINE_CITIES } from '@/lib/geocoding';
 
 export interface FilterState {
   transactionType: string;
@@ -27,16 +28,6 @@ const propertyTypes = [
   { value: 'NEW_DEVELOPMENT', label: 'New Development' },
 ];
 
-const cities = [
-  { value: '', label: 'All Cities' },
-  { value: 'Makati', label: 'Makati City' },
-  { value: 'Taguig', label: 'BGC, Taguig' },
-  { value: 'Quezon City', label: 'Quezon City' },
-  { value: 'Manila', label: 'Manila' },
-  { value: 'Pasig', label: 'Pasig City' },
-  { value: 'Cebu', label: 'Cebu City' },
-  { value: 'Davao', label: 'Davao City' },
-];
 
 const priceRanges = [
   { min: '', max: '', label: 'Any Price' },
@@ -142,9 +133,10 @@ function PropertyFilters({ filters, onFilterChange, onReset }: PropertyFiltersPr
             onChange={(e) => handleChange('city', e.target.value)}
             className="form-select"
           >
-            {cities.map((city) => (
-              <option key={city.value} value={city.value}>
-                {city.label}
+            <option value="">All Cities</option>
+            {PHILIPPINE_CITIES.map((city) => (
+              <option key={city} value={city}>
+                {city}
               </option>
             ))}
           </select>

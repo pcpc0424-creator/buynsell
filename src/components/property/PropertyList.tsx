@@ -123,6 +123,7 @@ function PropertyList({ properties, loading, total = 0, onSortChange, sort = 'ne
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  unoptimized={property.mainImage?.startsWith('/uploads')}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
@@ -162,6 +163,7 @@ function PropertyList({ properties, loading, total = 0, onSortChange, sort = 'ne
                         alt={property.agent.name || 'Agent'}
                         fill
                         className="object-cover"
+                        unoptimized={property.agent.image?.startsWith('/uploads')}
                       />
                     </div>
                     <span className="text-white text-sm font-medium drop-shadow-lg">

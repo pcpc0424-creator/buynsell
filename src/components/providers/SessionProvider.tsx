@@ -8,7 +8,7 @@ interface Props {
 
 export default function SessionProvider({ children }: Props) {
   return (
-    <NextAuthSessionProvider basePath="/buynsell/api/auth">
+    <NextAuthSessionProvider>
       {children}
     </NextAuthSessionProvider>
   );

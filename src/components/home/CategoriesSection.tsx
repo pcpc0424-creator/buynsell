@@ -4,7 +4,7 @@ const categories = [
   {
     href: '/properties?type=house',
     icon: 'fa-home',
-    label: 'HOUSE & LOT',
+    label: 'House',
     count: '2,450+',
     gradient: 'from-blue-500/20 to-blue-600/30',
     iconColor: 'text-blue-500',

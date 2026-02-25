@@ -53,6 +53,7 @@ export default function ListingsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedListing, setSelectedListing] = useState<string | null>(null);
   const [showRejectModal, setShowRejectModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [rejectReason, setRejectReason] = useState('');
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [statusCounts, setStatusCounts] = useState<StatusCounts>({ PENDING: 0, APPROVED: 0, REJECTED: 0 });
@@ -208,6 +209,47 @@ export default function ListingsPage() {
 
       setShowRejectModal(false);
       setRejectReason('');
+      setSelectedListing(null);
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleDelete = (id: string) => {
+    setSelectedListing(id);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!selectedListing) return;
+
+    try {
+      setActionLoading(selectedListing);
+      const res = await fetch(apiUrl(`/api/listings/${selectedListing}`), {
+        method: 'DELETE',
+      });
+
+      const result = await res.json();
+
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to delete listing');
+      }
+
+      // Remove from local state
+      const deletedListing = listings.find(l => l.id === selectedListing);
+      setListings(prev => prev.filter(l => l.id !== selectedListing));
+
+      // Update status counts
+      if (deletedListing) {
+        setStatusCounts(prev => ({
+          ...prev,
+          [deletedListing.status]: Math.max(0, prev[deletedListing.status as keyof StatusCounts] - 1),
+        }));
+      }
+
+      setShowDeleteModal(false);
       setSelectedListing(null);
     } catch (err) {
       alert(err instanceof Error ? err.message : 'An error occurred');
@@ -472,6 +514,14 @@ export default function ListingsPage() {
                             </button>
                           </>
                         )}
+                        <button
+                          onClick={() => handleDelete(listing.id)}
+                          disabled={actionLoading === listing.id}
+                          className="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center text-red-400 hover:bg-red-500/20 transition-all disabled:opacity-50"
+                          title="Delete"
+                        >
+                          <i className="fas fa-trash text-sm"></i>
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -557,6 +607,44 @@ export default function ListingsPage() {
                   <i className="fas fa-spinner fa-spin"></i>
                 ) : (
                   'Reject'
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setShowDeleteModal(false)}
+          ></div>
+          <div className="relative glass-ultra rounded-2xl p-6 w-full max-w-md">
+            <h3 className="text-xl font-semibold text-slate-800 mb-4">Delete Listing</h3>
+            <p className="text-slate-500 text-sm mb-6">
+              Are you sure you want to delete this listing? This action cannot be undone.
+            </p>
+            <div className="flex space-x-3">
+              <button
+                onClick={() => {
+                  setShowDeleteModal(false);
+                  setSelectedListing(null);
+                }}
+                className="flex-1 py-3 rounded-xl glass-ultra text-slate-800 font-medium hover:bg-slate-200 transition-all"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                disabled={actionLoading === selectedListing}
+                className="flex-1 py-3 rounded-xl bg-red-500 text-white font-medium hover:bg-red-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {actionLoading === selectedListing ? (
+                  <i className="fas fa-spinner fa-spin"></i>
+                ) : (
+                  'Delete'
                 )}
               </button>
             </div>
