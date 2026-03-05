@@ -6,6 +6,7 @@ import {
   RecentProperties,
   AgentsSection,
   CTASection,
+  AdBanner,
 } from '@/components/home';
 
 export const metadata: Metadata = {
@@ -25,8 +26,10 @@ export default function Home() {
       <Header />
       <main>
         <HeroSection />
+        <AdBanner position="MAIN_BANNER" className="py-8" />
         <CategoriesSection />
         <RecentProperties />
+        <AdBanner position="SIDEBAR" className="py-8" />
         <AgentsSection />
         <CTASection />
         <Services />

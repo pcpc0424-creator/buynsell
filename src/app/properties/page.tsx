@@ -8,6 +8,7 @@ import { Header, Footer, Services } from '@/components/layout';
 import { PropertyCategories } from '@/components/property';
 import PropertyList from '@/components/property/PropertyList';
 import PropertyFilters, { FilterState } from '@/components/property/PropertyFilters';
+import { AdBanner } from '@/components/home';
 import { apiUrl } from '@/lib/config';
 
 // Dynamic import for PropertyMap to avoid SSR issues with Leaflet
@@ -204,6 +205,8 @@ function PropertiesPageContent() {
     <>
       <Header />
       <PropertyCategories />
+
+      <AdBanner position="LIST_TOP" className="py-6" />
 
       <section className="py-12">
         <div className={`mx-auto px-6 lg:px-8 ${viewMode === 'split' ? 'max-w-[1600px]' : 'max-w-7xl'}`}>
@@ -459,6 +462,8 @@ function PropertiesPageContent() {
           )}
         </div>
       </section>
+
+      <AdBanner position="LIST_BOTTOM" className="py-6" />
 
       <Services />
       <Footer />

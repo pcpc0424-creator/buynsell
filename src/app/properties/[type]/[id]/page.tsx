@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { Header, Footer, Services } from '@/components/layout';
 import { PropertyCategories } from '@/components/property';
+import { AdBanner } from '@/components/home';
 import { apiUrl, config, getImageUrl, isLocalUpload } from '@/lib/config';
 
 interface Agent {
@@ -536,6 +537,8 @@ export default function PropertyDetailPage({
           </div>
         </div>
       </section>
+
+      <AdBanner position="PROPERTY_DETAIL" className="py-6" />
 
       <Services />
       <Footer />
