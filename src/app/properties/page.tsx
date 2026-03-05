@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import { Header, Footer, Services } from '@/components/layout';
 import { PropertyCategories } from '@/components/property';
 import PropertyList from '@/components/property/PropertyList';
@@ -383,10 +384,11 @@ function PropertiesPageContent() {
                           >
                             <div className="flex">
                               <div className="relative w-32 h-32 flex-shrink-0">
-                                <img
+                                <Image
                                   src={property.mainImage || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=300'}
                                   alt={property.title}
-                                  className="w-full h-full object-cover"
+                                  fill
+                                  className="object-cover"
                                 />
                                 <span
                                   className={`absolute top-2 left-2 px-2 py-0.5 rounded text-white text-xs font-medium ${

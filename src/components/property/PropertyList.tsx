@@ -3,7 +3,7 @@
 import { memo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { config } from '@/lib/config';
+import { config, getImageUrl, isLocalUpload } from '@/lib/config';
 
 interface Agent {
   id: string;
@@ -118,12 +118,12 @@ function PropertyList({ properties, loading, total = 0, onSortChange, sort = 'ne
             <Link href={`/properties/${getPropertyTypeSlug(property.propertyType)}/${property.id}`}>
               <div className="relative h-[240px] overflow-hidden rounded-t-3xl">
                 <Image
-                  src={property.mainImage || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800'}
+                  src={getImageUrl(property.mainImage) || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800'}
                   alt={property.title}
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-110"
-                  unoptimized={property.mainImage?.startsWith('/uploads')}
+                  unoptimized={isLocalUpload(property.mainImage)}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
@@ -159,11 +159,11 @@ function PropertyList({ properties, loading, total = 0, onSortChange, sort = 'ne
                   <div className="absolute bottom-4 left-4 flex items-center space-x-2">
                     <div className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-slate-2000">
                       <Image
-                        src={property.agent.image || `${config.basePath}/images/default-avatar.svg`}
+                        src={getImageUrl(property.agent.image) || `${config.basePath}/images/default-avatar.svg`}
                         alt={property.agent.name || 'Agent'}
                         fill
                         className="object-cover"
-                        unoptimized={property.agent.image?.startsWith('/uploads')}
+                        unoptimized={isLocalUpload(property.agent.image)}
                       />
                     </div>
                     <span className="text-white text-sm font-medium drop-shadow-lg">

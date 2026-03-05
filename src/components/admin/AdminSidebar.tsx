@@ -18,6 +18,11 @@ const menuItems = [
     badge: 'pending',
   },
   {
+    href: '/admin/featured',
+    icon: 'fa-star',
+    label: 'Featured (메인노출)',
+  },
+  {
     href: '/admin/users',
     icon: 'fa-users',
     label: 'Users',

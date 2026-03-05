@@ -31,6 +31,7 @@ function PaymentSuccessContent() {
     } else {
       setLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderId]);
 
   const capturePayment = async () => {

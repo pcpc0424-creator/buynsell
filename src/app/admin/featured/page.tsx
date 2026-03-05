@@ -131,6 +131,28 @@ export default function FeaturedListingsPage() {
     }
   };
 
+  const normalizePositions = async () => {
+    try {
+      // Fetch current order and normalize positions
+      const res = await fetch(apiUrl('/api/admin/featured-listings'));
+      const data = await res.json();
+      if (!data.success) return;
+
+      const order = data.data.map((item: FeaturedListing, idx: number) => ({
+        id: item.id,
+        position: idx + 1,
+      }));
+
+      await fetch(apiUrl('/api/admin/featured-listings'), {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order }),
+      });
+    } catch (err) {
+      console.error('Failed to normalize positions:', err);
+    }
+  };
+
   const handleRemoveFromFeatured = async (item: FeaturedListing) => {
     if (!confirm(`Remove "${item.listing.title}" from featured listings?`)) return;
 
@@ -144,6 +166,9 @@ export default function FeaturedListingsPage() {
       if (!data.success) {
         throw new Error(data.error || 'Failed to remove from featured');
       }
+
+      // Normalize positions after deletion
+      await normalizePositions();
 
       setSuccess('Listing removed from featured!');
       fetchFeatured();
@@ -172,9 +197,11 @@ export default function FeaturedListingsPage() {
   };
 
   const handleEdit = (item: FeaturedListing) => {
+    // Find current index in the sorted list
+    const currentIndex = featured.findIndex(f => f.id === item.id);
     setEditingItem(item);
     setEditForm({
-      position: item.position,
+      position: currentIndex + 1, // Use display order, not raw position
       isActive: item.isActive,
       startDate: item.startDate ? item.startDate.split('T')[0] : '',
       endDate: item.endDate ? item.endDate.split('T')[0] : '',
@@ -190,7 +217,12 @@ export default function FeaturedListingsPage() {
       setSaving(true);
       setError(null);
 
-      const payload: any = {
+      const payload: {
+        position: number;
+        isActive: boolean;
+        startDate?: string;
+        endDate?: string | null;
+      } = {
         position: editForm.position,
         isActive: editForm.isActive,
       };
@@ -215,6 +247,9 @@ export default function FeaturedListingsPage() {
       if (!data.success) {
         throw new Error(data.error || 'Failed to update');
       }
+
+      // Normalize all positions after edit
+      await normalizePositions();
 
       setSuccess('Featured listing updated!');
       setShowEditModal(false);
@@ -686,12 +721,13 @@ export default function FeaturedListingsPage() {
                   <label className="block text-slate-600 text-sm font-medium mb-2">Position</label>
                   <input
                     type="number"
-                    min="0"
-                    value={editForm.position}
-                    onChange={(e) => setEditForm({ ...editForm, position: parseInt(e.target.value) || 0 })}
+                    min="1"
+                    max={featured.length}
+                    value={editForm.position || 1}
+                    onChange={(e) => setEditForm({ ...editForm, position: Math.min(featured.length, Math.max(1, parseInt(e.target.value) || 1)) })}
                     className="form-input"
                   />
-                  <p className="text-slate-400 text-xs mt-1">Lower numbers appear first</p>
+                  <p className="text-slate-400 text-xs mt-1">1 ~ {featured.length} (1 = shown first)</p>
                 </div>
 
                 {/* Date Range */}

@@ -21,15 +21,15 @@ export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
+  const password = formData.password;
   const passwordStrength = useMemo(() => {
-    const { password } = formData;
     let strength = 0;
     if (password.length >= 8) strength++;
     if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
     if (/[0-9]/.test(password)) strength++;
     if (/[^a-zA-Z0-9]/.test(password)) strength++;
     return strength;
-  }, [formData.password]);
+  }, [password]);
 
   const strengthColors = ['#ef4444', '#f97316', '#eab308', '#22c55e'];
   const strengthTexts = ['Weak', 'Fair', 'Good', 'Strong'];

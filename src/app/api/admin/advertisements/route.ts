@@ -7,8 +7,8 @@ import { authOptions } from '@/lib/auth';
 // Validation schema for advertisement
 const createAdSchema = z.object({
   title: z.string().min(1, 'Title is required'),
-  imageUrl: z.string().url('Invalid image URL'),
-  linkUrl: z.string().url('Invalid link URL').optional().nullable(),
+  imageUrl: z.string().min(1, 'Image URL is required'),
+  linkUrl: z.string().optional().nullable().or(z.literal('')),
   position: z.enum(['MAIN_BANNER', 'SIDEBAR', 'LIST_TOP', 'LIST_BOTTOM', 'PROPERTY_DETAIL']),
   isActive: z.boolean().optional(),
   startDate: z.string().datetime().optional().nullable(),

@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { Header, Footer, Services } from '@/components/layout';
 import { PropertyCategories } from '@/components/property';
-import { apiUrl, config } from '@/lib/config';
+import { apiUrl, config, getImageUrl, isLocalUpload } from '@/lib/config';
 
 interface Agent {
   id: string;
@@ -82,6 +82,7 @@ export default function PropertyDetailPage({
 
   useEffect(() => {
     fetchListing();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.id]);
 
   const fetchListing = async () => {
@@ -213,12 +214,12 @@ export default function PropertyDetailPage({
               <div className="glass-ultra rounded-3xl overflow-hidden">
                 <div className="relative h-[400px] lg:h-[500px]">
                   <Image
-                    src={allImages[selectedImageIndex] || listing.mainImage}
+                    src={getImageUrl(allImages[selectedImageIndex] || listing.mainImage)}
                     alt={listing.title}
                     fill
                     className="object-cover"
                     priority
-                    unoptimized={(allImages[selectedImageIndex] || listing.mainImage)?.startsWith('/uploads')}
+                    unoptimized={isLocalUpload(allImages[selectedImageIndex] || listing.mainImage)}
                   />
                   <div className="absolute top-4 left-4 flex gap-2">
                     <span
@@ -250,7 +251,7 @@ export default function PropertyDetailPage({
                           index === selectedImageIndex ? 'ring-2 ring-accent-blue' : 'opacity-60 hover:opacity-100'
                         }`}
                       >
-                        <Image src={image} alt={`View ${index + 1}`} fill sizes="96px" loading="lazy" className="object-cover" unoptimized={image?.startsWith('/uploads')} />
+                        <Image src={getImageUrl(image)} alt={`View ${index + 1}`} fill sizes="96px" loading="lazy" className="object-cover" unoptimized={isLocalUpload(image)} />
                       </button>
                     ))}
                   </div>
@@ -395,12 +396,13 @@ export default function PropertyDetailPage({
                 <div className="flex items-center space-x-4 mb-6">
                   <div className="relative w-16 h-16 rounded-xl overflow-hidden">
                     <Image
-                      src={listing.agent.image || `${config.basePath}/images/default-avatar.svg`}
+                      src={getImageUrl(listing.agent.image) || `${config.basePath}/images/default-avatar.svg`}
                       alt={listing.agent.name || 'Agent'}
                       fill
                       sizes="64px"
                       loading="lazy"
                       className="object-cover"
+                      unoptimized={isLocalUpload(listing.agent.image)}
                     />
                   </div>
                   <div>

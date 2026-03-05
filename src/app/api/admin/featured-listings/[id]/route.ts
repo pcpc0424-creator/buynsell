@@ -10,7 +10,7 @@ interface RouteParams {
 
 // Validation schema for update
 const updateFeaturedSchema = z.object({
-  position: z.number().int().min(0).optional(),
+  position: z.number().int().min(1).optional(),
   startDate: z.string().datetime().optional(),
   endDate: z.string().datetime().optional().nullable(),
   isActive: z.boolean().optional(),
@@ -153,6 +153,58 @@ export async function PUT(
     }
     if (data.endDate !== undefined) {
       updateData.endDate = data.endDate ? new Date(data.endDate) : null;
+    }
+
+    // Handle position change - shift other listings' positions
+    if (data.position !== undefined && data.position !== existing.position) {
+      const newPosition = data.position;
+      const oldPosition = existing.position;
+
+      if (newPosition > 0) {
+        if (oldPosition === 0) {
+          // Moving from unset (0) to a specific position
+          // Shift all items at newPosition or higher up by 1
+          await prisma.featuredListing.updateMany({
+            where: {
+              id: { not: id },
+              position: { gte: newPosition },
+            },
+            data: {
+              position: { increment: 1 },
+            },
+          });
+        } else if (newPosition < oldPosition) {
+          // Moving up (e.g., from position 3 to position 1)
+          // Shift items between newPosition and oldPosition-1 down by 1
+          await prisma.featuredListing.updateMany({
+            where: {
+              id: { not: id },
+              position: {
+                gte: newPosition,
+                lt: oldPosition,
+              },
+            },
+            data: {
+              position: { increment: 1 },
+            },
+          });
+        } else if (newPosition > oldPosition) {
+          // Moving down (e.g., from position 1 to position 3)
+          // Shift items between oldPosition+1 and newPosition up by 1
+          await prisma.featuredListing.updateMany({
+            where: {
+              id: { not: id },
+              position: {
+                gt: oldPosition,
+                lte: newPosition,
+              },
+            },
+            data: {
+              position: { decrement: 1 },
+            },
+          });
+        }
+      }
     }
 
     const featured = await prisma.featuredListing.update({

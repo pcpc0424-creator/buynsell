@@ -7,7 +7,7 @@ import { authOptions } from '@/lib/auth';
 // Validation schema for featured listing
 const createFeaturedSchema = z.object({
   listingId: z.string().min(1, 'Listing ID is required'),
-  position: z.number().int().min(0).optional(),
+  position: z.number().int().min(1).optional(),
   startDate: z.string().datetime().optional(),
   endDate: z.string().datetime().optional().nullable(),
   isActive: z.boolean().optional(),
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
 
     const featuredListings = await prisma.featuredListing.findMany({
       where,
-      orderBy: [{ position: 'asc' }, { createdAt: 'desc' }],
+      orderBy: [{ createdAt: 'desc' }],
       include: {
         listing: {
           select: {
@@ -67,9 +67,23 @@ export async function GET(request: NextRequest) {
       },
     });
 
+    // Sort: position > 0 comes first (sorted by position asc), then position 0 (sorted by createdAt desc)
+    const sortedListings = featuredListings.sort((a, b) => {
+      if (a.position > 0 && b.position > 0) {
+        return a.position - b.position;
+      }
+      if (a.position > 0 && b.position === 0) {
+        return -1;
+      }
+      if (a.position === 0 && b.position > 0) {
+        return 1;
+      }
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
+
     return NextResponse.json({
       success: true,
-      data: featuredListings,
+      data: sortedListings,
     });
   } catch (error) {
     console.error('Error fetching featured listings:', error);
@@ -147,12 +161,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get next position if not provided
+    // Get next position if not provided (position starts from 1)
     if (data.position === undefined) {
       const lastFeatured = await prisma.featuredListing.findFirst({
+        where: { position: { gt: 0 } },
         orderBy: { position: 'desc' },
       });
-      data.position = (lastFeatured?.position ?? -1) + 1;
+      data.position = (lastFeatured?.position ?? 0) + 1;
     }
 
     // Create featured listing
@@ -227,11 +242,11 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    // Update positions
-    const updates = body.order.map((item: { id: string; position: number }) =>
+    // Update positions (ensure positions start from 1)
+    const updates = body.order.map((item: { id: string; position: number }, index: number) =>
       prisma.featuredListing.update({
         where: { id: item.id },
-        data: { position: item.position },
+        data: { position: index + 1 },
       })
     );
 

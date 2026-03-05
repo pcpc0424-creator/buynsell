@@ -25,6 +25,7 @@ interface Listing {
   bathrooms: number;
   area: number;
   rejectionReason?: string;
+  isFeatured?: boolean;
 }
 
 interface StatusCounts {
@@ -258,6 +259,40 @@ export default function ListingsPage() {
     }
   };
 
+  const handleFeature = async (listing: Listing) => {
+    if (listing.isFeatured) {
+      // 이미 Featured인 경우 Featured 관리 페이지로 이동
+      window.location.href = `${config.basePath}/admin/featured`;
+      return;
+    }
+
+    try {
+      setActionLoading(listing.id);
+      const res = await fetch(apiUrl('/api/admin/featured-listings'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ listingId: listing.id }),
+      });
+
+      const result = await res.json();
+
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to add to featured');
+      }
+
+      // Update local state
+      setListings(prev =>
+        prev.map(l => (l.id === listing.id ? { ...l, isFeatured: true } : l))
+      );
+
+      alert('메인에 노출되도록 설정되었습니다!');
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('en-PH', {
       style: 'currency',
@@ -411,161 +446,142 @@ export default function ListingsPage() {
           </div>
         )}
 
-        {/* Listings Table */}
-        <div className="glass-ultra rounded-2xl overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-slate-200">
-                  <th className="text-left text-slate-500 text-sm font-medium px-6 py-4">Property</th>
-                  <th className="text-left text-slate-500 text-sm font-medium px-6 py-4">Agent</th>
-                  <th className="text-left text-slate-500 text-sm font-medium px-6 py-4">Type</th>
-                  <th className="text-left text-slate-500 text-sm font-medium px-6 py-4">Price</th>
-                  <th className="text-left text-slate-500 text-sm font-medium px-6 py-4">Status</th>
-                  <th className="text-left text-slate-500 text-sm font-medium px-6 py-4">Date</th>
-                  <th className="text-right text-slate-500 text-sm font-medium px-6 py-4">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {listings.map((listing) => (
-                  <tr
-                    key={listing.id}
-                    className="border-b border-slate-200 hover:bg-white/[0.02] transition-colors"
-                  >
-                    <td className="px-6 py-4">
-                      <div className="flex items-center space-x-4">
-                        <div className="relative w-16 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-slate-100">
-                          <Image
-                            src={getImageUrl(listing)}
-                            alt={listing.title}
-                            fill
-                            className="object-cover"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).src = `${config.basePath}/images/placeholder-property.svg`;
-                            }}
-                          />
-                        </div>
-                        <div className="min-w-0">
-                          <h4 className="text-slate-800 font-medium truncate">{listing.title}</h4>
-                          <p className="text-slate-400 text-sm truncate">
-                            {listing.address || `${listing.city}, ${listing.province}`}
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <p className="text-slate-800 text-sm">{listing.agent?.name || 'N/A'}</p>
-                      <p className="text-slate-400 text-xs">{listing.agent?.email || ''}</p>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="text-slate-500 text-sm">{listing.propertyType}</span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="text-slate-800 font-medium">{formatPrice(listing.price)}</span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span
-                        className={`px-3 py-1 rounded-lg text-xs font-medium ${
-                          statusColors[listing.status] || 'bg-gray-500/20 text-gray-400'
+        {/* Listings Cards */}
+        <div className="space-y-4">
+          {listings.map((listing) => (
+            <div
+              key={listing.id}
+              className="glass-ultra rounded-2xl p-4 hover:shadow-lg transition-all"
+            >
+              <div className="flex items-start space-x-4">
+                {/* Image */}
+                <div className="relative w-24 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-slate-100">
+                  <Image
+                    src={getImageUrl(listing)}
+                    alt={listing.title}
+                    fill
+                    className="object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = `${config.basePath}/images/placeholder-property.svg`;
+                    }}
+                  />
+                </div>
+
+                {/* Info */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <div className="min-w-0 flex-1">
+                      <h4 className="text-slate-800 font-semibold truncate">{listing.title}</h4>
+                      <p className="text-slate-400 text-sm truncate">
+                        {listing.address || listing.city}
+                      </p>
+                    </div>
+                    <span
+                      className={`px-3 py-1 rounded-lg text-xs font-medium flex-shrink-0 whitespace-nowrap ${
+                        statusColors[listing.status] || 'bg-gray-500/20 text-gray-400'
+                      }`}
+                    >
+                      {listing.status}
+                    </span>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2 text-sm text-slate-500 mb-3">
+                    <span className="font-semibold text-slate-800">{formatPrice(listing.price)}</span>
+                    <span>•</span>
+                    <span>{listing.propertyType}</span>
+                    <span>•</span>
+                    <span>{listing.agent?.name || 'N/A'}</span>
+                    <span>•</span>
+                    <span>{formatDate(listing.createdAt)}</span>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Link
+                      href={`/properties/${listing.transactionType.toLowerCase()}/${listing.id}`}
+                      target="_blank"
+                      className="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 text-sm font-medium transition-all"
+                    >
+                      보기
+                    </Link>
+                    {listing.status === 'APPROVED' && (
+                      <button
+                        onClick={() => handleFeature(listing)}
+                        disabled={actionLoading === listing.id}
+                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all disabled:opacity-50 ${
+                          listing.isFeatured
+                            ? 'bg-yellow-500 text-white hover:bg-yellow-600'
+                            : 'bg-amber-100 text-amber-700 hover:bg-amber-200'
                         }`}
                       >
-                        {listing.status}
-                      </span>
-                      {listing.rejectionReason && (
-                        <p className="text-red-400/60 text-xs mt-1 truncate max-w-[120px]" title={listing.rejectionReason}>
-                          {listing.rejectionReason}
-                        </p>
-                      )}
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="text-slate-500 text-sm">{formatDate(listing.createdAt)}</span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center justify-end space-x-2">
-                        <Link
-                          href={`/properties/${listing.transactionType.toLowerCase()}/${listing.id}`}
-                          target="_blank"
-                          className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200 hover:text-slate-800 transition-all"
-                          title="View Details"
-                        >
-                          <i className="fas fa-eye text-sm"></i>
-                        </Link>
-                        {listing.status === 'PENDING' && (
-                          <>
-                            <button
-                              onClick={() => handleApprove(listing.id)}
-                              disabled={actionLoading === listing.id}
-                              className="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center text-green-400 hover:bg-green-500/20 transition-all disabled:opacity-50"
-                              title="Approve"
-                            >
-                              {actionLoading === listing.id ? (
-                                <i className="fas fa-spinner fa-spin text-sm"></i>
-                              ) : (
-                                <i className="fas fa-check text-sm"></i>
-                              )}
-                            </button>
-                            <button
-                              onClick={() => handleReject(listing.id)}
-                              disabled={actionLoading === listing.id}
-                              className="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center text-red-400 hover:bg-red-500/20 transition-all disabled:opacity-50"
-                              title="Reject"
-                            >
-                              <i className="fas fa-times text-sm"></i>
-                            </button>
-                          </>
-                        )}
+                        {actionLoading === listing.id ? '...' : (listing.isFeatured ? '메인노출중' : '메인노출')}
+                      </button>
+                    )}
+                    {listing.status === 'PENDING' && (
+                      <>
                         <button
-                          onClick={() => handleDelete(listing.id)}
+                          onClick={() => handleApprove(listing.id)}
                           disabled={actionLoading === listing.id}
-                          className="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center text-red-400 hover:bg-red-500/20 transition-all disabled:opacity-50"
-                          title="Delete"
+                          className="px-3 py-1.5 rounded-lg bg-green-100 text-green-700 hover:bg-green-200 text-sm font-medium transition-all disabled:opacity-50"
                         >
-                          <i className="fas fa-trash text-sm"></i>
+                          승인
                         </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {listings.length === 0 && !loading && (
-            <div className="text-center py-12">
-              <i className="fas fa-building text-4xl text-slate-300 mb-4"></i>
-              <p className="text-slate-500">No listings found</p>
-            </div>
-          )}
-
-          {/* Pagination */}
-          {pagination.totalPages > 1 && (
-            <div className="flex items-center justify-between px-6 py-4 border-t border-slate-200">
-              <p className="text-slate-500 text-sm">
-                Showing {(pagination.page - 1) * pagination.limit + 1} to{' '}
-                {Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total}
-              </p>
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={() => setPagination(prev => ({ ...prev, page: prev.page - 1 }))}
-                  disabled={pagination.page === 1}
-                  className="px-3 py-1 rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Previous
-                </button>
-                <span className="text-slate-500 text-sm">
-                  Page {pagination.page} of {pagination.totalPages}
-                </span>
-                <button
-                  onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}
-                  disabled={pagination.page >= pagination.totalPages}
-                  className="px-3 py-1 rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Next
-                </button>
+                        <button
+                          onClick={() => handleReject(listing.id)}
+                          disabled={actionLoading === listing.id}
+                          className="px-3 py-1.5 rounded-lg bg-orange-100 text-orange-700 hover:bg-orange-200 text-sm font-medium transition-all disabled:opacity-50"
+                        >
+                          거절
+                        </button>
+                      </>
+                    )}
+                    <button
+                      onClick={() => handleDelete(listing.id)}
+                      disabled={actionLoading === listing.id}
+                      className="px-3 py-1.5 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 text-sm font-medium transition-all disabled:opacity-50"
+                    >
+                      삭제
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
-          )}
+          ))}
         </div>
+
+        {listings.length === 0 && !loading && (
+          <div className="glass-ultra rounded-2xl text-center py-12">
+            <p className="text-slate-500">리스팅이 없습니다</p>
+          </div>
+        )}
+
+        {/* Pagination */}
+        {pagination.totalPages > 1 && (
+          <div className="flex items-center justify-between mt-6 glass-ultra rounded-2xl px-6 py-4">
+            <p className="text-slate-500 text-sm">
+              {pagination.total}개 중 {(pagination.page - 1) * pagination.limit + 1} - {Math.min(pagination.page * pagination.limit, pagination.total)}
+            </p>
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => setPagination(prev => ({ ...prev, page: prev.page - 1 }))}
+                disabled={pagination.page === 1}
+                className="px-3 py-1 rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                이전
+              </button>
+              <span className="text-slate-500 text-sm">
+                {pagination.page} / {pagination.totalPages}
+              </span>
+              <button
+                onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}
+                disabled={pagination.page >= pagination.totalPages}
+                className="px-3 py-1 rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                다음
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Reject Modal */}

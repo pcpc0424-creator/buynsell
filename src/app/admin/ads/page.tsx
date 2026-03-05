@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { AdminHeader } from '@/components/admin';
-import { apiUrl } from '@/lib/config';
+import { apiUrl, getImageUrl, isLocalUpload } from '@/lib/config';
 
 interface Advertisement {
   id: string;
@@ -150,6 +150,7 @@ export default function AdsPage() {
       setUploadingImage(true);
       const uploadFormData = new FormData();
       uploadFormData.append('file', file);
+      uploadFormData.append('type', 'advertisement');
 
       const res = await fetch(apiUrl('/api/upload'), {
         method: 'POST',
@@ -190,8 +191,8 @@ export default function AdsPage() {
       };
 
       const url = editingAd
-        ? `/api/admin/advertisements/${editingAd.id}`
-        : '/api/admin/advertisements';
+        ? apiUrl(`/api/admin/advertisements/${editingAd.id}`)
+        : apiUrl('/api/admin/advertisements');
 
       const res = await fetch(url, {
         method: editingAd ? 'PUT' : 'POST',
@@ -331,10 +332,11 @@ export default function AdsPage() {
                 <div className="relative aspect-video bg-slate-100">
                   {ad.imageUrl && (
                     <Image
-                      src={ad.imageUrl}
+                      src={getImageUrl(ad.imageUrl)}
                       alt={ad.title}
                       fill
                       className="object-cover"
+                      unoptimized={isLocalUpload(ad.imageUrl)}
                     />
                   )}
                   <div className="absolute top-3 left-3">
@@ -450,10 +452,11 @@ export default function AdsPage() {
                   {formData.imageUrl ? (
                     <div className="relative aspect-video bg-slate-100 rounded-xl overflow-hidden mb-2">
                       <Image
-                        src={formData.imageUrl}
+                        src={getImageUrl(formData.imageUrl)}
                         alt="Preview"
                         fill
                         className="object-cover"
+                        unoptimized={isLocalUpload(formData.imageUrl)}
                       />
                       <button
                         type="button"
@@ -494,11 +497,11 @@ export default function AdsPage() {
                 <div>
                   <label className="block text-slate-600 text-sm font-medium mb-2">Link URL</label>
                   <input
-                    type="url"
+                    type="text"
                     value={formData.linkUrl}
                     onChange={(e) => setFormData({ ...formData, linkUrl: e.target.value })}
                     className="form-input"
-                    placeholder="https://example.com"
+                    placeholder="www.example.com"
                   />
                 </div>
 

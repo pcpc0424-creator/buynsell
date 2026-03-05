@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import { AgentHeader } from '@/components/agent';
-import { apiUrl } from '@/lib/config';
+import { apiUrl, getImageUrl, isLocalUpload } from '@/lib/config';
 
 interface ListingImage {
   url: string;
@@ -240,10 +240,11 @@ export default function AgentDashboard() {
                       <div className="relative w-14 h-10 rounded-lg overflow-hidden bg-slate-100">
                         {(listing.mainImage || listing.images?.[0]?.url) ? (
                           <Image
-                            src={listing.mainImage || listing.images[0].url}
+                            src={getImageUrl(listing.mainImage || listing.images[0].url)}
                             alt={listing.title}
                             fill
                             className="object-cover"
+                            unoptimized={isLocalUpload(listing.mainImage || listing.images[0].url)}
                           />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center text-slate-300">

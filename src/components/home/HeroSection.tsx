@@ -1,10 +1,50 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
+import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import { apiUrl, getImageUrl, isLocalUpload } from '@/lib/config';
+
+const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+
+interface FeaturedListing {
+  id: string;
+  listing: {
+    id: string;
+    title: string;
+    transactionType: string;
+    mainImage: string | null;
+    images?: { url: string }[];
+  };
+}
 
 export default function HeroSection() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [featured, setFeatured] = useState<FeaturedListing | null>(null);
+
+  useEffect(() => {
+    const fetchFeatured = async () => {
+      try {
+        const res = await fetch(apiUrl('/api/featured-listings?limit=1'));
+        const data = await res.json();
+        if (data.success && data.data?.length > 0) {
+          setFeatured(data.data[0]);
+        }
+      } catch (error) {
+        console.error('Error fetching featured listing:', error);
+      }
+    };
+    fetchFeatured();
+  }, []);
+
+  const listing = featured?.listing;
+  const heroImageUrl = listing?.mainImage
+    ? getImageUrl(listing.mainImage)
+    : listing?.images?.[0]?.url
+      ? getImageUrl(listing.images[0].url)
+      : DEFAULT_IMAGE;
+  const isLocal = listing?.mainImage ? isLocalUpload(listing.mainImage) : false;
+  const detailUrl = listing ? `/properties/${listing.transactionType.toLowerCase()}/${listing.id}` : null;
 
   const stats = [
     { value: '20K', suffix: '+', label: 'Properties' },
@@ -78,17 +118,36 @@ export default function HeroSection() {
 
             {/* Mobile Hero Image */}
             <div className="lg:hidden mt-10 relative">
-              <div className="relative rounded-2xl overflow-hidden shadow-xl">
-                <Image
-                  src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                  alt="Luxury Property"
-                  width={800}
-                  height={400}
-                  className="w-full h-[250px] object-cover"
-                  priority
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
-              </div>
+              {detailUrl ? (
+                <Link
+                  href={detailUrl}
+                  className="relative rounded-2xl overflow-hidden shadow-xl block cursor-pointer hover:scale-[1.02] transition-transform duration-300"
+                >
+                  <Image
+                    src={heroImageUrl}
+                    alt={listing?.title || "Hero Property"}
+                    width={800}
+                    height={400}
+                    className="w-full h-[250px] object-cover"
+                    priority
+                    unoptimized={isLocal}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent pointer-events-none"></div>
+                </Link>
+              ) : (
+                <div className="relative rounded-2xl overflow-hidden shadow-xl">
+                  <Image
+                    src={heroImageUrl}
+                    alt="Hero Property"
+                    width={800}
+                    height={400}
+                    className="w-full h-[250px] object-cover"
+                    priority
+                    unoptimized={isLocal}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent pointer-events-none"></div>
+                </div>
+              )}
               {/* Mobile Floating Cards */}
               <div className="absolute -bottom-4 left-4 glass-ultra rounded-xl p-3 z-20 shadow-lg">
                 <div className="flex items-center space-x-2">
@@ -116,17 +175,36 @@ export default function HeroSection() {
           <div className="hidden lg:block relative">
             <div className="relative">
               {/* Main Image */}
-              <div className="relative z-10 rounded-3xl overflow-hidden shadow-2xl">
-                <Image
-                  src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                  alt="Luxury Property"
-                  width={800}
-                  height={500}
-                  className="w-full h-[500px] object-cover"
-                  priority
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
-              </div>
+              {detailUrl ? (
+                <Link
+                  href={detailUrl}
+                  className="relative z-10 rounded-3xl overflow-hidden shadow-2xl block cursor-pointer hover:scale-[1.02] transition-transform duration-300"
+                >
+                  <Image
+                    src={heroImageUrl}
+                    alt={listing?.title || "Hero Property"}
+                    width={800}
+                    height={500}
+                    className="w-full h-[500px] object-cover"
+                    priority
+                    unoptimized={isLocal}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent pointer-events-none"></div>
+                </Link>
+              ) : (
+                <div className="relative z-10 rounded-3xl overflow-hidden shadow-2xl">
+                  <Image
+                    src={heroImageUrl}
+                    alt="Hero Property"
+                    width={800}
+                    height={500}
+                    className="w-full h-[500px] object-cover"
+                    priority
+                    unoptimized={isLocal}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent pointer-events-none"></div>
+                </div>
+              )}
 
               {/* Floating Card 1 */}
               <div className="absolute -bottom-8 -left-8 glass-ultra rounded-2xl p-5 z-20 shadow-lg">

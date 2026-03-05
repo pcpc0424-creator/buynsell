@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { apiUrl } from '@/lib/config';
 
 interface User {
@@ -91,6 +92,7 @@ export default function AdminPaymentsPage() {
       fetchPayments();
       fetchUsers();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, activeTab, search, statusFilter]);
 
   const fetchPayments = async () => {
@@ -370,9 +372,9 @@ export default function AdminPaymentsPage() {
                         <tr key={sub.id} className="hover:bg-slate-50">
                           <td className="px-6 py-4">
                             <div className="flex items-center">
-                              <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center mr-3">
+                              <div className="relative w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center mr-3 overflow-hidden">
                                 {sub.user.image ? (
-                                  <img src={sub.user.image} alt="" className="w-10 h-10 rounded-full object-cover" />
+                                  <Image src={sub.user.image} alt="" fill className="object-cover" />
                                 ) : (
                                   <i className="fas fa-user text-slate-400"></i>
                                 )}
@@ -457,9 +459,9 @@ export default function AdminPaymentsPage() {
                         <tr key={pt.id} className="hover:bg-slate-50">
                           <td className="px-6 py-4">
                             <div className="flex items-center">
-                              <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center mr-3">
+                              <div className="relative w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center mr-3 overflow-hidden">
                                 {pt.user.image ? (
-                                  <img src={pt.user.image} alt="" className="w-10 h-10 rounded-full object-cover" />
+                                  <Image src={pt.user.image} alt="" fill className="object-cover" />
                                 ) : (
                                   <i className="fas fa-user text-slate-400"></i>
                                 )}
