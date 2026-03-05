@@ -212,7 +212,6 @@ export default function RecentProperties() {
                       alt={featuredProperty.title}
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 66vw, 50vw"
-                      priority
                       className="card-image object-cover transition-transform duration-700 hover:scale-110"
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = `${config.basePath}/images/placeholder-property.svg`;

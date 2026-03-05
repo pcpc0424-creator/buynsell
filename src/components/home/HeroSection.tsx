@@ -129,7 +129,6 @@ export default function HeroSection() {
                     width={800}
                     height={400}
                     className="w-full h-[250px] object-cover"
-                    priority
                     unoptimized={isLocal}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent pointer-events-none"></div>
@@ -142,7 +141,6 @@ export default function HeroSection() {
                     width={800}
                     height={400}
                     className="w-full h-[250px] object-cover"
-                    priority
                     unoptimized={isLocal}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent pointer-events-none"></div>
@@ -186,7 +184,6 @@ export default function HeroSection() {
                     width={800}
                     height={500}
                     className="w-full h-[500px] object-cover"
-                    priority
                     unoptimized={isLocal}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent pointer-events-none"></div>
@@ -199,7 +196,6 @@ export default function HeroSection() {
                     width={800}
                     height={500}
                     className="w-full h-[500px] object-cover"
-                    priority
                     unoptimized={isLocal}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent pointer-events-none"></div>
