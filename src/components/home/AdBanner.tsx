@@ -70,14 +70,31 @@ export default function AdBanner({ position, className = '' }: AdBannerProps) {
 
   const currentAd = ads[currentIndex];
 
+  // Different aspect ratios for different positions
+  const getAspectRatio = () => {
+    switch (position) {
+      case 'MAIN_BANNER':
+        return 'aspect-[21/9] sm:aspect-[21/6]'; // Wide banner
+      case 'SIDEBAR':
+        return 'aspect-[16/9] sm:aspect-[21/9]'; // Medium
+      case 'LIST_TOP':
+      case 'LIST_BOTTOM':
+        return 'aspect-[16/9] sm:aspect-[21/6]'; // List banners
+      case 'PROPERTY_DETAIL':
+        return 'aspect-[16/9] sm:aspect-[21/9]'; // Detail page
+      default:
+        return 'aspect-[16/9]';
+    }
+  };
+
   const renderAd = (ad: Advertisement) => {
     const imageElement = (
-      <div className="relative w-full aspect-[3/1] sm:aspect-[4/1] rounded-2xl overflow-hidden">
+      <div className={`relative w-full ${getAspectRatio()} rounded-2xl overflow-hidden bg-slate-100`}>
         <Image
           src={getImageUrl(ad.imageUrl)}
           alt={ad.title}
           fill
-          className="object-cover"
+          className="object-contain"
           unoptimized={isLocalUpload(ad.imageUrl)}
         />
       </div>
