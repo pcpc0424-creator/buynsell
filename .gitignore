@@ -41,3 +41,9 @@ public/uploads/
 
 # Temp folder
 tnwjd/
+node_modules/
+.next/
+.env
+.env.*
+dist/
+build/

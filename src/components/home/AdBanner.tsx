@@ -70,31 +70,35 @@ export default function AdBanner({ position, className = '' }: AdBannerProps) {
 
   const currentAd = ads[currentIndex];
 
-  // Different aspect ratios for different positions
+  // Different aspect ratios for different positions (compact banner style like Blind)
   const getAspectRatio = () => {
     switch (position) {
       case 'MAIN_BANNER':
-        return 'aspect-[21/9] sm:aspect-[21/6]'; // Wide banner
+        return 'aspect-[6/1] sm:aspect-[8/1]'; // Wide banner
       case 'SIDEBAR':
-        return 'aspect-[16/9] sm:aspect-[21/9]'; // Medium
+        return 'aspect-[5/1] sm:aspect-[6/1]'; // Sidebar
       case 'LIST_TOP':
       case 'LIST_BOTTOM':
-        return 'aspect-[16/9] sm:aspect-[21/6]'; // List banners
+        return 'aspect-[6/1] sm:aspect-[8/1]'; // List banners
       case 'PROPERTY_DETAIL':
-        return 'aspect-[16/9] sm:aspect-[21/9]'; // Detail page
+        return 'aspect-[5/1] sm:aspect-[6/1]'; // Detail page
       default:
-        return 'aspect-[16/9]';
+        return 'aspect-[6/1]';
     }
   };
 
   const renderAd = (ad: Advertisement) => {
     const imageElement = (
-      <div className={`relative w-full ${getAspectRatio()} rounded-2xl overflow-hidden bg-slate-100`}>
+      <div className={`relative w-full ${getAspectRatio()} rounded-xl overflow-hidden bg-gradient-to-r from-blue-600 to-blue-500 shadow-sm border border-slate-200`}>
+        {/* Sponsored tag */}
+        <span className="absolute top-2 left-3 z-10 bg-slate-800/80 text-white text-[10px] px-2 py-0.5 rounded font-medium">
+          광고
+        </span>
         <Image
           src={getImageUrl(ad.imageUrl)}
           alt={ad.title}
           fill
-          className="object-contain"
+          className="object-cover"
           unoptimized={isLocalUpload(ad.imageUrl)}
         />
       </div>

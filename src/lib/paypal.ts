@@ -192,53 +192,118 @@ export const FEATURED_LISTING_PRICES = {
 };
 
 /**
- * Create PayPal order (placeholder - implement with actual PayPal SDK)
+ * Create PayPal order - calls actual PayPal API
  */
 export async function createPayPalOrder(
   payload: CreateOrderPayload
 ): Promise<PayPalOrder> {
-  // TODO: Implement actual PayPal order creation
-  // This is a placeholder that simulates the response
-
   if (!isPayPalConfigured()) {
     throw new Error('PayPal is not configured. Please set PAYPAL_CLIENT_ID and PAYPAL_CLIENT_SECRET.');
   }
 
-  // In production, this would call PayPal's API:
-  // POST /v2/checkout/orders
+  // Get access token
+  const accessToken = await getPayPalAccessToken();
+  const apiUrl = getPayPalApiUrl();
 
-  const mockOrderId = `ORDER_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  // Determine return URLs based on environment
+  const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+  const returnUrl = `${baseUrl}/payment/success`;
+  const cancelUrl = `${baseUrl}/payment/cancel`;
+
+  // Create order request
+  const orderRequest = {
+    intent: 'CAPTURE',
+    purchase_units: [
+      {
+        amount: {
+          currency_code: payload.currency || 'USD',
+          value: payload.amount.toFixed(2),
+        },
+        description: payload.description || `${payload.type} purchase`,
+        custom_id: JSON.stringify({
+          type: payload.type,
+          ...payload.metadata,
+        }),
+      },
+    ],
+    application_context: {
+      brand_name: 'BuyNSell Philippines',
+      landing_page: 'LOGIN',
+      user_action: 'PAY_NOW',
+      return_url: returnUrl,
+      cancel_url: cancelUrl,
+    },
+  };
+
+  const response = await fetch(`${apiUrl}/v2/checkout/orders`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify(orderRequest),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    console.error('PayPal create order error:', errorData);
+    throw new Error(errorData.message || 'Failed to create PayPal order');
+  }
+
+  const orderData = await response.json();
+
+  // Find approve URL from links
+  const approveLink = orderData.links?.find((link: any) => link.rel === 'approve');
 
   return {
-    id: mockOrderId,
-    status: 'CREATED',
+    id: orderData.id,
+    status: orderData.status as PaymentStatus,
     amount: payload.amount,
     currency: payload.currency || 'USD',
     type: payload.type,
-    approveUrl: `https://www.sandbox.paypal.com/checkoutnow?token=${mockOrderId}`,
+    approveUrl: approveLink?.href,
     createdAt: new Date(),
     metadata: payload.metadata,
   };
 }
 
 /**
- * Capture PayPal order (placeholder - implement with actual PayPal SDK)
+ * Capture PayPal order - calls actual PayPal API
  */
-export async function capturePayPalOrder(orderId: string): Promise<PayPalOrder> {
-  // TODO: Implement actual PayPal order capture
-  // POST /v2/checkout/orders/{order_id}/capture
-
+export async function capturePayPalOrder(orderId: string): Promise<PayPalOrder & { captureData?: any }> {
   if (!isPayPalConfigured()) {
     throw new Error('PayPal is not configured');
   }
 
+  const accessToken = await getPayPalAccessToken();
+  const apiUrl = getPayPalApiUrl();
+
+  const response = await fetch(`${apiUrl}/v2/checkout/orders/${orderId}/capture`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    console.error('PayPal capture order error:', errorData);
+    throw new Error(errorData.message || 'Failed to capture PayPal order');
+  }
+
+  const captureData = await response.json();
+  const purchaseUnit = captureData.purchase_units?.[0];
+  const capture = purchaseUnit?.payments?.captures?.[0];
+
   return {
-    id: orderId,
-    status: 'COMPLETED',
-    amount: 0, // Would come from PayPal response
-    currency: 'USD',
-    type: 'subscription',
+    id: captureData.id,
+    status: captureData.status as PaymentStatus,
+    amount: parseFloat(capture?.amount?.value || '0'),
+    currency: capture?.amount?.currency_code || 'USD',
+    type: 'subscription', // Will be parsed from custom_id
     createdAt: new Date(),
+    captureData,
   };
 }
 

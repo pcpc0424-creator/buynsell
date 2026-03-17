@@ -285,7 +285,7 @@ export default function ListingsPage() {
         prev.map(l => (l.id === listing.id ? { ...l, isFeatured: true } : l))
       );
 
-      alert('메인에 노출되도록 설정되었습니다!');
+      alert('Listing has been added to featured!');
     } catch (err) {
       alert(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -454,17 +454,23 @@ export default function ListingsPage() {
               className="glass-ultra rounded-2xl p-4 hover:shadow-lg transition-all"
             >
               <div className="flex items-start space-x-4">
-                {/* Image */}
+                {/* Image - Hide for pending listings */}
                 <div className="relative w-24 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-slate-100">
-                  <Image
-                    src={getImageUrl(listing)}
-                    alt={listing.title}
-                    fill
-                    className="object-cover"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = `${config.basePath}/images/placeholder-property.svg`;
-                    }}
-                  />
+                  {listing.status === 'PENDING' ? (
+                    <div className="w-full h-full flex items-center justify-center bg-slate-200">
+                      <i className="fas fa-eye-slash text-slate-400 text-xl"></i>
+                    </div>
+                  ) : (
+                    <Image
+                      src={getImageUrl(listing)}
+                      alt={listing.title}
+                      fill
+                      className="object-cover"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = `${config.basePath}/images/placeholder-property.svg`;
+                      }}
+                    />
+                  )}
                 </div>
 
                 {/* Info */}
@@ -502,7 +508,7 @@ export default function ListingsPage() {
                       target="_blank"
                       className="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 text-sm font-medium transition-all"
                     >
-                      보기
+                      View
                     </Link>
                     {listing.status === 'APPROVED' && (
                       <button
@@ -514,7 +520,7 @@ export default function ListingsPage() {
                             : 'bg-amber-100 text-amber-700 hover:bg-amber-200'
                         }`}
                       >
-                        {actionLoading === listing.id ? '...' : (listing.isFeatured ? '메인노출중' : '메인노출')}
+                        {actionLoading === listing.id ? '...' : (listing.isFeatured ? 'Featured' : 'Feature')}
                       </button>
                     )}
                     {listing.status === 'PENDING' && (
@@ -524,14 +530,14 @@ export default function ListingsPage() {
                           disabled={actionLoading === listing.id}
                           className="px-3 py-1.5 rounded-lg bg-green-100 text-green-700 hover:bg-green-200 text-sm font-medium transition-all disabled:opacity-50"
                         >
-                          승인
+                          Approve
                         </button>
                         <button
                           onClick={() => handleReject(listing.id)}
                           disabled={actionLoading === listing.id}
                           className="px-3 py-1.5 rounded-lg bg-orange-100 text-orange-700 hover:bg-orange-200 text-sm font-medium transition-all disabled:opacity-50"
                         >
-                          거절
+                          Reject
                         </button>
                       </>
                     )}
@@ -540,7 +546,7 @@ export default function ListingsPage() {
                       disabled={actionLoading === listing.id}
                       className="px-3 py-1.5 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 text-sm font-medium transition-all disabled:opacity-50"
                     >
-                      삭제
+                      Delete
                     </button>
                   </div>
                 </div>
@@ -551,7 +557,7 @@ export default function ListingsPage() {
 
         {listings.length === 0 && !loading && (
           <div className="glass-ultra rounded-2xl text-center py-12">
-            <p className="text-slate-500">리스팅이 없습니다</p>
+            <p className="text-slate-500">No listings found</p>
           </div>
         )}
 
@@ -559,7 +565,7 @@ export default function ListingsPage() {
         {pagination.totalPages > 1 && (
           <div className="flex items-center justify-between mt-6 glass-ultra rounded-2xl px-6 py-4">
             <p className="text-slate-500 text-sm">
-              {pagination.total}개 중 {(pagination.page - 1) * pagination.limit + 1} - {Math.min(pagination.page * pagination.limit, pagination.total)}
+              {(pagination.page - 1) * pagination.limit + 1} - {Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total}
             </p>
             <div className="flex items-center space-x-2">
               <button
@@ -567,7 +573,7 @@ export default function ListingsPage() {
                 disabled={pagination.page === 1}
                 className="px-3 py-1 rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                이전
+                Previous
               </button>
               <span className="text-slate-500 text-sm">
                 {pagination.page} / {pagination.totalPages}
@@ -577,7 +583,7 @@ export default function ListingsPage() {
                 disabled={pagination.page >= pagination.totalPages}
                 className="px-3 py-1 rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                다음
+                Next
               </button>
             </div>
           </div>

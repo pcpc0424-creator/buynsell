@@ -201,7 +201,8 @@ model Listing {
   longitude       Float?
 
   // Property Details
-  area            Float?          // sqm
+  area            Float?          // Floor area in sqm
+  lotArea         Float?          // Lot area in sqm
   bedrooms        Int?
   bathrooms       Int?
   parking         Int?

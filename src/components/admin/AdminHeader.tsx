@@ -50,8 +50,8 @@ export default function AdminHeader({ title, subtitle }: AdminHeaderProps) {
             notifs.push({
               id: `inquiry-${inquiry.id}`,
               type: 'inquiry',
-              title: '새 문의',
-              message: `${inquiry.name}님의 문의가 대기 중입니다`,
+              title: 'New Inquiry',
+              message: `Inquiry from ${inquiry.name} is pending`,
               link: '/admin/inquiries?status=PENDING',
               createdAt: inquiry.createdAt,
               read: false,
@@ -65,8 +65,8 @@ export default function AdminHeader({ title, subtitle }: AdminHeaderProps) {
             notifs.push({
               id: `listing-${listing.id}`,
               type: 'listing',
-              title: '새 매물 승인 대기',
-              message: `"${listing.title}" 승인이 필요합니다`,
+              title: 'Listing Pending Approval',
+              message: `"${listing.title}" needs approval`,
               link: '/admin/listings?status=PENDING',
               createdAt: listing.createdAt,
               read: false,
@@ -107,10 +107,10 @@ export default function AdminHeader({ title, subtitle }: AdminHeaderProps) {
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
 
-    if (minutes < 1) return '방금 전';
-    if (minutes < 60) return `${minutes}분 전`;
-    if (hours < 24) return `${hours}시간 전`;
-    return `${days}일 전`;
+    if (minutes < 1) return 'Just now';
+    if (minutes < 60) return `${minutes}m ago`;
+    if (hours < 24) return `${hours}h ago`;
+    return `${days}d ago`;
   };
 
   const getIcon = (type: string) => {
@@ -136,7 +136,7 @@ export default function AdminHeader({ title, subtitle }: AdminHeaderProps) {
             <button
               onClick={() => setShowNotifications(!showNotifications)}
               className="relative w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200 hover:text-slate-800 transition-all"
-              title="알림"
+              title="Notifications"
             >
               <i className="fas fa-bell"></i>
               {notifications.length > 0 && (
@@ -150,9 +150,9 @@ export default function AdminHeader({ title, subtitle }: AdminHeaderProps) {
             {showNotifications && (
               <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden z-50">
                 <div className="px-4 py-3 border-b border-slate-100 flex items-center justify-between">
-                  <h3 className="font-semibold text-slate-800">알림</h3>
+                  <h3 className="font-semibold text-slate-800">Notifications</h3>
                   {notifications.length > 0 && (
-                    <span className="text-xs text-slate-500">{notifications.length}개</span>
+                    <span className="text-xs text-slate-500">{notifications.length}</span>
                   )}
                 </div>
 
@@ -188,7 +188,7 @@ export default function AdminHeader({ title, subtitle }: AdminHeaderProps) {
                   ) : (
                     <div className="px-4 py-8 text-center">
                       <i className="fas fa-bell-slash text-slate-300 text-2xl mb-2"></i>
-                      <p className="text-slate-500 text-sm">알림이 없습니다</p>
+                      <p className="text-slate-500 text-sm">No notifications</p>
                     </div>
                   )}
                 </div>
@@ -200,7 +200,7 @@ export default function AdminHeader({ title, subtitle }: AdminHeaderProps) {
                       onClick={() => setShowNotifications(false)}
                       className="text-sm text-accent-blue hover:text-accent-purple transition-colors"
                     >
-                      모든 알림 보기 →
+                      View all notifications →
                     </Link>
                   </div>
                 )}

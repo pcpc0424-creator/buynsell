@@ -18,6 +18,7 @@ const createListingSchema = z.object({
   latitude: z.number().optional(),
   longitude: z.number().optional(),
   area: z.number().positive().optional(),
+  lotArea: z.number().positive().optional(),
   bedrooms: z.number().int().min(0).optional(),
   bathrooms: z.number().int().min(0).optional(),
   parking: z.number().int().min(0).optional(),

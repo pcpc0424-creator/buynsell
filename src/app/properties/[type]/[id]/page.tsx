@@ -80,11 +80,23 @@ export default function PropertyDetailPage({
   });
   const [submitting, setSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [inquiryError, setInquiryError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchListing();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.id]);
+
+  // Pre-fill inquiry form with session data
+  useEffect(() => {
+    if (session?.user) {
+      setInquiryForm((prev) => ({
+        ...prev,
+        name: session.user.name || prev.name,
+        email: session.user.email || prev.email,
+      }));
+    }
+  }, [session]);
 
   const fetchListing = async () => {
     try {
@@ -114,16 +126,37 @@ export default function PropertyDetailPage({
       return;
     }
 
+    // Client-side validation
+    const name = inquiryForm.name.trim() || session.user?.name || '';
+    const email = inquiryForm.email.trim() || session.user?.email || '';
+    const message = inquiryForm.message.trim();
+
+    if (name.length < 2) {
+      setInquiryError('Please enter your name (at least 2 characters)');
+      return;
+    }
+    if (!email || !email.includes('@')) {
+      setInquiryError('Please enter a valid email address');
+      return;
+    }
+    if (message.length < 10) {
+      setInquiryError('Please enter a message (at least 10 characters)');
+      return;
+    }
+
     try {
       setSubmitting(true);
-      setError(null);
+      setInquiryError(null);
 
       const res = await fetch(apiUrl('/api/inquiries'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           listingId: params.id,
-          ...inquiryForm,
+          name,
+          email,
+          phone: inquiryForm.phone,
+          message,
         }),
       });
 
@@ -136,7 +169,7 @@ export default function PropertyDetailPage({
       setSubmitSuccess(true);
       setInquiryForm({ name: '', email: '', phone: '', message: '' });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to send inquiry');
+      setInquiryError(err instanceof Error ? err.message : 'Failed to send inquiry');
     } finally {
       setSubmitting(false);
     }
@@ -480,6 +513,12 @@ export default function PropertyDetailPage({
                       className="form-textarea"
                       required
                     ></textarea>
+                    {inquiryError && (
+                      <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
+                        <i className="fas fa-exclamation-circle mr-2"></i>
+                        {inquiryError}
+                      </div>
+                    )}
                     <button
                       type="submit"
                       disabled={submitting}

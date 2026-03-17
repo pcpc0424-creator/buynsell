@@ -45,6 +45,7 @@ interface FormData {
   latitude: number | null;
   longitude: number | null;
   area: string;
+  lotArea: string;
   bedrooms: string;
   bathrooms: string;
   parking: string;
@@ -65,6 +66,7 @@ const initialFormData: FormData = {
   latitude: null,
   longitude: null,
   area: '',
+  lotArea: '',
   bedrooms: '',
   bathrooms: '',
   parking: '',
@@ -195,6 +197,7 @@ export default function NewListingPage() {
         latitude: formData.latitude || undefined,
         longitude: formData.longitude || undefined,
         area: formData.area ? parseFloat(formData.area) : undefined,
+        lotArea: formData.lotArea ? parseFloat(formData.lotArea) : undefined,
         bedrooms: formData.bedrooms ? parseInt(formData.bedrooms) : undefined,
         bathrooms: formData.bathrooms ? parseInt(formData.bathrooms) : undefined,
         parking: formData.parking ? parseInt(formData.parking) : undefined,
@@ -473,6 +476,18 @@ export default function NewListingPage() {
                     className="form-input"
                   />
                 </div>
+              </div>
+
+              <div>
+                <label className="block text-slate-600 text-sm font-medium mb-2">Lot Area (sqm)</label>
+                <input
+                  type="number"
+                  name="lotArea"
+                  value={formData.lotArea}
+                  onChange={handleChange}
+                  placeholder="0"
+                  className="form-input"
+                />
               </div>
 
               {(formData.propertyType === 'CONDO' || formData.propertyType === 'COMMERCIAL') && (
